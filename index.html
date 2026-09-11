@@ -22,48 +22,31 @@
     color:var(--texto);
     font-size:14px;
   }
-  /* HEADER PRINCIPAL */
   .main-header{
     background:linear-gradient(180deg,var(--verde-mil),var(--verde-osc));
     color:#f2f0e5;
     padding:14px 12px;
     text-align:center;
     border-bottom:3px solid var(--arena);
-    position:sticky;
-    top:0;
-    z-index:50;
+    position:sticky;top:0;z-index:50;
   }
   .main-header h1{
-    font-size:16px;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    font-weight:700;
+    font-size:16px;letter-spacing:1.5px;
+    text-transform:uppercase;font-weight:700;
   }
   .main-header small{
-    display:block;
-    font-size:10px;
-    color:var(--arena);
-    letter-spacing:2px;
-    margin-top:4px;
+    display:block;font-size:10px;color:var(--arena);
+    letter-spacing:2px;margin-top:4px;
   }
-  /* BUSCADOR */
   .search-wrap{
-    padding:16px 12px;
-    background:var(--verde-osc);
-    position:sticky;
-    top:56px;
-    z-index:49;
+    padding:16px 12px;background:var(--verde-osc);
+    position:sticky;top:56px;z-index:49;
     border-bottom:1px solid var(--arena);
   }
   .search-wrap input{
-    width:100%;
-    padding:12px 14px;
-    font-size:15px;
-    border:2px solid var(--arena);
-    background:#f7f5ea;
-    color:var(--texto);
-    border-radius:3px;
-    outline:none;
+    width:100%;padding:12px 14px;font-size:15px;
+    border:2px solid var(--arena);background:#f7f5ea;
+    color:var(--texto);border-radius:3px;outline:none;
     text-transform:uppercase;
   }
   .search-wrap input:focus{
@@ -71,135 +54,72 @@
     box-shadow:0 0 0 2px rgba(201,194,168,.3);
   }
   .search-hint{
-    text-align:center;
-    font-size:11px;
-    color:var(--arena);
-    margin-top:6px;
-    letter-spacing:1px;
+    text-align:center;font-size:11px;color:var(--arena);
+    margin-top:6px;letter-spacing:1px;
   }
-  /* CONTENIDO */
   #resultado{padding:12px;}
   .resp-card{
-    background:var(--gris);
-    color:#fff;
-    padding:12px 14px;
-    border-left:5px solid var(--arena);
-    margin-bottom:16px;
-    border-radius:2px;
+    background:var(--gris);color:#fff;padding:12px 14px;
+    border-left:5px solid var(--arena);margin-bottom:16px;border-radius:2px;
   }
-  .resp-card .nombre{
-    font-size:15px;
-    font-weight:700;
-    letter-spacing:.5px;
-  }
+  .resp-card .nombre{font-size:15px;font-weight:700;letter-spacing:.5px;}
   .resp-card .cargo{
-    font-size:12px;
-    color:var(--arena);
-    margin-top:3px;
-    text-transform:uppercase;
-    letter-spacing:1px;
+    font-size:12px;color:var(--arena);margin-top:3px;
+    text-transform:uppercase;letter-spacing:1px;
   }
-  /* TABLAS */
   .tabla-seccion{
-    margin-bottom:22px;
-    border:1px solid var(--verde-claro);
-    border-radius:3px;
-    overflow:hidden;
-    background:#f4f2e8;
+    margin-bottom:22px;border:1px solid var(--verde-claro);
+    border-radius:3px;overflow:hidden;background:#f4f2e8;
   }
   .tabla-titulo{
     background:linear-gradient(180deg,var(--verde-mil),var(--verde-osc));
-    color:#f2f0e5;
-    padding:8px 12px;
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+    color:#f2f0e5;padding:8px 12px;font-size:13px;font-weight:700;
+    letter-spacing:1.5px;text-transform:uppercase;
+    display:flex;justify-content:space-between;align-items:center;
   }
   .tabla-titulo .count{
-    background:var(--arena);
-    color:var(--verde-osc);
-    font-size:11px;
-    padding:2px 8px;
-    border-radius:10px;
-    font-weight:700;
+    background:var(--arena);color:var(--verde-osc);
+    font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700;
   }
   .oficina-tag{
-    background:#e6e2cf;
-    color:var(--verde-osc);
-    font-size:11px;
-    font-weight:700;
-    padding:5px 10px;
-    letter-spacing:1px;
-    text-transform:uppercase;
+    background:#e6e2cf;color:var(--verde-osc);
+    font-size:11px;font-weight:700;padding:5px 10px;
+    letter-spacing:1px;text-transform:uppercase;
     border-bottom:1px solid var(--verde-claro);
     border-top:1px solid var(--verde-claro);
   }
   .tabla-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  table{
-    width:100%;
-    border-collapse:collapse;
-    font-size:12px;
-    min-width:520px;
-  }
+  table{width:100%;border-collapse:collapse;font-size:12px;min-width:520px;}
   thead th{
-    background:var(--verde-claro);
-    color:#fff;
-    text-align:left;
-    padding:7px 8px;
-    font-size:11px;
-    letter-spacing:.5px;
+    background:var(--verde-claro);color:#fff;text-align:left;
+    padding:7px 8px;font-size:11px;letter-spacing:.5px;
     text-transform:uppercase;
     border-right:1px solid rgba(255,255,255,.15);
   }
   tbody td{
-    padding:6px 8px;
-    border-bottom:1px solid var(--gris-claro);
-    border-right:1px solid #eceae0;
-    vertical-align:top;
-    word-break:break-word;
+    padding:6px 8px;border-bottom:1px solid var(--gris-claro);
+    border-right:1px solid #eceae0;vertical-align:top;word-break:break-word;
   }
   tbody tr:nth-child(even){background:#efeddf;}
   tbody tr:hover{background:#e2dfc9;}
-  .pendiente{
-    color:var(--rojo);
-    font-weight:700;
-    text-transform:uppercase;
-  }
+  .pendiente{color:var(--rojo);font-weight:700;text-transform:uppercase;}
   .no-data{
-    background:#f0eee2;
-    color:#7a7360;
-    text-align:center;
-    padding:20px 12px;
-    font-style:italic;
-    font-size:12px;
-    letter-spacing:1px;
-    text-transform:uppercase;
+    background:#f0eee2;color:#7a7360;text-align:center;
+    padding:20px 12px;font-style:italic;font-size:12px;
+    letter-spacing:1px;text-transform:uppercase;
     border-top:1px solid var(--verde-claro);
   }
   .estado-badge{
-    display:inline-block;
-    padding:2px 7px;
-    border-radius:3px;
-    font-size:10px;
-    font-weight:700;
-    letter-spacing:.5px;
-    color:#fff;
+    display:inline-block;padding:2px 7px;border-radius:3px;
+    font-size:10px;font-weight:700;letter-spacing:.5px;color:#fff;
   }
   .estado-malo{background:#8b3a2e;}
   .estado-regular{background:#8a7a3a;}
   .estado-bueno{background:#3d6b3a;}
   .estado-pendiente{background:var(--rojo);}
-  /* ESTADOS GENERALES */
   .info-inicial{
-    text-align:center;
-    padding:40px 20px;
-    color:#5c5644;
-    font-size:13px;
-    letter-spacing:1px;
+    text-align:center;padding:40px 20px;color:#5c5644;
+    font-size:13px;letter-spacing:1px;
   }
   .info-inicial .icon{font-size:38px;margin-bottom:10px;opacity:.5;}
   .loading,.error{
@@ -207,12 +127,8 @@
   }
   .error{color:var(--rojo);}
   footer{
-    text-align:center;
-    padding:14px;
-    font-size:10px;
-    color:#7a7360;
-    letter-spacing:1.5px;
-    border-top:1px solid var(--gris-claro);
+    text-align:center;padding:14px;font-size:10px;color:#7a7360;
+    letter-spacing:1.5px;border-top:1px solid var(--gris-claro);
   }
 </style>
 </head>
@@ -239,19 +155,18 @@
 
 <script>
 /* ============================================================
-   CONFIGURACIÓN DE FUENTES (Google Drive CSV públicos)
+   CONFIGURACIÓN — Apps Script + Google Sheets (editables)
    ============================================================ */
 const API_URL = "https://script.google.com/macros/s/AKfycbz6yhDzMoFa11ohQ1rz2p3fp--wzeypJ94AI3mgmM7iqwv0h08lTctoBfJpik7l1KOxJw/exec";
-  const FUENTES = {
-  fijos:     "1bf3ZoBqAeinGeoRz7H4GlYYL5GoVhYOH",
-  fungibles: "1OkQ3TomtYZP0gONgtcOFeganb2IOiWkz",
-  sector:    "1uWqHkvnQZfyd_jMMc-MerJQmZqbOB0V3"
+
+const FUENTES = {
+  fijos:     "1hGj-Xai2iHo-IqiEC_VEdnJLx0Q0pHyrWns912Dfz6w",
+  fungibles: "15m3IcYLXZPd70tbXkWR9fx7WT6DXVNPwIzxH--12-Ny",
+  sector:    "1aWAJYEUz313JgcAsPYYGM2wQLUjP_9LCsiIe2lAQ5so"
 };
 
-
-
 /* ============================================================
-   PARSEO CSV (robusto: soporta comillas y comas)
+   PARSEO CSV
    ============================================================ */
 function parseCSV(text){
   const rows = [];
@@ -274,46 +189,59 @@ function parseCSV(text){
   return rows.filter(r => r.some(v => v.trim() !== ""));
 }
 
-/* Convierte filas CSV a objetos usando la primera fila como header */
+function limpiarHeader(h){
+  return h.toString().trim().toUpperCase()
+    .replace(/\./g,"")        /* quita puntos finales */
+    .replace(/\s+/g," ")      /* normaliza espacios */
+    .trim();
+}
+
 function toObjects(rows){
   if(!rows.length) return [];
-  const headers = rows[0].map(h => h.trim().toUpperCase());
+  const headers = rows[0].map(limpiarHeader);
   return rows.slice(1).map(r => {
     const obj = {};
-    headers.forEach((h,i) => obj[h] = (r[i] || "").trim());
+    headers.forEach((h,i) => obj[h] = (r[i] || "").toString().trim());
     return obj;
   });
 }
 
 /* ============================================================
-   CARGA DE DATOS
+   CARGA
    ============================================================ */
 const DATA = { fijos: [], fungibles: [], sector: [] };
 
 async function cargarTodo(){
-  const tareas = [
+  await Promise.all([
     cargar("fijos", FUENTES.fijos),
     cargar("fungibles", FUENTES.fungibles),
     cargar("sector", FUENTES.sector)
-  ];
-  await Promise.all(tareas);
+  ]);
 }
 
 async function cargar(key, fileId){
   try{
-    // Solicitar a través de Apps Script, no directamente a Google Drive
-    const url = `${API_URL}?fileId=${fileId}`;
-    const res = await fetch(url, { 
-      method: "GET",
-      redirect: "follow"  // Crítico: seguir redirecciones
+    const res = await fetch(`${API_URL}?fileId=${fileId}`, {
+      method: "GET", cache: "no-store", redirect: "follow"
     });
-    
     if(!res.ok) throw new Error("HTTP " + res.status);
-    
-    const texto = await res.text();
+
+    let texto = await res.text();
+
+    if(texto.trim().startsWith("<")){
+      throw new Error("El servidor devolvió HTML (revisar permisos de Apps Script)");
+    }
+    if(texto.trim().startsWith("{")){
+      try{
+        const j = JSON.parse(texto);
+        if(j.error) throw new Error(j.error);
+      }catch(_){ /* no es JSON válido, seguir */ }
+    }
+
     const rows = parseCSV(texto);
     DATA[key] = toObjects(rows);
     console.log(`✔ ${key}: ${DATA[key].length} registros`);
+    if(DATA[key][0]) console.log(`   Columnas ${key}:`, Object.keys(DATA[key][0]));
   }catch(e){
     console.warn(`✖ Error cargando ${key}:`, e.message);
     DATA[key] = [];
@@ -354,30 +282,28 @@ function renderEstado(val){
 }
 
 /* ============================================================
-   BÚSQUEDA
+   BÚSQUEDA — busca en cualquier campo del registro
    ============================================================ */
 function buscar(termino){
   const t = norm(termino);
   if(t.length < 2){
     return { fijos:[], fungibles:[], sector:[], responsable:null, cargo:null };
   }
-  const coincide = (obj, campos) =>
-    campos.some(c => norm(obj[c]).includes(t));
 
-  const fijos = DATA.fijos.filter(o =>
-    coincide(o, ["RESPONSABLE","GRADO NOMBRES","NOMBRES","GRADO NOMBRES Y APELLIDOS"])
-  );
-  const fungibles = DATA.fungibles.filter(o =>
-    coincide(o, ["GRADO NOMBRES","RESPONSABLE","NOMBRES"])
-  );
-  const sector = DATA.sector.filter(o =>
-    coincide(o, ["RESPONSABLE","GRADO NOMBRES","NOMBRES"])
-  );
+  const coincide = (obj) =>
+    Object.values(obj).some(v => norm(v).includes(t));
+
+  const fijos = DATA.fijos.filter(coincide);
+  const fungibles = DATA.fungibles.filter(coincide);
+  const sector = DATA.sector.filter(coincide);
 
   const primero = fijos[0] || fungibles[0] || sector[0];
   let responsable = null, cargo = null;
   if(primero){
-    responsable = primero["RESPONSABLE"] || primero["GRADO NOMBRES"] || null;
+    responsable = primero["GRADO NOMBRES"]
+      || primero["RESPONSABLE"]
+      || primero["NOMBRES"]
+      || null;
     cargo = primero["CARGO"] || null;
   }
   return { fijos, fungibles, sector, responsable, cargo };
@@ -389,14 +315,14 @@ function buscar(termino){
 function agruparPorOficina(lista){
   const mapa = new Map();
   lista.forEach(o => {
-    const ofi = (o["OFICINA"] || o["SECTOR"] || o["OFICINA / SECTOR"] || "SIN OFICINA").trim();
+    const ofi = (o["OFICINA/SECTOR"] || o["OFICINA / SECTOR"] || o["OFICINA"] || "SIN OFICINA").trim();
     if(!mapa.has(ofi)) mapa.set(ofi, []);
     mapa.get(ofi).push(o);
   });
   return mapa;
 }
 
-function tablaHTML(titulo, lista, columnas, key){
+function tablaHTML(titulo, lista, columnas){
   let html = `<div class="tabla-seccion">
     <div class="tabla-titulo">
       <span>${titulo}</span>
@@ -417,10 +343,9 @@ function tablaHTML(titulo, lista, columnas, key){
     items.forEach(item => {
       html += "<tr>";
       columnas.forEach(c => {
-        let val;
-        if(c.render === "estado") val = renderEstado(item[c.key]);
-        else if(c.render === "valor") val = renderValor(item[c.key]);
-        else val = renderValor(item[c.key]);
+        const val = (c.render === "estado")
+          ? renderEstado(item[c.key])
+          : renderValor(item[c.key]);
         html += `<td>${val}</td>`;
       });
       html += "</tr>";
@@ -462,30 +387,30 @@ function renderResultado(termino){
     </div>`;
   }
 
-  /* ---- FIJOS ---- */
+  /* FIJOS: CODIGOVSIAF, DESCRIPCION, COSTO, ESTADO */
   html += tablaHTML("FIJOS", res.fijos, [
-    {label:"CODIGOVSIAF", key:"CODIGOVSIAF", render:"valor"},
-    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO", render:"valor"},
-    {label:"COSTO", key:"COSTO", render:"valor"},
+    {label:"CODIGOVSIAF", key:"CODIGOVSIAF"},
+    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO"},
+    {label:"COSTO", key:"COSTO"},
     {label:"ESTADO", key:"ESTADO", render:"estado"}
-  ], "fijos");
+  ]);
 
-  /* ---- FUNGIBLES ---- */
+  /* FUNGIBLES: CODIGO, DESCRIPCION, VALOR TOTAL, CANTIDAD, ESTADO */
   html += tablaHTML("FUNGIBLES", res.fungibles, [
-    {label:"CÓDIGO", key:"CODIGO", render:"valor"},
-    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO", render:"valor"},
-    {label:"VALOR TOTAL", key:"VALOR TOTAL", render:"valor"},
-    {label:"CANTIDAD", key:"CANTIDAD", render:"valor"},
+    {label:"CÓDIGO", key:"CODIGO"},
+    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO"},
+    {label:"VALOR TOTAL", key:"VALOR TOTAL"},
+    {label:"CANTIDAD", key:"CANTIDAD"},
     {label:"ESTADO", key:"ESTADO", render:"estado"}
-  ], "fungibles");
+  ]);
 
-  /* ---- SECTOR ---- */
+  /* SECTOR: DESCRIPCION, CANTIDAD, ESTADO, OBS */
   html += tablaHTML("SECTOR", res.sector, [
-    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO", render:"valor"},
-    {label:"CANTIDAD", key:"CANTIDAD", render:"valor"},
+    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO"},
+    {label:"CANTIDAD", key:"CANTIDAD"},
     {label:"ESTADO", key:"ESTADO", render:"estado"},
-    {label:"OBS.", key:"OBS", render:"valor"}
-  ], "sector");
+    {label:"OBS", key:"OBS"}
+  ]);
 
   cont.innerHTML = html;
 }
@@ -504,15 +429,16 @@ document.addEventListener("DOMContentLoaded", async () => {
   if(!DATA.fungibles.length) errores.push("FUNGIBLES");
   if(!DATA.sector.length) errores.push("SECTOR");
 
-  if(errores.length){
+  if(errores.length === 3){
     cont.innerHTML = `<div class="error">
-      ⚠️ NO SE PUDO CARGAR: ${errores.join(", ")}<br><br>
-      Verifique que los archivos estén compartidos públicamente.
+      ⚠️ NO SE PUDO CARGAR NINGÚN ARCHIVO<br><br>
+      Revise la consola (F12) para ver detalles.
     </div>`;
   } else {
     cont.innerHTML = `<div class="info-inicial">
       <div class="icon">🎖️</div>
       INGRESE UN NOMBRE PARA CONSULTAR LOS ACTIVOS A CARGO
+      ${errores.length ? `<br><br><small style="color:#c0392b">⚠️ Sin datos: ${errores.join(", ")}</small>` : ""}
     </div>`;
   }
 
