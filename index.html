@@ -241,16 +241,14 @@
 /* ============================================================
    CONFIGURACIÓN DE FUENTES (Google Drive CSV públicos)
    ============================================================ */
-const FUENTES = {
+const API_URL = "https://script.google.com/macros/s/AKfycbz6yhDzMoFa11ohQ1rz2p3fp--wzeypJ94AI3mgmM7iqwv0h08lTctoBfJpik7l1KOxJw/exec";
+  const FUENTES = {
   fijos:     "1bf3ZoBqAeinGeoRz7H4GlYYL5GoVhYOH",
   fungibles: "1OkQ3TomtYZP0gONgtcOFeganb2IOiWkz",
   sector:    "1uWqHkvnQZfyd_jMMc-MerJQmZqbOB0V3"
 };
 
-/* URL de descarga directa desde Google Drive */
-function driveUrl(id){
-  return `https://drive.google.com/uc?export=download&id=${id}&confirm=t`;
-}
+
 
 /* ============================================================
    PARSEO CSV (robusto: soporta comillas y comas)
@@ -301,15 +299,18 @@ async function cargarTodo(){
   await Promise.all(tareas);
 }
 
-async function cargar(key, id){
+async function cargar(key, fileId){
   try{
-    const res = await fetch(driveUrl(id), { cache:"no-store" });
+    // Solicitar a través de Apps Script, no directamente a Google Drive
+    const url = `${API_URL}?fileId=${fileId}`;
+    const res = await fetch(url, { 
+      method: "GET",
+      redirect: "follow"  // Crítico: seguir redirecciones
+    });
+    
     if(!res.ok) throw new Error("HTTP " + res.status);
-    let texto = await res.text();
-    // Si Google devuelve HTML (archivo no público o intersticial), detectar
-    if(texto.trim().startsWith("<")){
-      throw new Error("El archivo no es accesible como CSV público");
-    }
+    
+    const texto = await res.text();
     const rows = parseCSV(texto);
     DATA[key] = toObjects(rows);
     console.log(`✔ ${key}: ${DATA[key].length} registros`);
