@@ -3,167 +3,443 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control de Activos Fijos y Fungibles</title>
+<title>Sistema de Control DIV-10 V3.1</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root{
-    --verde-mil:#2f3e2e;
-    --verde-osc:#1c261b;
-    --verde-claro:#4a5d47;
-    --gris:#3a3a3a;
-    --gris-claro:#d9d9d9;
-    --arena:#c9c2a8;
-    --rojo:#c0392b;
-    --texto:#1a1a1a;
+    --bg:#0a0e12;
+    --bg-panel:#141a20;
+    --bg-elevado:#1e252d;
+    --bg-hover:#252d36;
+    --bg-input:#0f1419;
+    --texto:#e8ecf0;
+    --texto-suave:#8b96a3;
+    --texto-muy-suave:#5a6472;
+    --borde:rgba(212,176,96,.2);
+    --borde-fuerte:rgba(212,176,96,.5);
+    --sombra-panel:0 8px 30px rgba(0,0,0,.5);
+    --sombra-modal:0 30px 80px rgba(0,0,0,.7);
+    --grid-color:rgba(212,176,96,.03);
+    --scanline-opacity:.3;
+    --dorado:#d4b060;
+    --dorado-brillante:#f0d088;
+    --dorado-glow:rgba(212,176,96,.4);
+    --cian:#26c6da;
+    --cian-brillante:#5ee0f0;
+    --cian-glow:rgba(38,198,218,.35);
+    --verde:#4ade80;
+    --verde-glow:rgba(74,222,128,.3);
+    --rojo:#ef4444;
+    --rojo-glow:rgba(239,68,68,.3);
+    --amarillo:#fbbf24;
+    --vino:#e05878;
+    --mono:"JetBrains Mono","Consolas","Monaco",monospace;
+    --sans:"Inter","Segoe UI",Roboto,sans-serif;
+  }
+  body.light{
+    --bg:#f4f2eb;--bg-panel:#ffffff;--bg-elevado:#f8f7f3;--bg-hover:#f0edd9;--bg-input:#ffffff;
+    --texto:#1e252d;--texto-suave:#5a6472;--texto-muy-suave:#8b96a3;
+    --borde:rgba(30,51,37,.15);--borde-fuerte:rgba(30,51,37,.4);
+    --sombra-panel:0 4px 16px rgba(0,0,0,.08);
+    --sombra-modal:0 20px 60px rgba(0,0,0,.25);
+    --grid-color:rgba(30,51,37,.04);--scanline-opacity:.15;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
   body{
-    font-family:"Segoe UI",Roboto,Arial,sans-serif;
-    background:#e8e6dc;
-    color:var(--texto);
-    font-size:14px;
+    font-family:var(--sans);background:var(--bg);color:var(--texto);font-size:14px;
+    min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+    position:relative;transition:background .4s ease, color .4s ease;
   }
-  .main-header{
-    background:linear-gradient(180deg,var(--verde-mil),var(--verde-osc));
-    color:#f2f0e5;
-    padding:14px 12px;
-    text-align:center;
-    border-bottom:3px solid var(--arena);
-    position:sticky;top:0;z-index:50;
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg-elevado);}
+  ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--dorado),#9e7d35);border-radius:5px;border:2px solid var(--bg-elevado);}
+  ::-webkit-scrollbar-thumb:hover{background:var(--dorado-brillante);}
+  .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+  .bg-layer::before{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);
+    background-size:50px 50px;animation:gridMove 20s linear infinite;
   }
-  .main-header h1{
-    font-size:16px;letter-spacing:1.5px;
-    text-transform:uppercase;font-weight:700;
+  @keyframes gridMove{from{transform:translate(0,0);}to{transform:translate(50px,50px);}}
+  .bg-layer::after{
+    content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+    background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.08) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.06) 0%,transparent 40%);
+    animation:pulseBg 8s ease-in-out infinite;
   }
-  .main-header small{
-    display:block;font-size:10px;color:var(--arena);
-    letter-spacing:2px;margin-top:4px;
+  body.light .bg-layer::after{background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.05) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.04) 0%,transparent 40%);}
+  @keyframes pulseBg{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
+  .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cian),transparent);opacity:var(--scanline-opacity);z-index:1;pointer-events:none;animation:scanline 8s linear infinite;}
+  @keyframes scanline{from{top:0;}to{top:100vh;}}
+  .app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
+  .header{
+    position:sticky;top:0;z-index:50;background:var(--bg-panel);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--borde);padding:16px 20px;overflow:hidden;
+    animation:slideDown .5s cubic-bezier(.4,0,.2,1);transition:background .4s ease, border-color .4s ease;
   }
-  .search-wrap{
-    padding:16px 12px;background:var(--verde-osc);
-    position:sticky;top:56px;z-index:49;
-    border-bottom:1px solid var(--arena);
-  }
-  .search-wrap input{
-    width:100%;padding:12px 14px;font-size:15px;
-    border:2px solid var(--arena);background:#f7f5ea;
-    color:var(--texto);border-radius:3px;outline:none;
-    text-transform:uppercase;
-  }
-  .search-wrap input:focus{
-    border-color:#e0d9b8;
-    box-shadow:0 0 0 2px rgba(201,194,168,.3);
-  }
-  .search-hint{
-    text-align:center;font-size:11px;color:var(--arena);
-    margin-top:6px;letter-spacing:1px;
-  }
-  #resultado{padding:12px;}
-  .resp-card{
-    background:var(--gris);color:#fff;padding:12px 14px;
-    border-left:5px solid var(--arena);margin-bottom:16px;border-radius:2px;
-  }
-  .resp-card .nombre{font-size:15px;font-weight:700;letter-spacing:.5px;}
-  .resp-card .cargo{
-    font-size:12px;color:var(--arena);margin-top:3px;
-    text-transform:uppercase;letter-spacing:1px;
-  }
-  .tabla-seccion{
-    margin-bottom:22px;border:1px solid var(--verde-claro);
-    border-radius:3px;overflow:hidden;background:#f4f2e8;
-  }
-  .tabla-titulo{
-    background:linear-gradient(180deg,var(--verde-mil),var(--verde-osc));
-    color:#f2f0e5;padding:8px 12px;font-size:13px;font-weight:700;
-    letter-spacing:1.5px;text-transform:uppercase;
-    display:flex;justify-content:space-between;align-items:center;
-  }
-  .tabla-titulo .count{
-    background:var(--arena);color:var(--verde-osc);
-    font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700;
-  }
-  .oficina-tag{
-    background:#e6e2cf;color:var(--verde-osc);
-    font-size:11px;font-weight:700;padding:5px 10px;
-    letter-spacing:1px;text-transform:uppercase;
-    border-bottom:1px solid var(--verde-claro);
-    border-top:1px solid var(--verde-claro);
-  }
-  .tabla-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  table{width:100%;border-collapse:collapse;font-size:12px;min-width:520px;}
-  thead th{
-    background:var(--verde-claro);color:#fff;text-align:left;
-    padding:7px 8px;font-size:11px;letter-spacing:.5px;
-    text-transform:uppercase;
-    border-right:1px solid rgba(255,255,255,.15);
-  }
-  tbody td{
-    padding:6px 8px;border-bottom:1px solid var(--gris-claro);
-    border-right:1px solid #eceae0;vertical-align:top;word-break:break-word;
-  }
-  tbody tr:nth-child(even){background:#efeddf;}
-  tbody tr:hover{background:#e2dfc9;}
-  .pendiente{color:var(--rojo);font-weight:700;text-transform:uppercase;}
-  .no-data{
-    background:#f0eee2;color:#7a7360;text-align:center;
-    padding:20px 12px;font-style:italic;font-size:12px;
-    letter-spacing:1px;text-transform:uppercase;
-    border-top:1px solid var(--verde-claro);
-  }
-  .estado-badge{
-    display:inline-block;padding:2px 7px;border-radius:3px;
-    font-size:10px;font-weight:700;letter-spacing:.5px;color:#fff;
-  }
-  .estado-malo{background:#8b3a2e;}
-  .estado-regular{background:#8a7a3a;}
-  .estado-bueno{background:#3d6b3a;}
-  .estado-pendiente{background:var(--rojo);}
-  .info-inicial{
-    text-align:center;padding:40px 20px;color:#5c5644;
-    font-size:13px;letter-spacing:1px;
-  }
-  .info-inicial .icon{font-size:38px;margin-bottom:10px;opacity:.5;}
-  .loading,.error{
-    text-align:center;padding:24px;font-size:13px;letter-spacing:1px;
-  }
+  body:not(.light) .header{background:linear-gradient(180deg,rgba(20,26,32,.95),rgba(10,14,18,.9));}
+  body.light .header{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,247,243,.95));}
+  @keyframes slideDown{from{transform:translateY(-100%);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .header::after{content:"";position:absolute;bottom:0;left:0;height:2px;width:100%;background:linear-gradient(90deg,transparent,var(--dorado),var(--cian),var(--dorado),transparent);background-size:200% 100%;animation:borderFlow 3s linear infinite;}
+  @keyframes borderFlow{from{background-position:200% 0;}to{background-position:-200% 0;}}
+  .header-content{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .header-logo{display:flex;align-items:center;gap:12px;}
+  .header-logo-icon{width:40px;height:40px;border:2px solid var(--dorado);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--dorado);background:rgba(212,176,96,.05);animation:pulseGlow 3s ease-in-out infinite;}
+  @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 var(--dorado-glow);}50%{box-shadow:0 0 20px 4px var(--dorado-glow);}}
+  .header-text h1{font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,var(--texto),var(--dorado-brillante));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  body.light .header-text h1{background:linear-gradient(90deg,#1e252d,var(--dorado));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .header-text small{display:block;font-size:9px;color:var(--dorado);letter-spacing:3px;margin-top:3px;text-transform:uppercase;font-weight:600;font-family:var(--mono);}
+  .header-actions{display:flex;align-items:center;gap:10px;}
+  .btn-theme{width:40px;height:40px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;color:var(--dorado);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
+  .btn-theme:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:rotate(180deg) scale(1.05);box-shadow:0 0 20px var(--dorado-glow);}
+  .btn-reload{width:40px;height:40px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;color:var(--cian);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
+  .btn-reload:hover{background:var(--cian);color:var(--bg);border-color:var(--cian-brillante);box-shadow:0 0 20px var(--cian-glow);transform:scale(1.05);}
+  .header-status{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(38,198,218,.08);border:1px solid rgba(38,198,218,.3);border-radius:20px;font-size:10px;font-family:var(--mono);color:var(--cian-brillante);letter-spacing:1px;}
+  .status-dot{width:8px;height:8px;background:var(--verde);border-radius:50%;box-shadow:0 0 8px var(--verde);animation:blink 2s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+  .search-section{padding:20px;max-width:1200px;margin:0 auto;width:100%;animation:slideDown .6s cubic-bezier(.4,0,.2,1) .1s both;display:none;}
+  .search-section.visible{display:block;}
+  .search-box{position:relative;display:flex;align-items:center;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:4px 16px;transition:all .3s cubic-bezier(.4,0,.2,1);}
+  .search-box:focus-within{border-color:var(--dorado);box-shadow:0 0 0 3px rgba(212,176,96,.1),0 0 30px rgba(212,176,96,.2);}
+  .search-icon{color:var(--dorado);font-size:18px;margin-right:12px;flex-shrink:0;transition:transform .3s ease;}
+  .search-box:focus-within .search-icon{transform:scale(1.1);filter:drop-shadow(0 0 8px var(--dorado));}
+  .search-input{flex:1;background:transparent;border:none;outline:none;padding:14px 0;font-size:15px;color:var(--texto);font-family:var(--sans);font-weight:500;letter-spacing:.5px;}
+  .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
+  .search-hint{display:flex;gap:6px;align-items:center;font-size:10px;color:var(--texto-muy-suave);font-family:var(--mono);flex-shrink:0;}
+  .search-hint .hint-chip{background:var(--bg-elevado);border:1px solid var(--borde);padding:2px 6px;border-radius:4px;letter-spacing:.5px;}
+  .view-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;}
+  .view-btn{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:10px;padding:14px 12px;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);overflow:hidden;text-align:center;animation:slideUp .5s cubic-bezier(.4,0,.2,1) both;display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .view-btn:nth-child(1){animation-delay:.15s;}
+  .view-btn:nth-child(2){animation-delay:.2s;}
+  .view-btn:nth-child(3){animation-delay:.25s;}
+  .view-btn:nth-child(4){animation-delay:.3s;}
+  @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .view-btn:hover{transform:translateY(-4px);border-color:var(--color,var(--dorado));box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 25px color-mix(in srgb,var(--color,var(--dorado)) 30%,transparent);}
+  .view-btn:active{transform:translateY(-2px) scale(.98);}
+  .view-btn[data-color="verde"]{--color:var(--verde);}
+  .view-btn[data-color="azul"]{--color:var(--cian);}
+  .view-btn[data-color="marron"]{--color:#d4a060;}
+  .view-btn[data-color="vino"]{--color:var(--vino);}
+  .view-btn-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;}
+  .view-btn-count{font-size:24px;font-weight:800;color:var(--color,var(--dorado));font-family:var(--mono);text-shadow:0 0 15px color-mix(in srgb,var(--color,var(--dorado)) 40%,transparent);transition:all .3s ease;}
+  .view-btn:hover .view-btn-count{transform:scale(1.1);text-shadow:0 0 25px color-mix(in srgb,var(--color,var(--dorado)) 70%,transparent);}
+  .view-btn .ripple{position:absolute;border-radius:50%;background:var(--color,var(--dorado));transform:scale(0);animation:ripple .6s ease-out;opacity:.5;pointer-events:none;}
+  @keyframes ripple{to{transform:scale(4);opacity:0;}}
+  .main{flex:1;padding:0 20px 40px;max-width:1200px;margin:0 auto;width:100%;}
+  .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;}
+  .list-title .list-count{background:var(--bg-panel);border:1px solid var(--borde);color:var(--dorado);padding:3px 12px;border-radius:12px;font-family:var(--mono);font-weight:800;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+  .resp-card{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);overflow:hidden;animation:slideIn .5s cubic-bezier(.4,0,.2,1) both;display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  @keyframes slideIn{from{transform:translateX(-20px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+  .resp-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--dorado),var(--cian));transform:scaleY(0);transform-origin:top;transition:transform .4s cubic-bezier(.4,0,.2,1);}
+  .resp-card:hover{transform:translateX(8px);border-color:var(--dorado);background:var(--bg-elevado);box-shadow:var(--sombra-panel),0 0 30px rgba(212,176,96,.15);}
+  .resp-card:hover::before{transform:scaleY(1);}
+  .resp-card-info{flex:1;min-width:0;}
+  .resp-card-name{font-size:15px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:6px;transition:color .3s ease;}
+  .resp-card:hover .resp-card-name{color:var(--dorado-brillante);}
+  body.light .resp-card:hover .resp-card-name{color:var(--dorado);}
+  .resp-card-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--texto-suave);font-family:var(--mono);}
+  .resp-card-meta span{display:flex;align-items:center;gap:4px;}
+  .resp-card-arrow{font-size:28px;color:var(--texto-muy-suave);transition:all .4s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
+  .resp-card:hover .resp-card-arrow{color:var(--dorado);transform:translateX(8px);}
+  .bien-card{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);animation:slideIn .5s cubic-bezier(.4,0,.2,1) both;display:flex;gap:14px;align-items:flex-start;}
+  .bien-card:hover{transform:translateX(8px);border-color:var(--cian);background:var(--bg-elevado);box-shadow:var(--sombra-panel),0 0 30px rgba(38,198,218,.15);}
+  .bien-card-thumb{width:56px;height:56px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--texto-muy-suave);flex-shrink:0;overflow:hidden;transition:all .3s ease;}
+  .bien-card-thumb img{width:100%;height:100%;object-fit:cover;}
+  .bien-card:hover .bien-card-thumb{border-color:var(--cian);box-shadow:0 0 15px var(--cian-glow);}
+  .bien-card-info{flex:1;min-width:0;}
+  .bien-card-code{font-size:11px;font-family:var(--mono);color:var(--dorado);font-weight:700;letter-spacing:1px;margin-bottom:4px;text-transform:uppercase;}
+  .bien-card-desc{font-size:13px;font-weight:600;color:var(--texto);line-height:1.3;margin-bottom:6px;}
+  .bien-card-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:10px;font-family:var(--mono);color:var(--texto-suave);}
+  .bien-card-meta span{display:flex;align-items:center;gap:4px;}
+  .bien-card-tipo{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:var(--bg-elevado);border:1px solid var(--borde);}
+  .bien-card-tipo.fijos{color:var(--verde);border-color:var(--verde-glow);}
+  .bien-card-tipo.fungibles{color:var(--cian);border-color:var(--cian-glow);}
+  .bien-card-tipo.internos{color:#d4a060;border-color:rgba(212,160,96,.3);}
+  .bien-card-tipo.prestados{color:var(--vino);border-color:rgba(224,88,120,.3);}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+  body.light .modal-overlay{background:rgba(30,37,45,.4);}
+  .modal-overlay.visible{opacity:1;pointer-events:auto;}
+  .modal{background:var(--bg-panel);border:1px solid var(--dorado);border-radius:16px;max-width:720px;width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--sombra-modal),0 0 60px rgba(212,176,96,.15);transform:scale(.9) translateY(20px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);}
+  .modal-overlay.visible .modal{transform:scale(1) translateY(0);opacity:1;}
+  .modal-header{padding:18px 22px;border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(212,176,96,.05),transparent);}
+  .modal-header h2{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:700;flex:1;min-width:0;word-break:break-word;}
+  .modal-close{width:32px;height:32px;background:transparent;border:1px solid var(--borde);color:var(--texto-suave);border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .3s ease;flex-shrink:0;}
+  .modal-close:hover{background:var(--rojo);border-color:var(--rojo);color:white;transform:rotate(90deg);box-shadow:0 0 20px var(--rojo-glow);}
+  .modal-body{padding:20px 22px;overflow-y:auto;flex:1;min-height:200px;}
+  .btn-nav{display:inline-flex;align-items:center;gap:8px;background:var(--bg-elevado);color:var(--dorado);border:1px solid var(--borde);padding:9px 16px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:8px;font-weight:700;font-family:var(--sans);transition:all .3s cubic-bezier(.4,0,.2,1);margin-bottom:16px;}
+  .btn-nav:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:translateX(-4px);box-shadow:0 0 20px var(--dorado-glow);}
+  .modal-titulo-seccion{text-align:center;padding:8px 0 16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;font-family:var(--mono);border-bottom:1px solid var(--borde);margin-bottom:16px;}
+  .oficina-card{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg-elevado);border:1px solid var(--borde);border-left:4px solid var(--dorado);padding:14px 16px;margin-bottom:10px;border-radius:10px;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);animation:slideIn .4s cubic-bezier(.4,0,.2,1) both;}
+  .oficina-card:hover{transform:translateX(8px);border-color:var(--dorado);border-left-color:var(--cian);background:var(--bg-hover);box-shadow:var(--sombra-panel),0 0 25px rgba(212,176,96,.15);}
+  .oficina-card-info{flex:1;min-width:0;}
+  .oficina-card-nombre{font-size:13px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:4px;transition:color .3s ease;}
+  .oficina-card:hover .oficina-card-nombre{color:var(--dorado-brillante);}
+  body.light .oficina-card:hover .oficina-card-nombre{color:var(--dorado);}
+  .oficina-card-id{font-size:10px;font-family:var(--mono);color:var(--cian);letter-spacing:1px;}
+  .oficina-card-count{background:rgba(212,176,96,.1);border:1px solid var(--dorado);color:var(--dorado-brillante);padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800;font-family:var(--mono);flex-shrink:0;transition:all .3s ease;}
+  body.light .oficina-card-count{background:rgba(212,176,96,.15);color:#8a6d30;}
+  .oficina-card:hover .oficina-card-count{background:var(--dorado);color:var(--bg);box-shadow:0 0 20px var(--dorado-glow);}
+  .oficina-encabezado{background:linear-gradient(135deg,rgba(38,198,218,.1),rgba(212,176,96,.1));border:1px solid var(--borde);border-left:4px solid var(--cian);border-radius:10px;padding:14px 16px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  body.light .oficina-encabezado{background:linear-gradient(135deg,rgba(38,198,218,.06),rgba(212,176,96,.06));}
+  .oficina-encabezado-info{flex:1;min-width:0;}
+  .oficina-encabezado-nombre{font-size:14px;font-weight:800;color:var(--texto);letter-spacing:.3px;margin-bottom:4px;}
+  .oficina-encabezado-sub{font-size:10px;font-family:var(--mono);color:var(--cian-brillante);letter-spacing:1px;text-transform:uppercase;}
+  body.light .oficina-encabezado-sub{color:#1e7b8a;}
+  .oficina-encabezado-count{background:rgba(38,198,218,.15);border:1px solid var(--cian);color:var(--cian-brillante);padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800;font-family:var(--mono);flex-shrink:0;}
+  body.light .oficina-encabezado-count{background:rgba(38,198,218,.2);color:#0e5a68;}
+  .tabla-section{margin-bottom:20px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;overflow:hidden;}
+  .tabla-header{padding:12px 16px;background:linear-gradient(180deg,rgba(212,176,96,.08),transparent);border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .tabla-header-titulo{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:800;}
+  .tabla-header-titulo .dot{width:8px;height:8px;border-radius:50%;background:var(--color,var(--dorado));box-shadow:0 0 8px var(--color,var(--dorado));}
+  .tabla-header[data-color="verde"]{--color:var(--verde);}
+  .tabla-header[data-color="azul"]{--color:var(--cian);}
+  .tabla-header[data-color="marron"]{--color:#d4a060;}
+  .tabla-header[data-color="vino"]{--color:var(--vino);}
+  .tabla-header-count{font-family:var(--mono);font-size:12px;color:var(--dorado);font-weight:800;background:rgba(212,176,96,.1);padding:2px 10px;border-radius:10px;border:1px solid rgba(212,176,96,.3);}
+  body.light .tabla-header-count{background:rgba(212,176,96,.15);color:#8a6d30;}
+  .tabla-scroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px;}
+  thead th{background:rgba(0,0,0,.15);color:var(--texto-suave);text-align:left;padding:10px 12px;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;border-bottom:1px solid var(--borde);}
+  body.light thead th{background:rgba(30,51,37,.04);}
+  tbody td{padding:10px 12px;border-bottom:1px solid rgba(212,176,96,.08);color:var(--texto);vertical-align:top;word-break:break-word;}
+  body.light tbody td{border-bottom-color:rgba(30,51,37,.06);}
+  tbody tr{cursor:pointer;transition:all .2s ease;animation:fadeIn .3s ease both;}
+  tbody tr:nth-child(even){background:rgba(0,0,0,.15);}
+  body.light tbody tr:nth-child(even){background:rgba(30,51,37,.02);}
+  tbody tr:hover{background:rgba(212,176,96,.08);}
+  tbody tr:hover td:first-child{padding-left:18px;}
+  .estado-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
+  .estado-regular{color:var(--amarillo);border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08);}
+  body.light .estado-regular{color:#8a6d0a;border-color:rgba(138,109,10,.4);background:rgba(251,191,36,.15);}
+  .estado-malo{color:var(--rojo);border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.08);}
+  body.light .estado-malo{color:#a01a1a;border-color:rgba(160,26,26,.4);background:rgba(239,68,68,.12);}
+  .estado-bueno{color:var(--verde);border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.08);}
+  body.light .estado-bueno{color:#1a7a3a;border-color:rgba(26,122,58,.4);background:rgba(74,222,128,.15);}
+  .estado-pendiente{color:var(--rojo);border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.12);animation:blink 1.5s ease-in-out infinite;}
+  .bien-detalle{background:var(--bg-elevado);border:1px solid var(--borde);border-radius:12px;overflow:hidden;}
+  .bien-detalle-header{padding:20px;background:linear-gradient(135deg,rgba(212,176,96,.1),rgba(38,198,218,.05));border-bottom:2px solid var(--dorado);display:flex;gap:16px;align-items:flex-start;}
+  .bien-detalle-foto{width:80px;height:80px;background:var(--bg);border:2px solid var(--dorado);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--dorado);flex-shrink:0;overflow:hidden;cursor:pointer;transition:all .3s ease;position:relative;}
+  .bien-detalle-foto:hover{transform:scale(1.05);box-shadow:0 0 25px var(--dorado-glow);}
+  .bien-detalle-foto img{width:100%;height:100%;object-fit:cover;}
+  .bien-detalle-header-info{flex:1;min-width:0;}
+  .bien-detalle-codigo{font-size:11px;font-family:var(--mono);color:var(--dorado);letter-spacing:2px;font-weight:800;text-transform:uppercase;margin-bottom:6px;}
+  .bien-detalle-nombre{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3;margin-bottom:8px;}
+  .bien-detalle-tipo-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
+  .bien-detalle-tipo-badge.fijos{color:var(--verde);background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);}
+  .bien-detalle-tipo-badge.fungibles{color:var(--cian);background:rgba(38,198,218,.1);border:1px solid rgba(38,198,218,.3);}
+  .bien-detalle-tipo-badge.internos{color:#d4a060;background:rgba(212,160,96,.1);border:1px solid rgba(212,160,96,.3);}
+  .bien-detalle-tipo-badge.prestados{color:var(--vino);background:rgba(224,88,120,.1);border:1px solid rgba(224,88,120,.3);}
+  .bien-detalle-campos{padding:0;}
+  .bien-detalle-campo{display:flex;gap:16px;align-items:flex-start;padding:12px 20px;border-bottom:1px solid rgba(212,176,96,.08);}
+  body.light .bien-detalle-campo{border-bottom-color:rgba(30,51,37,.06);}
+  .bien-detalle-campo:last-child{border-bottom:none;}
+  .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.15);}
+  body.light .bien-detalle-campo:nth-child(even){background:rgba(30,51,37,.02);}
+  .bien-detalle-label{flex:0 0 38%;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;color:var(--texto-suave);padding-top:2px;font-family:var(--mono);}
+  .bien-detalle-valor{flex:1;font-size:12px;color:var(--texto);line-height:1.4;word-break:break-word;}
+  .bien-detalle-valor.vacio{color:var(--texto-muy-suave);font-style:italic;}
+  .bien-detalle-valor.pendiente{color:var(--rojo);font-weight:800;text-transform:uppercase;}
+  .empty-state{text-align:center;padding:60px 20px;color:var(--texto-suave);animation:fadeIn .6s ease both;}
+  .empty-state-icon{font-size:64px;margin-bottom:16px;opacity:.4;animation:float 3s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .empty-state-title{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--texto);margin-bottom:8px;font-weight:700;}
+  .empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
+  .loading,.error{text-align:center;padding:32px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;}
+  .loading{color:var(--dorado);}
   .error{color:var(--rojo);}
-  footer{
-    text-align:center;padding:14px;font-size:10px;color:#7a7360;
-    letter-spacing:1.5px;border-top:1px solid var(--gris-claro);
+  .footer{text-align:center;padding:24px 20px;border-top:1px solid var(--borde);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-muy-suave);font-family:var(--mono);font-weight:600;margin-top:auto;}
+  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.95);backdrop-filter:blur(10px);z-index:200;display:flex;align-items:center;justify-content:center;padding:30px;opacity:0;pointer-events:none;transition:opacity .3s ease;cursor:zoom-out;}
+  .lightbox.visible{opacity:1;pointer-events:auto;}
+  .lightbox img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 0 60px rgba(212,176,96,.3);animation:zoomIn .3s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes zoomIn{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+  @media (max-width:600px){
+    .header-text h1{font-size:13px;letter-spacing:1px;}
+    .view-buttons{grid-template-columns:repeat(2,1fr);}
+    .view-btn-count{font-size:20px;}
+    .search-hint{display:none;}
+    .bien-detalle-foto{width:60px;height:60px;font-size:24px;}
+    .bien-detalle-label{flex:0 0 45%;}
+    .header-status{display:none;}
   }
 </style>
 </head>
 <body>
 
-<header class="main-header">
-  <h1>Control de Activos Fijos y Fungibles</h1>
-  <small>DIV-10 · SISTEMA DE CONSULTA</small>
-</header>
+<div class="bg-layer"></div>
+<div class="scanline"></div>
 
-<div class="search-wrap">
-  <input type="text" id="buscador" placeholder="🔍 Buscar por Nombres y Apellidos..." autocomplete="off">
-  <div class="search-hint">Escriba el nombre del responsable</div>
+<div class="app">
+  <header class="header">
+    <div class="header-content">
+      <div class="header-logo">
+        <div class="header-logo-icon">◈</div>
+        <div class="header-text">
+          <h1>Control DIV-10</h1>
+          <small>System v3.1 · Cloud Mode</small>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-reload" onclick="recargarArchivo()" title="Recargar datos">
+          ⟳
+        </button>
+        <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="Cambiar tema (Ctrl+T)">
+          <span id="themeIcon">◐</span>
+        </button>
+        <div class="header-status">
+          <div class="status-dot"></div>
+          <span id="statusText">CARGANDO</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="search-section" id="searchSection">
+    <div class="search-box">
+      <span class="search-icon">⌕</span>
+      <input type="text" class="search-input" id="buscador" placeholder="Buscar por nombre, código o ID asignación...">
+      <div class="search-hint">
+        <span class="hint-chip">Ctrl</span>
+        <span class="hint-chip">K</span>
+      </div>
+    </div>
+
+    <div class="view-buttons">
+      <button class="view-btn" data-color="verde" onclick="verGeneral('fijos', event, this)">
+        <span class="view-btn-label">Fijos</span>
+        <span class="view-btn-count" id="count-fijos">0</span>
+      </button>
+      <button class="view-btn" data-color="azul" onclick="verGeneral('fungibles', event, this)">
+        <span class="view-btn-label">Fungibles</span>
+        <span class="view-btn-count" id="count-fungibles">0</span>
+      </button>
+      <button class="view-btn" data-color="marron" onclick="verGeneral('internos', event, this)">
+        <span class="view-btn-label">Internos</span>
+        <span class="view-btn-count" id="count-internos">0</span>
+      </button>
+      <button class="view-btn" data-color="vino" onclick="verGeneral('prestados', event, this)">
+        <span class="view-btn-label">Prestados</span>
+        <span class="view-btn-count" id="count-prestados">0</span>
+      </button>
+    </div>
+  </section>
+
+  <main class="main" id="contenido"></main>
+
+  <footer class="footer">◈ Sistema de Control DIV-10 · v3.1 ◈</footer>
 </div>
 
-<div id="resultado">
-  <div class="info-inicial">
-    <div class="icon">🎖️</div>
-    INGRESE UN NOMBRE PARA CONSULTAR LOS ACTIVOS A CARGO
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-titulo">Detalle</h2>
+      <button class="modal-close" onclick="cerrarModal()">×</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
 
-<footer>SISTEMA DE CONTROL PATRIMONIAL — DIV-10</footer>
+<div class="lightbox" id="lightbox" onclick="cerrarLightbox()">
+  <img id="lightbox-img" src="" alt="">
+</div>
 
 <script>
 /* ============================================================
-   CONFIGURACIÓN — Apps Script + Google Sheets (editables)
+   CONFIGURACIÓN — MODO NUBE
    ============================================================ */
-const API_URL = "https://script.google.com/macros/s/AKfycbz6yhDzMoFa11ohQ1rz2p3fp--wzeypJ94AI3mgmM7iqwv0h08lTctoBfJpik7l1KOxJw/exec";
+const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1ZZZcNDDou-pZhNuM9ISanIoArFFnsMh_A6yracR78WXZ1jv5wwFg/exec";
 
-const FUENTES = {
-  fijos:     "1hGj-Xai2iHo-IqiEC_VEdnJLx0Q0pHyrWns912Dfz6w",
-  fungibles: "15m3IcYLXZPd70tbXkWR9fx7WT6DXVNPwIzxH--12-Ny",
-  sector:    "1aWAJYEUz313JgcAsPYYGM2wQLUjP_9LCsiIe2lAQ5so"
+const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
+
+let estado = {
+  pantalla: "carga",
+  modalVista: "oficinas",
+  responsableActual: null,
+  oficinaActual: null,
+  bienActual: null
 };
+
+/* ============================================================
+   TEMA
+   ============================================================ */
+function cargarTema(){
+  const guardado = localStorage.getItem("tema");
+  if(guardado === "light"){
+    document.body.classList.add("light");
+    document.getElementById("themeIcon").textContent = "◑";
+  }
+}
+function toggleTheme(){
+  document.body.classList.toggle("light");
+  const isLight = document.body.classList.contains("light");
+  document.getElementById("themeIcon").textContent = isLight ? "◑" : "◐";
+  localStorage.setItem("tema", isLight ? "light" : "dark");
+}
+cargarTema();
+
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function norm(s){
+  return (s || "").toString().toUpperCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\s+/g," ").trim();
+}
+function esc(s){
+  return (s || "").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function escAttr(s){
+  return esc(s).replace(/'/g,"&#39;").replace(/"/g,"&quot;");
+}
+function normalizarClave(h){
+  return h.toString().trim()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/\./g,"").replace(/\s+/g," ")
+    .toUpperCase().trim();
+}
+function getVal(obj, ...claves){
+  if(!obj) return "";
+  for(const k of claves){
+    if(obj[k] !== undefined && obj[k] !== null && obj[k].toString().trim() !== ""){
+      return obj[k].toString().trim();
+    }
+  }
+  return "";
+}
+function obtenerIdAsig(o){
+  return getVal(o, "ASIGNACION ID", "ASIGNACIÓN ID", "ASIGNACON ID", "ASIGNACION", "ASIGNACIÓN", "ID");
+}
+function obtenerFoto(o){
+  return getVal(o, "FOTO", "URL_IMAGEN", "IMAGEN");
+}
+function renderEstado(val){
+  const v = (val || "").toString().trim();
+  if(!v) return "—";
+  if(v.toUpperCase().includes("PENDIENTE")) return `<span class="estado-badge estado-pendiente">${esc(v)}</span>`;
+  const up = v.toUpperCase();
+  let cls = "estado-regular";
+  if(up.includes("MALO")) cls = "estado-malo";
+  else if(up.includes("BUENO") || up.includes("ÓPTIMO") || up.includes("OPTIMO")) cls = "estado-bueno";
+  return `<span class="estado-badge ${cls}">${esc(v)}</span>`;
+}
+function renderFotoMiniatura(url){
+  if(!url) return `<span style="font-size:22px;opacity:.4;">◈</span>`;
+  if(!url.startsWith("http") && url.length > 20) url = `https://drive.google.com/uc?export=view&id=${url}`;
+  return `<img src="${escAttr(url)}" alt="" onerror="this.parentElement.innerHTML='<span style=&quot;font-size:22px;opacity:.4;&quot;>◈</span>'">`;
+}
+function normalizarUrlFoto(url){
+  if(!url) return "";
+  if(url.startsWith("http")) return url;
+  if(url.length > 20) return `https://drive.google.com/uc?export=view&id=${url}`;
+  return "";
+}
+function detectarTipoBusqueda(texto){
+  const t = texto.trim().toUpperCase();
+  if(!t) return "vacio";
+  if(/^[A-Z0-9]{6,}$/.test(t) && /\d/.test(t) && /[A-Z]/.test(t)) return "codigo";
+  if(/^\d+[A-Z]?$/.test(t)) return "id";
+  return "nombre";
+}
 
 /* ============================================================
    PARSEO CSV
@@ -181,7 +457,7 @@ function parseCSV(text){
       if(c === '"') inQuotes = true;
       else if(c === ','){ row.push(field); field=""; }
       else if(c === '\n'){ row.push(field); rows.push(row); row=[]; field=""; }
-      else if(c === '\r'){ /* ignorar */ }
+      else if(c === '\r'){ }
       else field += c;
     }
   }
@@ -189,266 +465,731 @@ function parseCSV(text){
   return rows.filter(r => r.some(v => v.trim() !== ""));
 }
 
-function limpiarHeader(h){
-  return h.toString().trim().toUpperCase()
-    .replace(/\./g,"")        /* quita puntos finales */
-    .replace(/\s+/g," ")      /* normaliza espacios */
-    .trim();
+function csvAObjetos(texto){
+  const filas = parseCSV(texto);
+  if(filas.length < 2) return [];
+  const headers = filas[0].map(h => normalizarClave(h));
+  const resultado = [];
+  for(let i = 1; i < filas.length; i++){
+    const fila = filas[i];
+    const obj = {};
+    let tieneDatos = false;
+    headers.forEach((h, idx) => {
+      const val = (fila[idx] === undefined || fila[idx] === null) ? "" : fila[idx].toString().trim();
+      obj[h] = val;
+      if(val) tieneDatos = true;
+    });
+    if(tieneDatos) resultado.push(obj);
+  }
+  return resultado;
 }
 
-function toObjects(rows){
-  if(!rows.length) return [];
-  const headers = rows[0].map(limpiarHeader);
-  return rows.slice(1).map(r => {
-    const obj = {};
-    headers.forEach((h,i) => obj[h] = (r[i] || "").toString().trim());
-    return obj;
+/* ============================================================
+   CARGA DESDE LA NUBE
+   ============================================================ */
+async function cargarDesdeNube(){
+  const cont = document.getElementById("contenido");
+  cont.innerHTML = `<div class="loading fade-in">☁ Cargando datos desde Google Drive...</div>`;
+  document.getElementById("searchSection").classList.remove("visible");
+  document.getElementById("statusText").textContent = "CARGANDO";
+
+  try{
+    const hojas = [
+      { key: "fijos",     nombre: "BD_FIJOS" },
+      { key: "fungibles", nombre: "BD_FUNG" },
+      { key: "internos",  nombre: "BD_INTERNO" },
+      { key: "prestados", nombre: "BD_PRESTADOS" },
+      { key: "resp",      nombre: "RESP" }
+    ];
+
+    const resultados = await Promise.all(
+      hojas.map(h => fetch(`${API_URL_NUBE}?sheet=${h.nombre}`)
+        .then(r => r.text())
+        .then(texto => ({ key: h.key, nombre: h.nombre, texto }))
+      )
+    );
+
+    resultados.forEach(({ key, nombre, texto }) => {
+      if(texto.trim().startsWith("<")){
+        console.warn(`⚠ ${nombre}: respuesta HTML (revisar permisos)`);
+        DATA[key] = [];
+        return;
+      }
+      if(texto.trim().startsWith("{")){
+        try{
+          const j = JSON.parse(texto);
+          if(j.error){
+            console.warn(`⚠ ${nombre}:`, j.error);
+            DATA[key] = [];
+            return;
+          }
+        }catch(_){}
+      }
+      DATA[key] = csvAObjetos(texto);
+      console.log(`✔ ${nombre}: ${DATA[key].length} registros`);
+    });
+
+    DATA.fijos = DATA.fijos.filter(o => obtenerIdAsig(o));
+    DATA.fungibles = DATA.fungibles.filter(o => obtenerIdAsig(o));
+    DATA.internos = DATA.internos.filter(o => obtenerIdAsig(o));
+    DATA.prestados = DATA.prestados.filter(o => obtenerIdAsig(o) || getVal(o, "DESCRIPCION DEL ACTIVO"));
+    DATA.resp = DATA.resp.filter(o => getVal(o, "ID") && getNombreCompletoResp(o));
+
+    actualizarContadores();
+    document.getElementById("searchSection").classList.add("visible");
+    document.getElementById("statusText").textContent = "ONLINE";
+    estado.pantalla = "listo";
+
+    renderVacio();
+
+  }catch(err){
+    console.error(err);
+    cont.innerHTML = `<div class="error fade-in">
+      ⚠ No se pudieron cargar los datos desde Drive<br><br>
+      <small>${esc(err.message)}</small><br><br>
+      <small style="opacity:.7;font-size:10px;">Verifique que el Apps Script esté implementado con acceso "Cualquier usuario"</small>
+    </div>`;
+    document.getElementById("statusText").textContent = "ERROR";
+  }
+}
+
+function recargarArchivo(){
+  DATA.fijos = [];
+  DATA.fungibles = [];
+  DATA.internos = [];
+  DATA.prestados = [];
+  DATA.resp = [];
+  const input = document.getElementById("buscador");
+  if(input) input.value = "";
+  cargarDesdeNube();
+}
+
+/* ============================================================
+   CONTADORES
+   ============================================================ */
+function actualizarContadores(){
+  const conteos = {
+    fijos: DATA.fijos.length,
+    fungibles: DATA.fungibles.length,
+    internos: DATA.internos.length,
+    prestados: DATA.prestados.length
+  };
+  Object.keys(conteos).forEach(tipo => {
+    const el = document.getElementById(`count-${tipo}`);
+    if(el) el.textContent = conteos[tipo];
   });
 }
 
 /* ============================================================
-   CARGA
+   HELPERS RESPONSABLES
    ============================================================ */
-const DATA = { fijos: [], fungibles: [], sector: [] };
-
-async function cargarTodo(){
-  await Promise.all([
-    cargar("fijos", FUENTES.fijos),
-    cargar("fungibles", FUENTES.fungibles),
-    cargar("sector", FUENTES.sector)
-  ]);
+function getNombreCompletoResp(resp){
+  if(!resp) return "";
+  const grado = getVal(resp, "GRADO");
+  const nombres = getVal(resp, "NOMBRES");
+  const apPat = getVal(resp, "AP PAT");
+  const apMat = getVal(resp, "AP MAT");
+  return [grado, nombres, apPat, apMat].filter(Boolean).join(" ").replace(/\s+/g," ").trim();
+}
+function getCedulaResp(resp){ return getVal(resp, "CEDULA", "CÉDULA"); }
+function getResponsablePorId(id){
+  if(!id) return null;
+  return DATA.resp.find(x => getVal(x, "ID") === id.trim()) || null;
+}
+function getNombreResponsablePorId(id){
+  const r = getResponsablePorId(id);
+  return r ? getNombreCompletoResp(r) : "DESCONOCIDO";
+}
+function getOficinaResponsablePorId(id){
+  const r = getResponsablePorId(id);
+  return r ? getVal(r, "OFICINA") : "—";
 }
 
-async function cargar(key, fileId){
-  try{
-    const res = await fetch(`${API_URL}?fileId=${fileId}`, {
-      method: "GET", cache: "no-store", redirect: "follow"
-    });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-
-    let texto = await res.text();
-
-    if(texto.trim().startsWith("<")){
-      throw new Error("El servidor devolvió HTML (revisar permisos de Apps Script)");
-    }
-    if(texto.trim().startsWith("{")){
-      try{
-        const j = JSON.parse(texto);
-        if(j.error) throw new Error(j.error);
-      }catch(_){ /* no es JSON válido, seguir */ }
-    }
-
-    const rows = parseCSV(texto);
-    DATA[key] = toObjects(rows);
-    console.log(`✔ ${key}: ${DATA[key].length} registros`);
-    if(DATA[key][0]) console.log(`   Columnas ${key}:`, Object.keys(DATA[key][0]));
-  }catch(e){
-    console.warn(`✖ Error cargando ${key}:`, e.message);
-    DATA[key] = [];
-  }
+function ordenarIdAsignacion(a, b){
+  const parse = (id) => {
+    const m = (id || "").match(/^(\d+)([A-Z]*)$/i);
+    if(!m) return [99999, ""];
+    return [parseInt(m[1], 10), (m[2] || "").toUpperCase()];
+  };
+  const [numA, letA] = parse(a);
+  const [numB, letB] = parse(b);
+  if(numA !== numB) return numA - numB;
+  return letA.localeCompare(letB);
 }
 
 /* ============================================================
-   UTILIDADES
+   BÚSQUEDA
    ============================================================ */
-function norm(s){
-  return (s || "").toString().toUpperCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-    .replace(/\s+/g," ").trim();
-}
-function esc(s){
-  return (s || "").toString()
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
-function renderValor(val){
-  const v = (val || "").toString().trim();
-  if(!v) return "—";
-  if(v.toUpperCase().includes("PENDIENTE")){
-    return `<span class="pendiente">${esc(v)}</span>`;
-  }
-  return esc(v);
-}
-function renderEstado(val){
-  const v = (val || "").toString().trim();
-  if(!v) return "—";
-  if(v.toUpperCase().includes("PENDIENTE")){
-    return `<span class="estado-badge estado-pendiente">${esc(v)}</span>`;
-  }
-  const up = v.toUpperCase();
-  let cls = "estado-regular";
-  if(up.includes("MALO")) cls = "estado-malo";
-  else if(up.includes("BUENO") || up.includes("ÓPTIMO") || up.includes("OPTIMO")) cls = "estado-bueno";
-  return `<span class="estado-badge ${cls}">${esc(v)}</span>`;
-}
-
-/* ============================================================
-   BÚSQUEDA — busca en cualquier campo del registro
-   ============================================================ */
-function buscar(termino){
+function buscarResponsables(termino){
   const t = norm(termino);
-  if(t.length < 2){
-    return { fijos:[], fungibles:[], sector:[], responsable:null, cargo:null };
-  }
+  if(t.length < 1) return [];
+  const coincidencias = DATA.resp.filter(r => norm(getNombreCompletoResp(r)).includes(t));
+  const mapa = new Map();
+  coincidencias.forEach(r => {
+    const ced = getCedulaResp(r) || norm(getNombreCompletoResp(r));
+    if(!mapa.has(ced)){
+      mapa.set(ced, { cedula: ced, nombre: getNombreCompletoResp(r), cargo: getVal(r, "CARGO"), asignaciones: [] });
+    }
+    mapa.get(ced).asignaciones.push({ id: getVal(r, "ID"), oficina: getVal(r, "OFICINA"), cargo: getVal(r, "CARGO") });
+  });
+  const lista = Array.from(mapa.values());
+  lista.forEach(per => per.asignaciones.sort((a,b) => ordenarIdAsignacion(a.id, b.id)));
+  lista.sort((a,b) => a.nombre.localeCompare(b.nombre));
+  return lista;
+}
 
-  const coincide = (obj) =>
-    Object.values(obj).some(v => norm(v).includes(t));
+function buscarBienesPorCodigo(termino){
+  const t = norm(termino);
+  const todos = [
+    ...DATA.fijos.map(b => ({...b, __tipo: "FIJOS"})),
+    ...DATA.fungibles.map(b => ({...b, __tipo: "FUNGIBLES"})),
+    ...DATA.internos.map(b => ({...b, __tipo: "INTERNOS"})),
+    ...DATA.prestados.map(b => ({...b, __tipo: "PRESTADOS"}))
+  ];
+  return todos.filter(b => norm(getVal(b, "CODIGO")).includes(t));
+}
 
-  const fijos = DATA.fijos.filter(coincide);
-  const fungibles = DATA.fungibles.filter(coincide);
-  const sector = DATA.sector.filter(coincide);
+function buscarBienesPorIdAsig(idAsig){
+  const t = norm(idAsig);
+  const todos = [
+    ...DATA.fijos.map(b => ({...b, __tipo: "FIJOS"})),
+    ...DATA.fungibles.map(b => ({...b, __tipo: "FUNGIBLES"})),
+    ...DATA.internos.map(b => ({...b, __tipo: "INTERNOS"})),
+    ...DATA.prestados.map(b => ({...b, __tipo: "PRESTADOS"}))
+  ];
+  return todos.filter(b => norm(obtenerIdAsig(b)) === t);
+}
 
-  const primero = fijos[0] || fungibles[0] || sector[0];
-  let responsable = null, cargo = null;
-  if(primero){
-    responsable = primero["GRADO NOMBRES"]
-      || primero["RESPONSABLE"]
-      || primero["NOMBRES"]
-      || null;
-    cargo = primero["CARGO"] || null;
-  }
-  return { fijos, fungibles, sector, responsable, cargo };
+function contarBienesPorAsignacion(id){
+  const idLimpio = (id || "").trim();
+  let total = 0;
+  total += DATA.fijos.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  total += DATA.fungibles.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  total += DATA.internos.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  total += DATA.prestados.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  return total;
 }
 
 /* ============================================================
    RENDER
    ============================================================ */
-function agruparPorOficina(lista){
-  const mapa = new Map();
-  lista.forEach(o => {
-    const ofi = (o["OFICINA/SECTOR"] || o["OFICINA / SECTOR"] || o["OFICINA"] || "SIN OFICINA").trim();
-    if(!mapa.has(ofi)) mapa.set(ofi, []);
-    mapa.get(ofi).push(o);
-  });
-  return mapa;
+function renderVacio(){
+  document.getElementById("contenido").innerHTML = `
+    <div class="empty-state">
+      <div class="empty-state-icon">◈</div>
+      <div class="empty-state-title">Sistema listo</div>
+      <div class="empty-state-sub">Escriba un nombre, código o ID de asignación</div>
+    </div>`;
 }
 
-function tablaHTML(titulo, lista, columnas){
-  let html = `<div class="tabla-seccion">
-    <div class="tabla-titulo">
-      <span>${titulo}</span>
-      <span class="count">${lista.length}</span>
-    </div>`;
-
+function renderListaResponsables(filtro){
+  const lista = buscarResponsables(filtro);
   if(!lista.length){
-    html += `<div class="no-data">NO CUENTA ${titulo}</div></div>`;
-    return html;
+    document.getElementById("contenido").innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">◌</div>
+        <div class="empty-state-title">Sin resultados</div>
+        <div class="empty-state-sub">No hay responsables con "${esc(filtro)}"</div>
+      </div>`;
+    return;
   }
-
-  const grupos = agruparPorOficina(lista);
-  for(const [oficina, items] of grupos){
-    html += `<div class="oficina-tag">📍 ${esc(oficina)}</div>`;
-    html += `<div class="tabla-scroll"><table><thead><tr>`;
-    columnas.forEach(c => html += `<th>${c.label}</th>`);
-    html += `</tr></thead><tbody>`;
-    items.forEach(item => {
-      html += "<tr>";
-      columnas.forEach(c => {
-        const val = (c.render === "estado")
-          ? renderEstado(item[c.key])
-          : renderValor(item[c.key]);
-        html += `<td>${val}</td>`;
-      });
-      html += "</tr>";
-    });
-    html += `</tbody></table></div>`;
-  }
-  html += `</div>`;
-  return html;
+  let html = `<div class="list-title">
+    <span>◈ Responsables encontrados</span>
+    <span class="list-count">${lista.length}</span>
+  </div>`;
+  lista.forEach((r, i) => {
+    const totalBienes = r.asignaciones.reduce((a, o) => a + contarBienesPorAsignacion(o.id), 0);
+    html += `
+      <div class="resp-card" style="animation-delay:${i * 50}ms" onclick="abrirModalResponsable(${i})">
+        <div class="resp-card-info">
+          <div class="resp-card-name">${esc(r.nombre)}</div>
+          <div class="resp-card-meta">
+            <span>◈ C.I. ${esc(r.cedula)}</span>
+            <span>▪ ${r.asignaciones.length} oficina(s)</span>
+            <span>▪ ${totalBienes} bienes</span>
+          </div>
+        </div>
+        <div class="resp-card-arrow">›</div>
+      </div>`;
+  });
+  document.getElementById("contenido").innerHTML = html;
+  window.__listaResponsablesActual = lista;
 }
 
-function renderResultado(termino){
-  const cont = document.getElementById("resultado");
-  const res = buscar(termino);
-
-  if(norm(termino).length < 2){
-    cont.innerHTML = `<div class="info-inicial">
-      <div class="icon">🎖️</div>
-      INGRESE UN NOMBRE PARA CONSULTAR LOS ACTIVOS A CARGO
-    </div>`;
+function renderListaBienes(filtro, tipoBusqueda){
+  const bienes = tipoBusqueda === "id" ? buscarBienesPorIdAsig(filtro) : buscarBienesPorCodigo(filtro);
+  if(!bienes.length){
+    document.getElementById("contenido").innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">◌</div>
+        <div class="empty-state-title">Sin resultados</div>
+        <div class="empty-state-sub">No hay bienes con "${esc(filtro)}"</div>
+      </div>`;
     return;
   }
-
-  const totalReg = res.fijos.length + res.fungibles.length + res.sector.length;
-
-  if(totalReg === 0){
-    cont.innerHTML = `<div class="info-inicial">
-      <div class="icon">🔎</div>
-      NO SE ENCONTRARON REGISTROS PARA "<b>${esc(termino)}</b>"
-    </div>`;
-    return;
-  }
-
-  let html = "";
-
-  if(res.responsable){
-    html += `<div class="resp-card">
-      <div class="nombre">🎖️ ${esc(res.responsable)}</div>
-      ${res.cargo ? `<div class="cargo">${esc(res.cargo)}</div>` : ``}
-    </div>`;
-  }
-
-  /* FIJOS: CODIGOVSIAF, DESCRIPCION, COSTO, ESTADO */
-  html += tablaHTML("FIJOS", res.fijos, [
-    {label:"CODIGOVSIAF", key:"CODIGOVSIAF"},
-    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO"},
-    {label:"COSTO", key:"COSTO"},
-    {label:"ESTADO", key:"ESTADO", render:"estado"}
-  ]);
-
-  /* FUNGIBLES: CODIGO, DESCRIPCION, VALOR TOTAL, CANTIDAD, ESTADO */
-  html += tablaHTML("FUNGIBLES", res.fungibles, [
-    {label:"CÓDIGO", key:"CODIGO"},
-    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO"},
-    {label:"VALOR TOTAL", key:"VALOR TOTAL"},
-    {label:"CANTIDAD", key:"CANTIDAD"},
-    {label:"ESTADO", key:"ESTADO", render:"estado"}
-  ]);
-
-  /* SECTOR: DESCRIPCION, CANTIDAD, ESTADO, OBS */
-  html += tablaHTML("SECTOR", res.sector, [
-    {label:"DESCRIPCIÓN DEL ACTIVO", key:"DESCRIPCION DEL ACTIVO"},
-    {label:"CANTIDAD", key:"CANTIDAD"},
-    {label:"ESTADO", key:"ESTADO", render:"estado"},
-    {label:"OBS", key:"OBS"}
-  ]);
-
-  cont.innerHTML = html;
+  if(bienes.length === 1){ abrirDetalleBienDirecto(bienes[0]); return; }
+  let html = `<div class="list-title">
+    <span>◈ Bienes encontrados</span>
+    <span class="list-count">${bienes.length}</span>
+  </div>`;
+  bienes.forEach((b, i) => {
+    const idAsig = obtenerIdAsig(b);
+    const oficina = getOficinaResponsablePorId(idAsig);
+    const tipoClase = b.__tipo.toLowerCase();
+    const foto = obtenerFoto(b);
+    html += `
+      <div class="bien-card" style="animation-delay:${i * 40}ms" onclick="abrirDetalleBienDirectoPorCodigo('${escAttr(getVal(b, 'CODIGO'))}', '${escAttr(b.__tipo)}')">
+        <div class="bien-card-thumb">${renderFotoMiniatura(foto)}</div>
+        <div class="bien-card-info">
+          <div class="bien-card-code">${esc(getVal(b, "CODIGO"))}</div>
+          <div class="bien-card-desc">${esc(getVal(b, "DESCRIPCION DEL ACTIVO"))}</div>
+          <div class="bien-card-meta">
+            <span class="bien-card-tipo ${tipoClase}">${esc(b.__tipo)}</span>
+            <span>▪ ID ${esc(idAsig)}</span>
+            <span>▪ ${esc(oficina)}</span>
+          </div>
+        </div>
+        <div class="resp-card-arrow">›</div>
+      </div>`;
+  });
+  document.getElementById("contenido").innerHTML = html;
 }
 
 /* ============================================================
-   INICIALIZACIÓN
+   MODAL
    ============================================================ */
-document.addEventListener("DOMContentLoaded", async () => {
-  const cont = document.getElementById("resultado");
-  cont.innerHTML = `<div class="loading">⏳ CARGANDO BASE DE DATOS...</div>`;
-
-  await cargarTodo();
-
-  const errores = [];
-  if(!DATA.fijos.length) errores.push("FIJOS");
-  if(!DATA.fungibles.length) errores.push("FUNGIBLES");
-  if(!DATA.sector.length) errores.push("SECTOR");
-
-  if(errores.length === 3){
-    cont.innerHTML = `<div class="error">
-      ⚠️ NO SE PUDO CARGAR NINGÚN ARCHIVO<br><br>
-      Revise la consola (F12) para ver detalles.
-    </div>`;
+function abrirModalResponsable(idx){
+  const lista = window.__listaResponsablesActual || [];
+  const r = lista[idx];
+  if(!r) return;
+  estado.responsableActual = r;
+  if(r.asignaciones.length === 1){
+    estado.modalVista = "tablas";
+    estado.oficinaActual = r.asignaciones[0];
   } else {
-    cont.innerHTML = `<div class="info-inicial">
-      <div class="icon">🎖️</div>
-      INGRESE UN NOMBRE PARA CONSULTAR LOS ACTIVOS A CARGO
-      ${errores.length ? `<br><br><small style="color:#c0392b">⚠️ Sin datos: ${errores.join(", ")}</small>` : ""}
+    estado.modalVista = "oficinas";
+    estado.oficinaActual = null;
+  }
+  document.getElementById("modal-titulo").textContent = r.nombre;
+  document.getElementById("modal-body").innerHTML = renderModalBody();
+  document.getElementById("modal").classList.add("visible");
+}
+function abrirOficinaModal(idAsig){
+  const r = estado.responsableActual;
+  if(!r) return;
+  const oficina = r.asignaciones.find(o => o.id === idAsig);
+  if(!oficina) return;
+  estado.modalVista = "tablas";
+  estado.oficinaActual = oficina;
+  document.getElementById("modal-body").innerHTML = renderModalBody();
+}
+function volverAOficinasModal(){
+  estado.modalVista = "oficinas";
+  estado.oficinaActual = null;
+  document.getElementById("modal-body").innerHTML = renderModalBody();
+}
+function abrirDetalleBienDirecto(bien){
+  estado.modalVista = "detalleBien";
+  estado.bienActual = bien;
+  document.getElementById("modal-titulo").textContent = "Detalle del Bien";
+  document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
+  document.getElementById("modal").classList.add("visible");
+}
+function abrirDetalleBienDirectoPorCodigo(codigo, tipo){
+  let bien = null;
+  if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
+  else if(tipo === "FUNGIBLES") bien = DATA.fungibles.find(b => getVal(b, "CODIGO") === codigo);
+  else if(tipo === "INTERNOS") bien = DATA.internos.find(b => getVal(b, "CODIGO") === codigo);
+  else if(tipo === "PRESTADOS") bien = DATA.prestados.find(b => getVal(b, "CODIGO") === codigo);
+  if(!bien) return;
+  bien.__tipo = tipo;
+  abrirDetalleBienDirecto(bien);
+}
+function abrirDetalleBienDesdeModal(codigo, tipo){
+  let bien = null;
+  if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
+  else if(tipo === "FUNGIBLES") bien = DATA.fungibles.find(b => getVal(b, "CODIGO") === codigo);
+  else if(tipo === "INTERNOS") bien = DATA.internos.find(b => getVal(b, "CODIGO") === codigo);
+  else if(tipo === "PRESTADOS") bien = DATA.prestados.find(b => getVal(b, "CODIGO") === codigo);
+  if(!bien) return;
+  bien.__tipo = tipo;
+  estado.bienActual = bien;
+  estado.modalVista = "detalleBien";
+  document.getElementById("modal-titulo").textContent = "Detalle del Bien";
+  document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
+}
+function volverATablasDesdeDetalleBien(){
+  estado.modalVista = "tablas";
+  estado.bienActual = null;
+  document.getElementById("modal-titulo").textContent = estado.responsableActual ? estado.responsableActual.nombre : "Bienes";
+  document.getElementById("modal-body").innerHTML = renderModalBody();
+}
+function cerrarModal(){
+  document.getElementById("modal").classList.remove("visible");
+  estado.modalVista = "oficinas";
+  estado.responsableActual = null;
+  estado.oficinaActual = null;
+  estado.bienActual = null;
+}
+function renderModalBody(){
+  if(estado.modalVista === "oficinas") return renderModalOficinas();
+  if(estado.modalVista === "tablas") return renderModalTablas();
+  if(estado.modalVista === "detalleBien") return renderDetalleBien(estado.bienActual);
+  return "";
+}
+function renderModalOficinas(){
+  const r = estado.responsableActual;
+  if(!r) return "";
+  let html = `<div class="modal-titulo-seccion">◈ Seleccione una oficina (${r.asignaciones.length})</div>`;
+  r.asignaciones.forEach((of, i) => {
+    const cant = contarBienesPorAsignacion(of.id);
+    html += `
+      <div class="oficina-card" style="animation-delay:${i * 50}ms" onclick="abrirOficinaModal('${escAttr(of.id)}')">
+        <div class="oficina-card-info">
+          <div class="oficina-card-nombre">${esc(of.oficina)}</div>
+          <div class="oficina-card-id">ID ASIGNACIÓN: ${esc(of.id)}</div>
+        </div>
+        <div class="oficina-card-count">${cant}</div>
+      </div>`;
+  });
+  return html;
+}
+function renderModalTablas(){
+  const of = estado.oficinaActual;
+  const r = estado.responsableActual;
+  if(!of || !r) return "";
+  const fijos = DATA.fijos.filter(b => obtenerIdAsig(b) === of.id);
+  const fungibles = DATA.fungibles.filter(b => obtenerIdAsig(b) === of.id);
+  const internos = DATA.internos.filter(b => obtenerIdAsig(b) === of.id);
+  const prestados = DATA.prestados.filter(b => obtenerIdAsig(b) === of.id);
+  const total = fijos.length + fungibles.length + internos.length + prestados.length;
+  const btnVolver = r.asignaciones.length > 1 ? `<button class="btn-nav" onclick="volverAOficinasModal()">← Oficinas</button>` : "";
+  let html = `${btnVolver}
+    <div class="oficina-encabezado">
+      <div class="oficina-encabezado-info">
+        <div class="oficina-encabezado-nombre">${esc(of.oficina)}</div>
+        <div class="oficina-encabezado-sub">◈ ID ${esc(of.id)} · ${total} bien(es)</div>
+      </div>
+      <div class="oficina-encabezado-count">${total}</div>
+    </div>`;
+  html += tablaModal("FIJOS", fijos, "verde");
+  html += tablaModal("FUNGIBLES", fungibles, "azul");
+  html += tablaModal("INTERNOS", internos, "marron");
+  if(prestados.length) html += tablaModal("PRESTADOS", prestados, "vino");
+  return html;
+}
+function tablaModal(titulo, lista, color){
+  if(!lista.length){
+    return `<div class="tabla-section">
+      <div class="tabla-header" data-color="${color}">
+        <div class="tabla-header-titulo"><span class="dot"></span>${titulo}</div>
+        <div class="tabla-header-count">0</div>
+      </div>
+      <div class="empty-state" style="padding:30px 20px;">
+        <div class="empty-state-sub">NO CUENTA ${titulo}</div>
+      </div>
     </div>`;
   }
+  let columnas = [];
+  if(titulo === "FIJOS") columnas = ["CODIGO", "DESCRIPCION DEL ACTIVO", "ESTADO"];
+  else if(titulo === "FUNGIBLES") columnas = ["CODIGO", "DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO"];
+  else columnas = ["DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO", "OBS"];
+  let html = `<div class="tabla-section">
+    <div class="tabla-header" data-color="${color}">
+      <div class="tabla-header-titulo"><span class="dot"></span>${titulo}</div>
+      <div class="tabla-header-count">${lista.length}</div>
+    </div>
+    <div class="tabla-scroll"><table><thead><tr>`;
+  columnas.forEach(c => html += `<th>${c}</th>`);
+  html += `</tr></thead><tbody>`;
+  lista.forEach((item, i) => {
+    const cod = getVal(item, "CODIGO");
+    html += `<tr style="animation-delay:${i * 15}ms" onclick="abrirDetalleBienDesdeModal('${escAttr(cod)}', '${titulo}')">`;
+    columnas.forEach(col => {
+      let val = "";
+      if(col === "CODIGO") val = getVal(item, "CODIGO") || "—";
+      else if(col === "DESCRIPCION DEL ACTIVO") val = getVal(item, "DESCRIPCION DEL ACTIVO");
+      else if(col === "CANTIDAD") val = getVal(item, "CANTIDAD") || "—";
+      else if(col === "ESTADO") val = renderEstado(getVal(item, "ESTADO"));
+      else if(col === "OBS") val = getVal(item, "OBS") || "—";
+      html += `<td>${val}</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table></div></div>`;
+  return html;
+}
 
+function renderDetalleBien(bien){
+  if(!bien) return "";
+  const tipo = bien.__tipo || "FIJOS";
+  const tipoClase = tipo.toLowerCase();
+  const idAsig = obtenerIdAsig(bien);
+  const r = getResponsablePorId(idAsig);
+  const oficina = r ? getVal(r, "OFICINA") : "—";
+  const responsable = r ? getNombreCompletoResp(r) : "—";
+  let campos = [];
+  if(tipo === "FIJOS"){
+    campos = [
+      ["ASIGNACIÓN ID", idAsig],["RESPONSABLE", responsable],["OFICINA", oficina],
+      ["CÓDIGO", getVal(bien, "CODIGO")],["AUXILIAR CONTABLE", getVal(bien, "AUXILIAR CONTABLE")],
+      ["DESCRIPCIÓN DEL ACTIVO", getVal(bien, "DESCRIPCION DEL ACTIVO")],
+      ["COSTO HISTÓRICO", getVal(bien, "COSTO HISTORICO")],
+      ["FECHA (DÍA/MES/AÑO)", [getVal(bien,"DIA"), getVal(bien,"MES"), getVal(bien,"AÑO")].filter(Boolean).join(" / ")],
+      ["VALOR NETO", getVal(bien, "VALOR NETO")],["ESTADO", getVal(bien, "ESTADO"), "estado"],
+      ["N°", getVal(bien, "N", "NRO")],["ORDEN DE OFICINAS", getVal(bien, "ORDEN DE OFICINAS")]
+    ];
+  } else if(tipo === "FUNGIBLES"){
+    campos = [
+      ["ASIGNACIÓN ID", idAsig],["RESPONSABLE", responsable],["OFICINA", oficina],
+      ["CÓDIGO", getVal(bien, "CODIGO")],["CANTIDAD", getVal(bien, "CANTIDAD")],
+      ["DESCRIPCIÓN DEL ACTIVO", getVal(bien, "DESCRIPCION DEL ACTIVO")],
+      ["VALOR UNITARIO", getVal(bien, "VALOR UNITARIO")],
+      ["FECHA (DÍA/MES/AÑO)", [getVal(bien,"DIA"), getVal(bien,"MES"), getVal(bien,"AÑO")].filter(Boolean).join(" / ")],
+      ["VALOR TOTAL", getVal(bien, "VALOR TOTAL")],["ESTADO", getVal(bien, "ESTADO"), "estado"],
+      ["NRO.", getVal(bien, "NRO")]
+    ];
+  } else {
+    campos = [
+      ["ASIGNACIÓN ID", idAsig],["RESPONSABLE", responsable],["OFICINA", oficina],
+      ["DESCRIPCIÓN DEL ACTIVO", getVal(bien, "DESCRIPCION DEL ACTIVO")],
+      ["CANTIDAD", getVal(bien, "CANTIDAD")],["ESTADO", getVal(bien, "ESTADO"), "estado"],
+      ["OBSERVACIONES", getVal(bien, "OBS")]
+    ];
+  }
+  const fotoRaw = obtenerFoto(bien);
+  const fotoUrl = normalizarUrlFoto(fotoRaw);
+  const tieneFoto = !!fotoUrl;
+  const fotoHTML = tieneFoto
+    ? `<img src="${escAttr(fotoUrl)}" alt="Foto" onclick="event.stopPropagation();abrirLightbox('${escAttr(fotoUrl)}')">`
+    : `<span style="font-size:28px;opacity:.5;">◈</span>`;
+  let btnVolver = estado.responsableActual
+    ? `<button class="btn-nav" onclick="volverATablasDesdeDetalleBien()">← Volver a tablas</button>`
+    : `<button class="btn-nav" onclick="cerrarModal()">← Cerrar</button>`;
+  let html = `${btnVolver}
+    <div class="bien-detalle">
+      <div class="bien-detalle-header">
+        <div class="bien-detalle-foto" title="${tieneFoto ? 'Clic para ampliar' : 'Sin foto disponible'}">${fotoHTML}</div>
+        <div class="bien-detalle-header-info">
+          <div class="bien-detalle-codigo">${esc(getVal(bien, "CODIGO") || "SIN CÓDIGO")}</div>
+          <div class="bien-detalle-nombre">${esc(getVal(bien, "DESCRIPCION DEL ACTIVO") || "Sin descripción")}</div>
+          <span class="bien-detalle-tipo-badge ${tipoClase}">${esc(tipo)}</span>
+        </div>
+      </div>
+      <div class="bien-detalle-campos">`;
+  campos.forEach(([label, valor, tipoRender]) => {
+    const v = (valor === null || valor === undefined) ? "" : valor.toString().trim();
+    let contenido;
+    if(tipoRender === "estado") contenido = v ? renderEstado(v) : `<span class="bien-detalle-valor vacio">—</span>`;
+    else if(!v) contenido = `<span class="bien-detalle-valor vacio">—</span>`;
+    else if(v.toUpperCase().includes("PENDIENTE")) contenido = `<span class="bien-detalle-valor pendiente">${esc(v)}</span>`;
+    else contenido = `<span class="bien-detalle-valor">${esc(v)}</span>`;
+    html += `<div class="bien-detalle-campo">
+      <div class="bien-detalle-label">${esc(label)}</div>
+      <div style="flex:1;">${contenido}</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  return html;
+}
+
+/* ============================================================
+   VISTAS GENERALES
+   ============================================================ */
+let vistaGeneralActual = null;
+function verGeneral(tipo, ev, btn){
+  if(ev && btn) ripple(ev, btn);
+  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+  if(btn) btn.classList.add("active");
+  vistaGeneralActual = tipo;
+  renderVistaGeneral(tipo);
+}
+function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
+  const cont = document.getElementById("contenido");
+  const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
+  const listaCompleta = DATA[tipo] || [];
+  const titulo = titulos[tipo] || tipo.toUpperCase();
+  if(!oficinaFiltro){
+    let html = `<div class="list-title">
+      <span>◈ ${titulo} — Total</span>
+      <span class="list-count">${listaCompleta.length}</span>
+    </div>`;
+    if(!listaCompleta.length){
+      html += `<div class="empty-state">
+        <div class="empty-state-icon">◌</div>
+        <div class="empty-state-title">Sin registros</div>
+        <div class="empty-state-sub">No hay bienes en esta categoría</div>
+      </div>`;
+      cont.innerHTML = html;
+      return;
+    }
+    const grupos = new Map();
+    listaCompleta.forEach(b => {
+      const idAsig = obtenerIdAsig(b);
+      const ofi = getOficinaResponsablePorId(idAsig) || "SIN OFICINA";
+      if(!grupos.has(ofi)) grupos.set(ofi, []);
+      grupos.get(ofi).push(b);
+    });
+    const arr = Array.from(grupos.entries()).sort((a,b) => b[1].length - a[1].length);
+    arr.forEach(([ofi, regs], i) => {
+      html += `
+        <div class="resp-card" style="animation-delay:${i * 30}ms" onclick="filtrarPorOficina('${escAttr(ofi)}')">
+          <div class="resp-card-info">
+            <div class="resp-card-name">${esc(ofi)}</div>
+            <div class="resp-card-meta"><span>◈ ${regs.length} registro(s)</span></div>
+          </div>
+          <div class="resp-card-arrow">›</div>
+        </div>`;
+    });
+    cont.innerHTML = html;
+    return;
+  }
+  const listaFiltrada = listaCompleta.filter(b => getOficinaResponsablePorId(obtenerIdAsig(b)) === oficinaFiltro);
+  let listaParaMostrar = listaFiltrada;
+  if(textoBusqueda && textoBusqueda.trim().length){
+    const t = norm(textoBusqueda);
+    listaParaMostrar = listaFiltrada.filter(o => Object.values(o).some(v => norm(v).includes(t)));
+  }
+  let html = `<button class="btn-nav" onclick="renderVistaGeneral('${tipo}')">← Volver a oficinas</button>
+    <div class="oficina-encabezado">
+      <div class="oficina-encabezado-info">
+        <div class="oficina-encabezado-nombre">${esc(oficinaFiltro)}</div>
+        <div class="oficina-encabezado-sub">◈ ${esc(titulo)} · ${listaFiltrada.length} bien(es)</div>
+      </div>
+      <div class="oficina-encabezado-count">${listaFiltrada.length}</div>
+    </div>
+    <div class="search-box" style="margin-bottom:16px;">
+      <span class="search-icon">⌕</span>
+      <input type="text" class="search-input" id="miniBuscador"
+             placeholder="Filtrar dentro de esta oficina..."
+             value="${escAttr(textoBusqueda || "")}"
+             oninput="filtrarDentroOficina('${escAttr(oficinaFiltro)}', this.value)"
+             style="font-size:13px;padding:10px 0;">
+    </div>`;
+  if(!listaParaMostrar.length){
+    html += `<div class="empty-state">
+      <div class="empty-state-icon">◌</div>
+      <div class="empty-state-title">Sin resultados</div>
+      <div class="empty-state-sub">No hay bienes que coincidan</div>
+    </div>`;
+    cont.innerHTML = html;
+    return;
+  }
+  html += tablaGeneral(tipo, listaParaMostrar);
+  cont.innerHTML = html;
+}
+function filtrarPorOficina(oficina){ renderVistaGeneral(vistaGeneralActual, oficina, ""); }
+function filtrarDentroOficina(oficina, texto){
+  renderVistaGeneral(vistaGeneralActual, oficina, texto);
+  setTimeout(() => {
+    const mb = document.getElementById("miniBuscador");
+    if(mb){ mb.focus(); mb.setSelectionRange(mb.value.length, mb.value.length); }
+  }, 10);
+}
+function tablaGeneral(tipo, lista){
+  const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
+  const colorMap = { fijos: "verde", fungibles: "azul", internos: "marron", prestados: "vino" };
+  const titulo = titulos[tipo] || tipo.toUpperCase();
+  const color = colorMap[tipo] || "verde";
+  let columnas = [];
+  if(tipo === "fijos") columnas = ["ASIGNACIÓN", "RESPONSABLE", "CODIGO", "DESCRIPCION DEL ACTIVO", "ESTADO"];
+  else if(tipo === "fungibles") columnas = ["ASIGNACIÓN", "RESPONSABLE", "CODIGO", "DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO"];
+  else columnas = ["ASIGNACIÓN", "RESPONSABLE", "DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO", "OBS"];
+  let html = `<div class="tabla-section">
+    <div class="tabla-header" data-color="${color}">
+      <div class="tabla-header-titulo"><span class="dot"></span>${titulo}</div>
+      <div class="tabla-header-count">${lista.length}</div>
+    </div>
+    <div class="tabla-scroll"><table><thead><tr>`;
+  columnas.forEach(c => html += `<th>${c}</th>`);
+  html += `</tr></thead><tbody>`;
+  const listaOrdenada = [...lista].sort((a, b) => ordenarIdAsignacion(obtenerIdAsig(a), obtenerIdAsig(b)));
+  const tipoUpper = tipo.toUpperCase();
+  listaOrdenada.forEach((item, i) => {
+    html += `<tr style="animation-delay:${i * 10}ms" onclick="abrirDetalleBienDesdeModal('${escAttr(getVal(item, 'CODIGO'))}', '${tipoUpper}')">`;
+    columnas.forEach(col => {
+      let val = "";
+      if(col === "ASIGNACIÓN") val = esc(obtenerIdAsig(item)) || "—";
+      else if(col === "RESPONSABLE") val = esc(getNombreResponsablePorId(obtenerIdAsig(item)));
+      else if(col === "CODIGO") val = getVal(item, "CODIGO") || "—";
+      else if(col === "DESCRIPCION DEL ACTIVO") val = getVal(item, "DESCRIPCION DEL ACTIVO");
+      else if(col === "CANTIDAD") val = getVal(item, "CANTIDAD") || "—";
+      else if(col === "ESTADO") val = renderEstado(getVal(item, "ESTADO"));
+      else if(col === "OBS") val = getVal(item, "OBS") || "—";
+      html += `<td>${val}</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table></div></div>`;
+  return html;
+}
+
+/* ============================================================
+   LIGHTBOX / RIPPLE
+   ============================================================ */
+function abrirLightbox(url){
+  document.getElementById("lightbox-img").src = url;
+  document.getElementById("lightbox").classList.add("visible");
+}
+function cerrarLightbox(){ document.getElementById("lightbox").classList.remove("visible"); }
+function ripple(e, btn){
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = e.clientX - rect.left - size / 2;
+  const y = e.clientY - rect.top - size / 2;
+  const span = document.createElement("span");
+  span.className = "ripple";
+  span.style.width = size + "px";
+  span.style.height = size + "px";
+  span.style.left = x + "px";
+  span.style.top = y + "px";
+  btn.appendChild(span);
+  setTimeout(() => span.remove(), 600);
+}
+
+/* ============================================================
+   BUSCADOR
+   ============================================================ */
+function initBuscador(){
   const input = document.getElementById("buscador");
   let timer;
   input.addEventListener("input", e => {
     clearTimeout(timer);
-    timer = setTimeout(() => renderResultado(e.target.value), 200);
+    const val = e.target.value.trim();
+    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+    if(val.length < 1){ renderVacio(); return; }
+    timer = setTimeout(() => {
+      const tipoBusqueda = detectarTipoBusqueda(val);
+      if(tipoBusqueda === "nombre") renderListaResponsables(val);
+      else renderListaBienes(val, tipoBusqueda);
+    }, 150);
   });
+}
+
+/* ============================================================
+   ATAJOS
+   ============================================================ */
+document.addEventListener("keydown", e => {
+  if((e.ctrlKey || e.metaKey) && e.key === "k"){
+    e.preventDefault();
+    const input = document.getElementById("buscador");
+    if(input) input.focus();
+  }
+  if((e.ctrlKey || e.metaKey) && e.key === "t"){ e.preventDefault(); toggleTheme(); }
+  if(e.key === "Escape"){
+    if(document.getElementById("lightbox").classList.contains("visible")) cerrarLightbox();
+    else if(document.getElementById("modal").classList.contains("visible")) cerrarModal();
+  }
+});
+
+/* ============================================================
+   INICIALIZACIÓN
+   ============================================================ */
+document.addEventListener("DOMContentLoaded", () => {
+  initBuscador();
+  cargarDesdeNube();
 });
 </script>
 </body>
 </html>
+Migración a Google Drive - Modo Nube
