@@ -3,36 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V3.1</title>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<title>Sistema de Control DIV-10 V3.2</title>
 <style>
   :root{
-    --bg:#0a0e12;
-    --bg-panel:#141a20;
-    --bg-elevado:#1e252d;
-    --bg-hover:#252d36;
-    --bg-input:#0f1419;
-    --texto:#e8ecf0;
-    --texto-suave:#8b96a3;
-    --texto-muy-suave:#5a6472;
-    --borde:rgba(212,176,96,.2);
-    --borde-fuerte:rgba(212,176,96,.5);
-    --sombra-panel:0 8px 30px rgba(0,0,0,.5);
-    --sombra-modal:0 30px 80px rgba(0,0,0,.7);
-    --grid-color:rgba(212,176,96,.03);
-    --scanline-opacity:.3;
-    --dorado:#d4b060;
-    --dorado-brillante:#f0d088;
-    --dorado-glow:rgba(212,176,96,.4);
-    --cian:#26c6da;
-    --cian-brillante:#5ee0f0;
-    --cian-glow:rgba(38,198,218,.35);
-    --verde:#4ade80;
-    --verde-glow:rgba(74,222,128,.3);
-    --rojo:#ef4444;
-    --rojo-glow:rgba(239,68,68,.3);
-    --amarillo:#fbbf24;
-    --vino:#e05878;
+    --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;--bg-input:#0f1419;
+    --texto:#e8ecf0;--texto-suave:#8b96a3;--texto-muy-suave:#5a6472;
+    --borde:rgba(212,176,96,.2);--borde-fuerte:rgba(212,176,96,.5);
+    --sombra-panel:0 8px 30px rgba(0,0,0,.5);--sombra-modal:0 30px 80px rgba(0,0,0,.7);
+    --grid-color:rgba(212,176,96,.03);--scanline-opacity:.3;
+    --dorado:#d4b060;--dorado-brillante:#f0d088;--dorado-glow:rgba(212,176,96,.4);
+    --cian:#26c6da;--cian-brillante:#5ee0f0;--cian-glow:rgba(38,198,218,.35);
+    --verde:#4ade80;--verde-glow:rgba(74,222,128,.3);
+    --rojo:#ef4444;--rojo-glow:rgba(239,68,68,.3);
+    --amarillo:#fbbf24;--vino:#e05878;
     --mono:"JetBrains Mono","Consolas","Monaco",monospace;
     --sans:"Inter","Segoe UI",Roboto,sans-serif;
   }
@@ -40,43 +23,34 @@
     --bg:#f4f2eb;--bg-panel:#ffffff;--bg-elevado:#f8f7f3;--bg-hover:#f0edd9;--bg-input:#ffffff;
     --texto:#1e252d;--texto-suave:#5a6472;--texto-muy-suave:#8b96a3;
     --borde:rgba(30,51,37,.15);--borde-fuerte:rgba(30,51,37,.4);
-    --sombra-panel:0 4px 16px rgba(0,0,0,.08);
-    --sombra-modal:0 20px 60px rgba(0,0,0,.25);
+    --sombra-panel:0 4px 16px rgba(0,0,0,.08);--sombra-modal:0 20px 60px rgba(0,0,0,.25);
     --grid-color:rgba(30,51,37,.04);--scanline-opacity:.15;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
-  body{
-    font-family:var(--sans);background:var(--bg);color:var(--texto);font-size:14px;
-    min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
-    position:relative;transition:background .4s ease, color .4s ease;
-  }
+  body{font-family:var(--sans);background:var(--bg);color:var(--texto);font-size:14px;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative;transition:background .4s ease,color .4s ease;}
   ::-webkit-scrollbar{width:10px;height:10px;}
   ::-webkit-scrollbar-track{background:var(--bg-elevado);}
   ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--dorado),#9e7d35);border-radius:5px;border:2px solid var(--bg-elevado);}
   ::-webkit-scrollbar-thumb:hover{background:var(--dorado-brillante);}
   .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-  .bg-layer::before{
-    content:"";position:absolute;inset:0;
-    background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);
-    background-size:50px 50px;animation:gridMove 20s linear infinite;
-  }
+  .bg-layer::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:50px 50px;animation:gridMove 20s linear infinite;}
   @keyframes gridMove{from{transform:translate(0,0);}to{transform:translate(50px,50px);}}
-  .bg-layer::after{
-    content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
-    background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.08) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.06) 0%,transparent 40%);
-    animation:pulseBg 8s ease-in-out infinite;
-  }
+  .bg-layer::after{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.08) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.06) 0%,transparent 40%);animation:pulseBg 8s ease-in-out infinite;}
   body.light .bg-layer::after{background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.05) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.04) 0%,transparent 40%);}
   @keyframes pulseBg{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
   .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cian),transparent);opacity:var(--scanline-opacity);z-index:1;pointer-events:none;animation:scanline 8s linear infinite;}
   @keyframes scanline{from{top:0;}to{top:100vh;}}
+
+  /* LAYOUT */
   .app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
-  .header{
-    position:sticky;top:0;z-index:50;background:var(--bg-panel);backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--borde);padding:16px 20px;overflow:hidden;
-    animation:slideDown .5s cubic-bezier(.4,0,.2,1);transition:background .4s ease, border-color .4s ease;
-  }
+  .app.focus-mode .header,
+  .app.focus-mode .footer,
+  .app.focus-mode .view-buttons{display:none !important;}
+  .app.focus-mode .search-section{padding-top:14px;}
+
+  /* HEADER */
+  .header{position:sticky;top:0;z-index:50;background:var(--bg-panel);backdrop-filter:blur(12px);border-bottom:1px solid var(--borde);padding:16px 20px;overflow:hidden;animation:slideDown .5s cubic-bezier(.4,0,.2,1);transition:background .4s ease,border-color .4s ease;}
   body:not(.light) .header{background:linear-gradient(180deg,rgba(20,26,32,.95),rgba(10,14,18,.9));}
   body.light .header{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,247,243,.95));}
   @keyframes slideDown{from{transform:translateY(-100%);opacity:0;}to{transform:translateY(0);opacity:1;}}
@@ -88,15 +62,19 @@
   @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 var(--dorado-glow);}50%{box-shadow:0 0 20px 4px var(--dorado-glow);}}
   .header-text h1{font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,var(--texto),var(--dorado-brillante));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
   body.light .header-text h1{background:linear-gradient(90deg,#1e252d,var(--dorado));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  .header-text small{display:block;font-size:9px;color:var(--dorado);letter-spacing:3px;margin-top:3px;text-transform:uppercase;font-weight:600;font-family:var(--mono);}
   .header-actions{display:flex;align-items:center;gap:10px;}
-  .btn-theme{width:40px;height:40px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;color:var(--dorado);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
-  .btn-theme:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:rotate(180deg) scale(1.05);box-shadow:0 0 20px var(--dorado-glow);}
-  .btn-reload{width:40px;height:40px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;color:var(--cian);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
-  .btn-reload:hover{background:var(--cian);color:var(--bg);border-color:var(--cian-brillante);box-shadow:0 0 20px var(--cian-glow);transform:scale(1.05);}
+  .btn-header{width:40px;height:40px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;color:var(--cian);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;position:relative;}
+  .btn-header:hover{background:var(--cian);color:var(--bg);border-color:var(--cian-brillante);box-shadow:0 0 20px var(--cian-glow);transform:scale(1.05);}
+  .btn-header.theme{color:var(--dorado);}
+  .btn-header.theme:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);box-shadow:0 0 20px var(--dorado-glow);transform:rotate(180deg) scale(1.05);}
+  .btn-header.search-btn.active{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);}
   .header-status{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(38,198,218,.08);border:1px solid rgba(38,198,218,.3);border-radius:20px;font-size:10px;font-family:var(--mono);color:var(--cian-brillante);letter-spacing:1px;}
   .status-dot{width:8px;height:8px;background:var(--verde);border-radius:50%;box-shadow:0 0 8px var(--verde);animation:blink 2s ease-in-out infinite;}
+  .status-dot.loading{background:var(--amarillo);box-shadow:0 0 8px var(--amarillo);}
+  .status-dot.error{background:var(--rojo);box-shadow:0 0 8px var(--rojo);}
   @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+  /* BUSCADOR */
   .search-section{padding:20px;max-width:1200px;margin:0 auto;width:100%;animation:slideDown .6s cubic-bezier(.4,0,.2,1) .1s both;display:none;}
   .search-section.visible{display:block;}
   .search-box{position:relative;display:flex;align-items:center;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:4px 16px;transition:all .3s cubic-bezier(.4,0,.2,1);}
@@ -105,8 +83,11 @@
   .search-box:focus-within .search-icon{transform:scale(1.1);filter:drop-shadow(0 0 8px var(--dorado));}
   .search-input{flex:1;background:transparent;border:none;outline:none;padding:14px 0;font-size:15px;color:var(--texto);font-family:var(--sans);font-weight:500;letter-spacing:.5px;}
   .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
-  .search-hint{display:flex;gap:6px;align-items:center;font-size:10px;color:var(--texto-muy-suave);font-family:var(--mono);flex-shrink:0;}
-  .search-hint .hint-chip{background:var(--bg-elevado);border:1px solid var(--borde);padding:2px 6px;border-radius:4px;letter-spacing:.5px;}
+  .search-clear{background:transparent;border:none;color:var(--texto-muy-suave);font-size:18px;cursor:pointer;padding:0 6px;transition:all .2s;display:none;}
+  .search-clear.visible{display:block;}
+  .search-clear:hover{color:var(--rojo);transform:scale(1.1);}
+
+  /* BOTONES VISTA */
   .view-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;}
   .view-btn{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:10px;padding:14px 12px;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);overflow:hidden;text-align:center;animation:slideUp .5s cubic-bezier(.4,0,.2,1) both;display:flex;flex-direction:column;align-items:center;gap:6px;}
   .view-btn:nth-child(1){animation-delay:.15s;}
@@ -125,6 +106,8 @@
   .view-btn:hover .view-btn-count{transform:scale(1.1);text-shadow:0 0 25px color-mix(in srgb,var(--color,var(--dorado)) 70%,transparent);}
   .view-btn .ripple{position:absolute;border-radius:50%;background:var(--color,var(--dorado));transform:scale(0);animation:ripple .6s ease-out;opacity:.5;pointer-events:none;}
   @keyframes ripple{to{transform:scale(4);opacity:0;}}
+
+  /* CONTENIDO */
   .main{flex:1;padding:0 20px 40px;max-width:1200px;margin:0 auto;width:100%;}
   .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;}
   .list-title .list-count{background:var(--bg-panel);border:1px solid var(--borde);color:var(--dorado);padding:3px 12px;border-radius:12px;font-family:var(--mono);font-weight:800;}
@@ -157,6 +140,8 @@
   .bien-card-tipo.fungibles{color:var(--cian);border-color:var(--cian-glow);}
   .bien-card-tipo.internos{color:#d4a060;border-color:rgba(212,160,96,.3);}
   .bien-card-tipo.prestados{color:var(--vino);border-color:rgba(224,88,120,.3);}
+
+  /* MODAL */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease;}
   body.light .modal-overlay{background:rgba(30,37,45,.4);}
   .modal-overlay.visible{opacity:1;pointer-events:auto;}
@@ -188,6 +173,8 @@
   body.light .oficina-encabezado-sub{color:#1e7b8a;}
   .oficina-encabezado-count{background:rgba(38,198,218,.15);border:1px solid var(--cian);color:var(--cian-brillante);padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800;font-family:var(--mono);flex-shrink:0;}
   body.light .oficina-encabezado-count{background:rgba(38,198,218,.2);color:#0e5a68;}
+
+  /* TABLAS */
   .tabla-section{margin-bottom:20px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;overflow:hidden;}
   .tabla-header{padding:12px 16px;background:linear-gradient(180deg,rgba(212,176,96,.08),transparent);border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;}
   .tabla-header-titulo{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:800;}
@@ -257,7 +244,6 @@
     .header-text h1{font-size:13px;letter-spacing:1px;}
     .view-buttons{grid-template-columns:repeat(2,1fr);}
     .view-btn-count{font-size:20px;}
-    .search-hint{display:none;}
     .bien-detalle-foto{width:60px;height:60px;font-size:24px;}
     .bien-detalle-label{flex:0 0 45%;}
     .header-status{display:none;}
@@ -269,25 +255,28 @@
 <div class="bg-layer"></div>
 <div class="scanline"></div>
 
-<div class="app">
+<div class="app" id="app">
+
   <header class="header">
     <div class="header-content">
       <div class="header-logo">
         <div class="header-logo-icon">◈</div>
         <div class="header-text">
           <h1>Control DIV-10</h1>
-          <small>System v3.1 · Cloud Mode</small>
         </div>
       </div>
       <div class="header-actions">
-        <button class="btn-reload" onclick="recargarArchivo()" title="Recargar datos">
+        <button class="btn-header" id="btnReload" onclick="recargarArchivo()" title="Actualizar datos">
           ⟳
         </button>
-        <button class="btn-theme" id="btnTheme" onclick="toggleTheme()" title="Cambiar tema (Ctrl+T)">
+        <button class="btn-header search-btn" id="btnSearchToggle" onclick="toggleSearch()" title="Buscar (Ctrl+K)">
+          ⌕
+        </button>
+        <button class="btn-header theme" id="btnTheme" onclick="toggleTheme()" title="Cambiar tema (Ctrl+T)">
           <span id="themeIcon">◐</span>
         </button>
         <div class="header-status">
-          <div class="status-dot"></div>
+          <div class="status-dot" id="statusDot"></div>
           <span id="statusText">CARGANDO</span>
         </div>
       </div>
@@ -298,13 +287,10 @@
     <div class="search-box">
       <span class="search-icon">⌕</span>
       <input type="text" class="search-input" id="buscador" placeholder="Buscar por nombre, código o ID asignación...">
-      <div class="search-hint">
-        <span class="hint-chip">Ctrl</span>
-        <span class="hint-chip">K</span>
-      </div>
+      <button class="search-clear" id="searchClear" onclick="limpiarBuscador()">×</button>
     </div>
 
-    <div class="view-buttons">
+    <div class="view-buttons" id="viewButtons">
       <button class="view-btn" data-color="verde" onclick="verGeneral('fijos', event, this)">
         <span class="view-btn-label">Fijos</span>
         <span class="view-btn-count" id="count-fijos">0</span>
@@ -326,7 +312,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v3.1 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v3.2 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -345,9 +331,11 @@
 
 <script>
 /* ============================================================
-   CONFIGURACIÓN — MODO NUBE
+   CONFIGURACIÓN
    ============================================================ */
 const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1ZZZcNDDou-pZhNuM9ISanIoArFFnsMh_A6yracR78WXZ1jv5wwFg/exec";
+const CACHE_KEY = "div10_data_cache_v1";
+const CACHE_TTL = 1000 * 60 * 60; /* 1 hora */
 
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
@@ -358,6 +346,9 @@ let estado = {
   oficinaActual: null,
   bienActual: null
 };
+
+/* Historial de navegación interna */
+let historialInterno = [];
 
 /* ============================================================
    TEMA
@@ -376,6 +367,37 @@ function toggleTheme(){
   localStorage.setItem("tema", isLight ? "light" : "dark");
 }
 cargarTema();
+
+/* ============================================================
+   VISIBILIDAD DEL BUSCADOR
+   ============================================================ */
+function aplicarVisibilidadBuscador(){
+  const visible = localStorage.getItem("buscador_visible") !== "false";
+  const section = document.getElementById("searchSection");
+  const btn = document.getElementById("btnSearchToggle");
+  if(visible){
+    section.classList.add("visible");
+    btn.classList.add("active");
+  } else {
+    section.classList.remove("visible");
+    btn.classList.remove("active");
+  }
+}
+function toggleSearch(){
+  const section = document.getElementById("searchSection");
+  const btn = document.getElementById("btnSearchToggle");
+  const visible = section.classList.contains("visible");
+  if(visible){
+    section.classList.remove("visible");
+    btn.classList.remove("active");
+    localStorage.setItem("buscador_visible", "false");
+  } else {
+    section.classList.add("visible");
+    btn.classList.add("active");
+    localStorage.setItem("buscador_visible", "true");
+    setTimeout(() => document.getElementById("buscador").focus(), 100);
+  }
+}
 
 /* ============================================================
    UTILIDADES
@@ -409,9 +431,7 @@ function getVal(obj, ...claves){
 function obtenerIdAsig(o){
   return getVal(o, "ASIGNACION ID", "ASIGNACIÓN ID", "ASIGNACON ID", "ASIGNACION", "ASIGNACIÓN", "ID");
 }
-function obtenerFoto(o){
-  return getVal(o, "FOTO", "URL_IMAGEN", "IMAGEN");
-}
+function obtenerFoto(o){ return getVal(o, "FOTO", "URL_IMAGEN", "IMAGEN"); }
 function renderEstado(val){
   const v = (val || "").toString().trim();
   if(!v) return "—";
@@ -464,7 +484,6 @@ function parseCSV(text){
   if(field.length || row.length){ row.push(field); rows.push(row); }
   return rows.filter(r => r.some(v => v.trim() !== ""));
 }
-
 function csvAObjetos(texto){
   const filas = parseCSV(texto);
   if(filas.length < 2) return [];
@@ -485,13 +504,69 @@ function csvAObjetos(texto){
 }
 
 /* ============================================================
-   CARGA DESDE LA NUBE
+   CACHÉ
    ============================================================ */
-async function cargarDesdeNube(){
-  const cont = document.getElementById("contenido");
-  cont.innerHTML = `<div class="loading fade-in">☁ Cargando datos desde Google Drive...</div>`;
-  document.getElementById("searchSection").classList.remove("visible");
-  document.getElementById("statusText").textContent = "CARGANDO";
+function guardarCache(){
+  try{
+    const payload = {
+      timestamp: Date.now(),
+      data: DATA
+    };
+    localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+    console.log("💾 Datos guardados en caché");
+  }catch(e){
+    console.warn("⚠ No se pudo guardar caché:", e.message);
+  }
+}
+
+function cargarCache(){
+  try{
+    const raw = localStorage.getItem(CACHE_KEY);
+    if(!raw) return false;
+    const payload = JSON.parse(raw);
+    if(!payload.data) return false;
+
+    /* Restaurar datos */
+    DATA.fijos = payload.data.fijos || [];
+    DATA.fungibles = payload.data.fungibles || [];
+    DATA.internos = payload.data.internos || [];
+    DATA.prestados = payload.data.prestados || [];
+    DATA.resp = payload.data.resp || [];
+
+    const edad = Date.now() - (payload.timestamp || 0);
+    const edadMin = Math.round(edad / 60000);
+    console.log(`📦 Caché cargado (edad: ${edadMin} min)`);
+
+    return true;
+  }catch(e){
+    console.warn("⚠ Error leyendo caché:", e.message);
+    return false;
+  }
+}
+
+/* ============================================================
+   STATUS DEL HEADER
+   ============================================================ */
+function setStatus(tipo, texto){
+  const dot = document.getElementById("statusDot");
+  const txt = document.getElementById("statusText");
+  dot.className = "status-dot";
+  if(tipo === "loading") dot.classList.add("loading");
+  if(tipo === "error") dot.classList.add("error");
+  txt.textContent = texto;
+}
+
+/* ============================================================
+   CARGA DE DATOS
+   ============================================================ */
+async function cargarDesdeNube(silencioso = false){
+  if(!silencioso){
+    const cont = document.getElementById("contenido");
+    if(!DATA.fijos.length){
+      cont.innerHTML = `<div class="loading fade-in">☁ Cargando datos desde Google Drive...</div>`;
+    }
+  }
+  setStatus("loading", "CARGANDO");
 
   try{
     const hojas = [
@@ -511,8 +586,7 @@ async function cargarDesdeNube(){
 
     resultados.forEach(({ key, nombre, texto }) => {
       if(texto.trim().startsWith("<")){
-        console.warn(`⚠ ${nombre}: respuesta HTML (revisar permisos)`);
-        DATA[key] = [];
+        console.warn(`⚠ ${nombre}: respuesta HTML`);
         return;
       }
       if(texto.trim().startsWith("{")){
@@ -520,7 +594,6 @@ async function cargarDesdeNube(){
           const j = JSON.parse(texto);
           if(j.error){
             console.warn(`⚠ ${nombre}:`, j.error);
-            DATA[key] = [];
             return;
           }
         }catch(_){}
@@ -535,33 +608,33 @@ async function cargarDesdeNube(){
     DATA.prestados = DATA.prestados.filter(o => obtenerIdAsig(o) || getVal(o, "DESCRIPCION DEL ACTIVO"));
     DATA.resp = DATA.resp.filter(o => getVal(o, "ID") && getNombreCompletoResp(o));
 
+    guardarCache();
     actualizarContadores();
     document.getElementById("searchSection").classList.add("visible");
-    document.getElementById("statusText").textContent = "ONLINE";
+    setStatus("online", "ONLINE");
     estado.pantalla = "listo";
 
-    renderVacio();
+    /* Si había contenido visual, mantenerlo; si no, mostrar vacío */
+    const cont = document.getElementById("contenido");
+    if(!cont.querySelector(".resp-card, .bien-card, .tabla-section")){
+      renderVacio();
+    }
 
   }catch(err){
     console.error(err);
-    cont.innerHTML = `<div class="error fade-in">
-      ⚠ No se pudieron cargar los datos desde Drive<br><br>
-      <small>${esc(err.message)}</small><br><br>
-      <small style="opacity:.7;font-size:10px;">Verifique que el Apps Script esté implementado con acceso "Cualquier usuario"</small>
-    </div>`;
-    document.getElementById("statusText").textContent = "ERROR";
+    if(!silencioso){
+      const cont = document.getElementById("contenido");
+      cont.innerHTML = `<div class="error fade-in">
+        ⚠ No se pudieron cargar los datos<br><br>
+        <small>${esc(err.message)}</small>
+      </div>`;
+    }
+    setStatus("error", "ERROR");
   }
 }
 
 function recargarArchivo(){
-  DATA.fijos = [];
-  DATA.fungibles = [];
-  DATA.internos = [];
-  DATA.prestados = [];
-  DATA.resp = [];
-  const input = document.getElementById("buscador");
-  if(input) input.value = "";
-  cargarDesdeNube();
+  cargarDesdeNube(false);
 }
 
 /* ============================================================
@@ -604,7 +677,6 @@ function getOficinaResponsablePorId(id){
   const r = getResponsablePorId(id);
   return r ? getVal(r, "OFICINA") : "—";
 }
-
 function ordenarIdAsignacion(a, b){
   const parse = (id) => {
     const m = (id || "").match(/^(\d+)([A-Z]*)$/i);
@@ -637,7 +709,6 @@ function buscarResponsables(termino){
   lista.sort((a,b) => a.nombre.localeCompare(b.nombre));
   return lista;
 }
-
 function buscarBienesPorCodigo(termino){
   const t = norm(termino);
   const todos = [
@@ -648,7 +719,6 @@ function buscarBienesPorCodigo(termino){
   ];
   return todos.filter(b => norm(getVal(b, "CODIGO")).includes(t));
 }
-
 function buscarBienesPorIdAsig(idAsig){
   const t = norm(idAsig);
   const todos = [
@@ -659,7 +729,6 @@ function buscarBienesPorIdAsig(idAsig){
   ];
   return todos.filter(b => norm(obtenerIdAsig(b)) === t);
 }
-
 function contarBienesPorAsignacion(id){
   const idLimpio = (id || "").trim();
   let total = 0;
@@ -669,6 +738,67 @@ function contarBienesPorAsignacion(id){
   total += DATA.prestados.filter(o => obtenerIdAsig(o) === idLimpio).length;
   return total;
 }
+
+/* ============================================================
+   HISTORIAL DE NAVEGACIÓN (para botón atrás del navegador)
+   ============================================================ */
+function pushHistorial(vista){
+  historialInterno.push(vista);
+  history.pushState({ vista }, "", "");
+}
+
+function popHistorial(){
+  if(historialInterno.length > 0){
+    historialInterno.pop();
+  }
+  if(historialInterno.length === 0){
+    /* Estamos en la pantalla principal */
+    const confirmar = confirm("¿Está seguro de salir del sistema?");
+    if(confirmar){
+      window.history.back();
+    } else {
+      /* Reingresar un estado para "cancelar" el back */
+      history.pushState({ vista: "root" }, "", "");
+    }
+    return;
+  }
+
+  /* Recuperar el estado anterior */
+  const anterior = historialInterno[historialInterno.length - 1];
+  aplicarVista(anterior, false);
+}
+
+function aplicarVista(vista, guardarHistorial = true){
+  if(vista.tipo === "inicio"){
+    renderVacio();
+  } else if(vista.tipo === "listaResponsables"){
+    renderListaResponsables(vista.filtro);
+  } else if(vista.tipo === "listaBienes"){
+    renderListaBienes(vista.filtro, vista.subtipo);
+  } else if(vista.tipo === "vistaGeneral"){
+    renderVistaGeneral(vista.categoria, vista.oficina, vista.textoBusqueda);
+  } else if(vista.tipo === "modalResponsable"){
+    /* Reabrir modal */
+    estado.responsableActual = vista.responsable;
+    estado.modalVista = vista.modalVista || "oficinas";
+    estado.oficinaActual = vista.oficina || null;
+    document.getElementById("modal-titulo").textContent = vista.responsable ? vista.responsable.nombre : "";
+    document.getElementById("modal-body").innerHTML = renderModalBody();
+    document.getElementById("modal").classList.add("visible");
+  } else if(vista.tipo === "modalDetalleBien"){
+    estado.responsableActual = vista.responsable || null;
+    estado.bienActual = vista.bien;
+    estado.modalVista = "detalleBien";
+    document.getElementById("modal-titulo").textContent = "Detalle del Bien";
+    document.getElementById("modal-body").innerHTML = renderDetalleBien(vista.bien);
+    document.getElementById("modal").classList.add("visible");
+  }
+}
+
+/* Manejo del botón atrás del navegador */
+window.addEventListener("popstate", () => {
+  popHistorial();
+});
 
 /* ============================================================
    RENDER
@@ -773,7 +903,15 @@ function abrirModalResponsable(idx){
   document.getElementById("modal-titulo").textContent = r.nombre;
   document.getElementById("modal-body").innerHTML = renderModalBody();
   document.getElementById("modal").classList.add("visible");
+
+  pushHistorial({
+    tipo: "modalResponsable",
+    responsable: r,
+    modalVista: estado.modalVista,
+    oficina: estado.oficinaActual
+  });
 }
+
 function abrirOficinaModal(idAsig){
   const r = estado.responsableActual;
   if(!r) return;
@@ -782,19 +920,42 @@ function abrirOficinaModal(idAsig){
   estado.modalVista = "tablas";
   estado.oficinaActual = oficina;
   document.getElementById("modal-body").innerHTML = renderModalBody();
+
+  pushHistorial({
+    tipo: "modalResponsable",
+    responsable: r,
+    modalVista: "tablas",
+    oficina: oficina
+  });
 }
+
 function volverAOficinasModal(){
   estado.modalVista = "oficinas";
   estado.oficinaActual = null;
   document.getElementById("modal-body").innerHTML = renderModalBody();
+
+  pushHistorial({
+    tipo: "modalResponsable",
+    responsable: estado.responsableActual,
+    modalVista: "oficinas",
+    oficina: null
+  });
 }
+
 function abrirDetalleBienDirecto(bien){
   estado.modalVista = "detalleBien";
   estado.bienActual = bien;
   document.getElementById("modal-titulo").textContent = "Detalle del Bien";
   document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
   document.getElementById("modal").classList.add("visible");
+
+  pushHistorial({
+    tipo: "modalDetalleBien",
+    responsable: estado.responsableActual,
+    bien: bien
+  });
 }
+
 function abrirDetalleBienDirectoPorCodigo(codigo, tipo){
   let bien = null;
   if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
@@ -805,6 +966,7 @@ function abrirDetalleBienDirectoPorCodigo(codigo, tipo){
   bien.__tipo = tipo;
   abrirDetalleBienDirecto(bien);
 }
+
 function abrirDetalleBienDesdeModal(codigo, tipo){
   let bien = null;
   if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
@@ -817,13 +979,28 @@ function abrirDetalleBienDesdeModal(codigo, tipo){
   estado.modalVista = "detalleBien";
   document.getElementById("modal-titulo").textContent = "Detalle del Bien";
   document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
+
+  pushHistorial({
+    tipo: "modalDetalleBien",
+    responsable: estado.responsableActual,
+    bien: bien
+  });
 }
+
 function volverATablasDesdeDetalleBien(){
   estado.modalVista = "tablas";
   estado.bienActual = null;
   document.getElementById("modal-titulo").textContent = estado.responsableActual ? estado.responsableActual.nombre : "Bienes";
   document.getElementById("modal-body").innerHTML = renderModalBody();
+
+  pushHistorial({
+    tipo: "modalResponsable",
+    responsable: estado.responsableActual,
+    modalVista: "tablas",
+    oficina: estado.oficinaActual
+  });
 }
+
 function cerrarModal(){
   document.getElementById("modal").classList.remove("visible");
   estado.modalVista = "oficinas";
@@ -831,12 +1008,14 @@ function cerrarModal(){
   estado.oficinaActual = null;
   estado.bienActual = null;
 }
+
 function renderModalBody(){
   if(estado.modalVista === "oficinas") return renderModalOficinas();
   if(estado.modalVista === "tablas") return renderModalTablas();
   if(estado.modalVista === "detalleBien") return renderDetalleBien(estado.bienActual);
   return "";
 }
+
 function renderModalOficinas(){
   const r = estado.responsableActual;
   if(!r) return "";
@@ -854,6 +1033,7 @@ function renderModalOficinas(){
   });
   return html;
 }
+
 function renderModalTablas(){
   const of = estado.oficinaActual;
   const r = estado.responsableActual;
@@ -878,6 +1058,7 @@ function renderModalTablas(){
   if(prestados.length) html += tablaModal("PRESTADOS", prestados, "vino");
   return html;
 }
+
 function tablaModal(titulo, lista, color){
   if(!lista.length){
     return `<div class="tabla-section">
@@ -1003,6 +1184,8 @@ function verGeneral(tipo, ev, btn){
   if(btn) btn.classList.add("active");
   vistaGeneralActual = tipo;
   renderVistaGeneral(tipo);
+
+  pushHistorial({ tipo: "vistaGeneral", categoria: tipo });
 }
 function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
   const cont = document.getElementById("contenido");
@@ -1078,7 +1261,10 @@ function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
   html += tablaGeneral(tipo, listaParaMostrar);
   cont.innerHTML = html;
 }
-function filtrarPorOficina(oficina){ renderVistaGeneral(vistaGeneralActual, oficina, ""); }
+function filtrarPorOficina(oficina){
+  renderVistaGeneral(vistaGeneralActual, oficina, "");
+  pushHistorial({ tipo: "vistaGeneral", categoria: vistaGeneralActual, oficina });
+}
 function filtrarDentroOficina(oficina, texto){
   renderVistaGeneral(vistaGeneralActual, oficina, texto);
   setTimeout(() => {
@@ -1152,18 +1338,51 @@ function ripple(e, btn){
    ============================================================ */
 function initBuscador(){
   const input = document.getElementById("buscador");
+  const clear = document.getElementById("searchClear");
   let timer;
+
   input.addEventListener("input", e => {
     clearTimeout(timer);
     const val = e.target.value.trim();
+
+    /* Mostrar/ocultar botón de limpiar */
+    if(val.length > 0) clear.classList.add("visible");
+    else clear.classList.remove("visible");
+
+    /* Modo focus: ocultar header, botones vista y footer */
+    const app = document.getElementById("app");
+    if(val.length > 0){
+      app.classList.add("focus-mode");
+    } else {
+      app.classList.remove("focus-mode");
+    }
+
+    /* Quitar estado activo de botones de vista */
     document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+
     if(val.length < 1){ renderVacio(); return; }
+
     timer = setTimeout(() => {
       const tipoBusqueda = detectarTipoBusqueda(val);
-      if(tipoBusqueda === "nombre") renderListaResponsables(val);
-      else renderListaBienes(val, tipoBusqueda);
-    }, 150);
+      if(tipoBusqueda === "nombre"){
+        renderListaResponsables(val);
+        pushHistorial({ tipo: "listaResponsables", filtro: val });
+      } else {
+        renderListaBienes(val, tipoBusqueda);
+        pushHistorial({ tipo: "listaBienes", filtro: val, subtipo: tipoBusqueda });
+      }
+    }, 200);
   });
+}
+
+function limpiarBuscador(){
+  const input = document.getElementById("buscador");
+  input.value = "";
+  document.getElementById("searchClear").classList.remove("visible");
+  document.getElementById("app").classList.remove("focus-mode");
+  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
+  renderVacio();
+  input.focus();
 }
 
 /* ============================================================
@@ -1172,13 +1391,15 @@ function initBuscador(){
 document.addEventListener("keydown", e => {
   if((e.ctrlKey || e.metaKey) && e.key === "k"){
     e.preventDefault();
-    const input = document.getElementById("buscador");
-    if(input) input.focus();
+    const section = document.getElementById("searchSection");
+    if(!section.classList.contains("visible")) toggleSearch();
+    setTimeout(() => document.getElementById("buscador").focus(), 100);
   }
   if((e.ctrlKey || e.metaKey) && e.key === "t"){ e.preventDefault(); toggleTheme(); }
   if(e.key === "Escape"){
     if(document.getElementById("lightbox").classList.contains("visible")) cerrarLightbox();
     else if(document.getElementById("modal").classList.contains("visible")) cerrarModal();
+    else if(document.getElementById("buscador").value.trim().length) limpiarBuscador();
   }
 });
 
@@ -1187,9 +1408,30 @@ document.addEventListener("keydown", e => {
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   initBuscador();
-  cargarDesdeNube();
+  aplicarVisibilidadBuscador();
+
+  /* Estado inicial del historial */
+  history.replaceState({ vista: "root" }, "", "");
+  historialInterno = [];
+
+  /* Intentar cargar desde caché primero */
+  const hayCache = cargarCache();
+
+  if(hayCache){
+    /* Mostrar datos del caché inmediatamente */
+    actualizarContadores();
+    document.getElementById("searchSection").classList.add("visible");
+    setStatus("online", "ONLINE");
+    estado.pantalla = "listo";
+    renderVacio();
+
+    /* Actualizar en segundo plano (silencioso) */
+    setTimeout(() => cargarDesdeNube(true), 500);
+  } else {
+    /* Sin caché: cargar desde la nube */
+    cargarDesdeNube(false);
+  }
 });
 </script>
 </body>
 </html>
-Migración a Google Drive - Modo Nube
