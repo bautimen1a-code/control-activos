@@ -3,19 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V3.2</title>
+<title>Control DIV-10 V3.2</title>
 <style>
   :root{
-    --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;--bg-input:#0f1419;
-    --texto:#e8ecf0;--texto-suave:#8b96a3;--texto-muy-suave:#5a6472;
-    --borde:rgba(212,176,96,.2);--borde-fuerte:rgba(212,176,96,.5);
-    --sombra-panel:0 8px 30px rgba(0,0,0,.5);--sombra-modal:0 30px 80px rgba(0,0,0,.7);
-    --grid-color:rgba(212,176,96,.03);--scanline-opacity:.3;
-    --dorado:#d4b060;--dorado-brillante:#f0d088;--dorado-glow:rgba(212,176,96,.4);
-    --cian:#26c6da;--cian-brillante:#5ee0f0;--cian-glow:rgba(38,198,218,.35);
-    --verde:#4ade80;--verde-glow:rgba(74,222,128,.3);
-    --rojo:#ef4444;--rojo-glow:rgba(239,68,68,.3);
-    --amarillo:#fbbf24;--vino:#e05878;
+    --bg:#0a0e12;
+    --bg-panel:#141a20;
+    --bg-elevado:#1e252d;
+    --bg-hover:#252d36;
+    --bg-input:#0f1419;
+    --texto:#e8ecf0;
+    --texto-suave:#8b96a3;
+    --texto-muy-suave:#5a6472;
+    --borde:rgba(212,176,96,.2);
+    --borde-fuerte:rgba(212,176,96,.5);
+    --sombra-panel:0 8px 30px rgba(0,0,0,.5);
+    --sombra-modal:0 30px 80px rgba(0,0,0,.7);
+    --grid-color:rgba(212,176,96,.03);
+    --scanline-opacity:.3;
+    --dorado:#d4b060;
+    --dorado-brillante:#f0d088;
+    --dorado-glow:rgba(212,176,96,.4);
+    --cian:#26c6da;
+    --cian-brillante:#5ee0f0;
+    --cian-glow:rgba(38,198,218,.35);
+    --verde:#4ade80;
+    --verde-glow:rgba(74,222,128,.3);
+    --rojo:#ef4444;
+    --rojo-glow:rgba(239,68,68,.3);
+    --amarillo:#fbbf24;
+    --vino:#e05878;
     --mono:"JetBrains Mono","Consolas","Monaco",monospace;
     --sans:"Inter","Segoe UI",Roboto,sans-serif;
   }
@@ -23,34 +39,45 @@
     --bg:#f4f2eb;--bg-panel:#ffffff;--bg-elevado:#f8f7f3;--bg-hover:#f0edd9;--bg-input:#ffffff;
     --texto:#1e252d;--texto-suave:#5a6472;--texto-muy-suave:#8b96a3;
     --borde:rgba(30,51,37,.15);--borde-fuerte:rgba(30,51,37,.4);
-    --sombra-panel:0 4px 16px rgba(0,0,0,.08);--sombra-modal:0 20px 60px rgba(0,0,0,.25);
+    --sombra-panel:0 4px 16px rgba(0,0,0,.08);
+    --sombra-modal:0 20px 60px rgba(0,0,0,.25);
     --grid-color:rgba(30,51,37,.04);--scanline-opacity:.15;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
-  body{font-family:var(--sans);background:var(--bg);color:var(--texto);font-size:14px;min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;position:relative;transition:background .4s ease,color .4s ease;}
+  body{
+    font-family:var(--sans);background:var(--bg);color:var(--texto);font-size:14px;
+    min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;
+    position:relative;transition:background .4s ease, color .4s ease;
+  }
   ::-webkit-scrollbar{width:10px;height:10px;}
   ::-webkit-scrollbar-track{background:var(--bg-elevado);}
   ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,var(--dorado),#9e7d35);border-radius:5px;border:2px solid var(--bg-elevado);}
   ::-webkit-scrollbar-thumb:hover{background:var(--dorado-brillante);}
   .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
-  .bg-layer::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);background-size:50px 50px;animation:gridMove 20s linear infinite;}
+  .bg-layer::before{
+    content:"";position:absolute;inset:0;
+    background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px);
+    background-size:50px 50px;animation:gridMove 20s linear infinite;
+  }
   @keyframes gridMove{from{transform:translate(0,0);}to{transform:translate(50px,50px);}}
-  .bg-layer::after{content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.08) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.06) 0%,transparent 40%);animation:pulseBg 8s ease-in-out infinite;}
+  .bg-layer::after{
+    content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+    background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.08) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.06) 0%,transparent 40%);
+    animation:pulseBg 8s ease-in-out infinite;
+  }
   body.light .bg-layer::after{background:radial-gradient(circle at 20% 30%,rgba(38,198,218,.05) 0%,transparent 40%),radial-gradient(circle at 80% 70%,rgba(212,176,96,.04) 0%,transparent 40%);}
   @keyframes pulseBg{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
   .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cian),transparent);opacity:var(--scanline-opacity);z-index:1;pointer-events:none;animation:scanline 8s linear infinite;}
   @keyframes scanline{from{top:0;}to{top:100vh;}}
-
-  /* LAYOUT */
   .app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
-  .app.focus-mode .header,
-  .app.focus-mode .footer,
-  .app.focus-mode .view-buttons{display:none !important;}
-  .app.focus-mode .search-section{padding-top:14px;}
 
   /* HEADER */
-  .header{position:sticky;top:0;z-index:50;background:var(--bg-panel);backdrop-filter:blur(12px);border-bottom:1px solid var(--borde);padding:16px 20px;overflow:hidden;animation:slideDown .5s cubic-bezier(.4,0,.2,1);transition:background .4s ease,border-color .4s ease;}
+  .header{
+    position:sticky;top:0;z-index:50;background:var(--bg-panel);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--borde);padding:16px 20px;overflow:hidden;
+    animation:slideDown .5s cubic-bezier(.4,0,.2,1);transition:background .4s ease, border-color .4s ease;
+  }
   body:not(.light) .header{background:linear-gradient(180deg,rgba(20,26,32,.95),rgba(10,14,18,.9));}
   body.light .header{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(248,247,243,.95));}
   @keyframes slideDown{from{transform:translateY(-100%);opacity:0;}to{transform:translateY(0);opacity:1;}}
@@ -63,55 +90,127 @@
   .header-text h1{font-size:16px;font-weight:800;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,var(--texto),var(--dorado-brillante));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
   body.light .header-text h1{background:linear-gradient(90deg,#1e252d,var(--dorado));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
   .header-actions{display:flex;align-items:center;gap:10px;}
-  .btn-header{width:40px;height:40px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;color:var(--cian);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;position:relative;}
-  .btn-header:hover{background:var(--cian);color:var(--bg);border-color:var(--cian-brillante);box-shadow:0 0 20px var(--cian-glow);transform:scale(1.05);}
-  .btn-header.theme{color:var(--dorado);}
-  .btn-header.theme:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);box-shadow:0 0 20px var(--dorado-glow);transform:rotate(180deg) scale(1.05);}
-  .btn-header.search-btn.active{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);}
+  .btn-icon{width:40px;height:40px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
+  .btn-icon.cyan{color:var(--cian);}
+  .btn-icon.gold{color:var(--dorado);}
+  .btn-icon.cyan:hover{background:var(--cian);color:var(--bg);border-color:var(--cian-brillante);box-shadow:0 0 20px var(--cian-glow);transform:scale(1.05);}
+  .btn-icon.gold:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:rotate(180deg) scale(1.05);box-shadow:0 0 20px var(--dorado-glow);}
+  .btn-icon.spinning{animation:spin 1s linear infinite;}
+  @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
   .header-status{display:flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(38,198,218,.08);border:1px solid rgba(38,198,218,.3);border-radius:20px;font-size:10px;font-family:var(--mono);color:var(--cian-brillante);letter-spacing:1px;}
   .status-dot{width:8px;height:8px;background:var(--verde);border-radius:50%;box-shadow:0 0 8px var(--verde);animation:blink 2s ease-in-out infinite;}
-  .status-dot.loading{background:var(--amarillo);box-shadow:0 0 8px var(--amarillo);}
-  .status-dot.error{background:var(--rojo);box-shadow:0 0 8px var(--rojo);}
   @keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
 
-  /* BUSCADOR */
-  .search-section{padding:20px;max-width:1200px;margin:0 auto;width:100%;animation:slideDown .6s cubic-bezier(.4,0,.2,1) .1s both;display:none;}
-  .search-section.visible{display:block;}
-  .search-box{position:relative;display:flex;align-items:center;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:4px 16px;transition:all .3s cubic-bezier(.4,0,.2,1);}
-  .search-box:focus-within{border-color:var(--dorado);box-shadow:0 0 0 3px rgba(212,176,96,.1),0 0 30px rgba(212,176,96,.2);}
-  .search-icon{color:var(--dorado);font-size:18px;margin-right:12px;flex-shrink:0;transition:transform .3s ease;}
-  .search-box:focus-within .search-icon{transform:scale(1.1);filter:drop-shadow(0 0 8px var(--dorado));}
-  .search-input{flex:1;background:transparent;border:none;outline:none;padding:14px 0;font-size:15px;color:var(--texto);font-family:var(--sans);font-weight:500;letter-spacing:.5px;}
-  .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
-  .search-clear{background:transparent;border:none;color:var(--texto-muy-suave);font-size:18px;cursor:pointer;padding:0 6px;transition:all .2s;display:none;}
-  .search-clear.visible{display:block;}
-  .search-clear:hover{color:var(--rojo);transform:scale(1.1);}
+  /* MAIN */
+  .main{flex:1;padding:20px;max-width:1200px;margin:0 auto;width:100%;}
 
-  /* BOTONES VISTA */
-  .view-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px;}
-  .view-btn{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:10px;padding:14px 12px;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);overflow:hidden;text-align:center;animation:slideUp .5s cubic-bezier(.4,0,.2,1) both;display:flex;flex-direction:column;align-items:center;gap:6px;}
-  .view-btn:nth-child(1){animation-delay:.15s;}
-  .view-btn:nth-child(2){animation-delay:.2s;}
-  .view-btn:nth-child(3){animation-delay:.25s;}
-  .view-btn:nth-child(4){animation-delay:.3s;}
+  /* PANTALLA PRINCIPAL */
+  .home{
+    display:flex;flex-direction:column;gap:14px;
+    animation:fadeIn .5s ease both;
+    padding-top:20px;
+  }
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+  .home-buttons{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
+  }
+  .home-btn{
+    position:relative;background:var(--bg-panel);border:1px solid var(--borde);
+    border-radius:12px;padding:22px 14px;cursor:pointer;
+    transition:all .3s cubic-bezier(.4,0,.2,1);overflow:hidden;
+    text-align:center;animation:slideUp .5s cubic-bezier(.4,0,.2,1) both;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+  }
+  .home-btn:nth-child(1){animation-delay:.1s;}
+  .home-btn:nth-child(2){animation-delay:.15s;}
+  .home-btn:nth-child(3){animation-delay:.2s;}
+  .home-btn:nth-child(4){animation-delay:.25s;}
+  .home-btn:nth-child(5){animation-delay:.3s;}
   @keyframes slideUp{from{transform:translateY(20px);opacity:0;}to{transform:translateY(0);opacity:1;}}
-  .view-btn:hover{transform:translateY(-4px);border-color:var(--color,var(--dorado));box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 25px color-mix(in srgb,var(--color,var(--dorado)) 30%,transparent);}
-  .view-btn:active{transform:translateY(-2px) scale(.98);}
-  .view-btn[data-color="verde"]{--color:var(--verde);}
-  .view-btn[data-color="azul"]{--color:var(--cian);}
-  .view-btn[data-color="marron"]{--color:#d4a060;}
-  .view-btn[data-color="vino"]{--color:var(--vino);}
-  .view-btn-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;}
-  .view-btn-count{font-size:24px;font-weight:800;color:var(--color,var(--dorado));font-family:var(--mono);text-shadow:0 0 15px color-mix(in srgb,var(--color,var(--dorado)) 40%,transparent);transition:all .3s ease;}
-  .view-btn:hover .view-btn-count{transform:scale(1.1);text-shadow:0 0 25px color-mix(in srgb,var(--color,var(--dorado)) 70%,transparent);}
-  .view-btn .ripple{position:absolute;border-radius:50%;background:var(--color,var(--dorado));transform:scale(0);animation:ripple .6s ease-out;opacity:.5;pointer-events:none;}
+  .home-btn:hover{
+    transform:translateY(-4px);
+    border-color:var(--color,var(--dorado));
+    box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 25px color-mix(in srgb,var(--color,var(--dorado)) 30%,transparent);
+  }
+  .home-btn:active{transform:translateY(-2px) scale(.98);}
+  .home-btn[data-color="verde"]{--color:var(--verde);}
+  .home-btn[data-color="azul"]{--color:var(--cian);}
+  .home-btn[data-color="marron"]{--color:#d4a060;}
+  .home-btn[data-color="vino"]{--color:var(--vino);}
+  .home-btn[data-color="buscar"]{--color:var(--dorado);}
+
+  .home-btn-icon{font-size:32px;color:var(--color,var(--dorado));text-shadow:0 0 20px color-mix(in srgb,var(--color,var(--dorado)) 50%,transparent);}
+  .home-btn-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:800;}
+  .home-btn-count{font-size:26px;font-weight:800;color:var(--color,var(--dorado));font-family:var(--mono);text-shadow:0 0 15px color-mix(in srgb,var(--color,var(--dorado)) 40%,transparent);}
+
+  .home-btn.buscar{
+    grid-column:span 4;
+    padding:24px;
+    background:linear-gradient(135deg,rgba(212,176,96,.08),rgba(212,176,96,.02));
+    flex-direction:row;
+    justify-content:center;
+    gap:16px;
+  }
+  .home-btn.buscar .home-btn-icon{font-size:28px;}
+  .home-btn.buscar .home-btn-label{font-size:14px;letter-spacing:3px;color:var(--dorado-brillante);}
+  .home-btn.buscar:hover{background:linear-gradient(135deg,rgba(212,176,96,.15),rgba(212,176,96,.05));}
+
+  .home-btn .ripple{position:absolute;border-radius:50%;background:var(--color,var(--dorado));transform:scale(0);animation:ripple .6s ease-out;opacity:.5;pointer-events:none;}
   @keyframes ripple{to{transform:scale(4);opacity:0;}}
 
-  /* CONTENIDO */
-  .main{flex:1;padding:0 20px 40px;max-width:1200px;margin:0 auto;width:100%;}
-  .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;}
+  /* MODO BÚSQUEDA */
+  .modo-busqueda{
+    animation:fadeIn .35s ease both;
+    display:flex;flex-direction:column;gap:14px;
+    min-height:60vh;
+  }
+  .modo-busqueda-top{
+    display:flex;gap:10px;align-items:center;
+  }
+  .btn-volver{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--bg-elevado);color:var(--dorado);
+    border:1px solid var(--borde);
+    padding:12px 18px;font-size:12px;
+    letter-spacing:1.5px;text-transform:uppercase;
+    cursor:pointer;border-radius:10px;font-weight:800;
+    font-family:var(--sans);flex-shrink:0;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+  }
+  .btn-volver:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:translateX(-4px);box-shadow:0 0 20px var(--dorado-glow);}
+
+  .search-wrapper{
+    flex:1;position:relative;display:flex;gap:8px;
+  }
+  .search-box{
+    flex:1;display:flex;align-items:center;
+    background:var(--bg-panel);
+    border:1px solid var(--borde);
+    border-radius:12px;
+    padding:4px 16px;
+    transition:all .3s cubic-bezier(.4,0,.2,1);
+  }
+  .search-box:focus-within{border-color:var(--dorado);box-shadow:0 0 0 3px rgba(212,176,96,.1),0 0 30px rgba(212,176,96,.2);}
+  .search-icon{color:var(--dorado);font-size:18px;margin-right:12px;flex-shrink:0;}
+  .search-input{flex:1;background:transparent;border:none;outline:none;padding:14px 0;font-size:15px;color:var(--texto);font-family:var(--sans);font-weight:500;letter-spacing:.5px;}
+  .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
+
+  .btn-search-go{
+    background:var(--dorado);color:var(--bg);
+    border:1px solid var(--dorado-brillante);
+    border-radius:12px;padding:0 22px;
+    font-size:12px;letter-spacing:1.5px;
+    text-transform:uppercase;font-weight:800;
+    cursor:pointer;display:flex;align-items:center;gap:8px;
+    transition:all .3s ease;flex-shrink:0;
+  }
+  .btn-search-go:hover{background:var(--dorado-brillante);transform:translateY(-2px);box-shadow:0 6px 20px var(--dorado-glow);}
+
+  /* LISTAS Y TARJETAS */
+  .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;}
   .list-title .list-count{background:var(--bg-panel);border:1px solid var(--borde);color:var(--dorado);padding:3px 12px;border-radius:12px;font-family:var(--mono);font-weight:800;}
-  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
   .resp-card{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);overflow:hidden;animation:slideIn .5s cubic-bezier(.4,0,.2,1) both;display:flex;align-items:center;justify-content:space-between;gap:16px;}
   @keyframes slideIn{from{transform:translateX(-20px);opacity:0;}to{transform:translateX(0);opacity:1;}}
   .resp-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--dorado),var(--cian));transform:scaleY(0);transform-origin:top;transition:transform .4s cubic-bezier(.4,0,.2,1);}
@@ -125,16 +224,15 @@
   .resp-card-meta span{display:flex;align-items:center;gap:4px;}
   .resp-card-arrow{font-size:28px;color:var(--texto-muy-suave);transition:all .4s cubic-bezier(.4,0,.2,1);flex-shrink:0;}
   .resp-card:hover .resp-card-arrow{color:var(--dorado);transform:translateX(8px);}
+
   .bien-card{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:16px 18px;margin-bottom:10px;cursor:pointer;transition:all .4s cubic-bezier(.4,0,.2,1);animation:slideIn .5s cubic-bezier(.4,0,.2,1) both;display:flex;gap:14px;align-items:flex-start;}
   .bien-card:hover{transform:translateX(8px);border-color:var(--cian);background:var(--bg-elevado);box-shadow:var(--sombra-panel),0 0 30px rgba(38,198,218,.15);}
-  .bien-card-thumb{width:56px;height:56px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--texto-muy-suave);flex-shrink:0;overflow:hidden;transition:all .3s ease;}
+  .bien-card-thumb{width:56px;height:56px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--texto-muy-suave);flex-shrink:0;overflow:hidden;}
   .bien-card-thumb img{width:100%;height:100%;object-fit:cover;}
-  .bien-card:hover .bien-card-thumb{border-color:var(--cian);box-shadow:0 0 15px var(--cian-glow);}
   .bien-card-info{flex:1;min-width:0;}
   .bien-card-code{font-size:11px;font-family:var(--mono);color:var(--dorado);font-weight:700;letter-spacing:1px;margin-bottom:4px;text-transform:uppercase;}
   .bien-card-desc{font-size:13px;font-weight:600;color:var(--texto);line-height:1.3;margin-bottom:6px;}
   .bien-card-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:10px;font-family:var(--mono);color:var(--texto-suave);}
-  .bien-card-meta span{display:flex;align-items:center;gap:4px;}
   .bien-card-tipo{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:var(--bg-elevado);border:1px solid var(--borde);}
   .bien-card-tipo.fijos{color:var(--verde);border-color:var(--verde-glow);}
   .bien-card-tipo.fungibles{color:var(--cian);border-color:var(--cian-glow);}
@@ -152,8 +250,10 @@
   .modal-close{width:32px;height:32px;background:transparent;border:1px solid var(--borde);color:var(--texto-suave);border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .3s ease;flex-shrink:0;}
   .modal-close:hover{background:var(--rojo);border-color:var(--rojo);color:white;transform:rotate(90deg);box-shadow:0 0 20px var(--rojo-glow);}
   .modal-body{padding:20px 22px;overflow-y:auto;flex:1;min-height:200px;}
+
   .btn-nav{display:inline-flex;align-items:center;gap:8px;background:var(--bg-elevado);color:var(--dorado);border:1px solid var(--borde);padding:9px 16px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:8px;font-weight:700;font-family:var(--sans);transition:all .3s cubic-bezier(.4,0,.2,1);margin-bottom:16px;}
   .btn-nav:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:translateX(-4px);box-shadow:0 0 20px var(--dorado-glow);}
+
   .modal-titulo-seccion{text-align:center;padding:8px 0 16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;font-family:var(--mono);border-bottom:1px solid var(--borde);margin-bottom:16px;}
   .oficina-card{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg-elevado);border:1px solid var(--borde);border-left:4px solid var(--dorado);padding:14px 16px;margin-bottom:10px;border-radius:10px;cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);animation:slideIn .4s cubic-bezier(.4,0,.2,1) both;}
   .oficina-card:hover{transform:translateX(8px);border-color:var(--dorado);border-left-color:var(--cian);background:var(--bg-hover);box-shadow:var(--sombra-panel),0 0 25px rgba(212,176,96,.15);}
@@ -164,7 +264,7 @@
   .oficina-card-id{font-size:10px;font-family:var(--mono);color:var(--cian);letter-spacing:1px;}
   .oficina-card-count{background:rgba(212,176,96,.1);border:1px solid var(--dorado);color:var(--dorado-brillante);padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800;font-family:var(--mono);flex-shrink:0;transition:all .3s ease;}
   body.light .oficina-card-count{background:rgba(212,176,96,.15);color:#8a6d30;}
-  .oficina-card:hover .oficina-card-count{background:var(--dorado);color:var(--bg);box-shadow:0 0 20px var(--dorado-glow);}
+
   .oficina-encabezado{background:linear-gradient(135deg,rgba(38,198,218,.1),rgba(212,176,96,.1));border:1px solid var(--borde);border-left:4px solid var(--cian);border-radius:10px;padding:14px 16px;margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
   body.light .oficina-encabezado{background:linear-gradient(135deg,rgba(38,198,218,.06),rgba(212,176,96,.06));}
   .oficina-encabezado-info{flex:1;min-width:0;}
@@ -172,9 +272,7 @@
   .oficina-encabezado-sub{font-size:10px;font-family:var(--mono);color:var(--cian-brillante);letter-spacing:1px;text-transform:uppercase;}
   body.light .oficina-encabezado-sub{color:#1e7b8a;}
   .oficina-encabezado-count{background:rgba(38,198,218,.15);border:1px solid var(--cian);color:var(--cian-brillante);padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800;font-family:var(--mono);flex-shrink:0;}
-  body.light .oficina-encabezado-count{background:rgba(38,198,218,.2);color:#0e5a68;}
 
-  /* TABLAS */
   .tabla-section{margin-bottom:20px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;overflow:hidden;}
   .tabla-header{padding:12px 16px;background:linear-gradient(180deg,rgba(212,176,96,.08),transparent);border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;}
   .tabla-header-titulo{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:800;}
@@ -184,7 +282,7 @@
   .tabla-header[data-color="marron"]{--color:#d4a060;}
   .tabla-header[data-color="vino"]{--color:var(--vino);}
   .tabla-header-count{font-family:var(--mono);font-size:12px;color:var(--dorado);font-weight:800;background:rgba(212,176,96,.1);padding:2px 10px;border-radius:10px;border:1px solid rgba(212,176,96,.3);}
-  body.light .tabla-header-count{background:rgba(212,176,96,.15);color:#8a6d30;}
+
   .tabla-scroll{overflow-x:auto;}
   table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px;}
   thead th{background:rgba(0,0,0,.15);color:var(--texto-suave);text-align:left;padding:10px 12px;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;border-bottom:1px solid var(--borde);}
@@ -196,6 +294,7 @@
   body.light tbody tr:nth-child(even){background:rgba(30,51,37,.02);}
   tbody tr:hover{background:rgba(212,176,96,.08);}
   tbody tr:hover td:first-child{padding-left:18px;}
+
   .estado-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;border:1px solid;}
   .estado-regular{color:var(--amarillo);border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08);}
   body.light .estado-regular{color:#8a6d0a;border-color:rgba(138,109,10,.4);background:rgba(251,191,36,.15);}
@@ -204,9 +303,10 @@
   .estado-bueno{color:var(--verde);border-color:rgba(74,222,128,.4);background:rgba(74,222,128,.08);}
   body.light .estado-bueno{color:#1a7a3a;border-color:rgba(26,122,58,.4);background:rgba(74,222,128,.15);}
   .estado-pendiente{color:var(--rojo);border-color:rgba(239,68,68,.5);background:rgba(239,68,68,.12);animation:blink 1.5s ease-in-out infinite;}
+
   .bien-detalle{background:var(--bg-elevado);border:1px solid var(--borde);border-radius:12px;overflow:hidden;}
   .bien-detalle-header{padding:20px;background:linear-gradient(135deg,rgba(212,176,96,.1),rgba(38,198,218,.05));border-bottom:2px solid var(--dorado);display:flex;gap:16px;align-items:flex-start;}
-  .bien-detalle-foto{width:80px;height:80px;background:var(--bg);border:2px solid var(--dorado);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--dorado);flex-shrink:0;overflow:hidden;cursor:pointer;transition:all .3s ease;position:relative;}
+  .bien-detalle-foto{width:80px;height:80px;background:var(--bg);border:2px solid var(--dorado);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--dorado);flex-shrink:0;overflow:hidden;cursor:pointer;transition:all .3s ease;}
   .bien-detalle-foto:hover{transform:scale(1.05);box-shadow:0 0 25px var(--dorado-glow);}
   .bien-detalle-foto img{width:100%;height:100%;object-fit:cover;}
   .bien-detalle-header-info{flex:1;min-width:0;}
@@ -227,26 +327,55 @@
   .bien-detalle-valor{flex:1;font-size:12px;color:var(--texto);line-height:1.4;word-break:break-word;}
   .bien-detalle-valor.vacio{color:var(--texto-muy-suave);font-style:italic;}
   .bien-detalle-valor.pendiente{color:var(--rojo);font-weight:800;text-transform:uppercase;}
+
   .empty-state{text-align:center;padding:60px 20px;color:var(--texto-suave);animation:fadeIn .6s ease both;}
   .empty-state-icon{font-size:64px;margin-bottom:16px;opacity:.4;animation:float 3s ease-in-out infinite;}
   @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
   .empty-state-title{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--texto);margin-bottom:8px;font-weight:700;}
   .empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
+
   .loading,.error{text-align:center;padding:32px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;}
   .loading{color:var(--dorado);}
   .error{color:var(--rojo);}
+
   .footer{text-align:center;padding:24px 20px;border-top:1px solid var(--borde);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-muy-suave);font-family:var(--mono);font-weight:600;margin-top:auto;}
+
   .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.95);backdrop-filter:blur(10px);z-index:200;display:flex;align-items:center;justify-content:center;padding:30px;opacity:0;pointer-events:none;transition:opacity .3s ease;cursor:zoom-out;}
   .lightbox.visible{opacity:1;pointer-events:auto;}
   .lightbox img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 0 60px rgba(212,176,96,.3);animation:zoomIn .3s cubic-bezier(.34,1.56,.64,1);}
   @keyframes zoomIn{from{transform:scale(.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+  /* TOAST */
+  .toast{
+    position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-20px);
+    background:var(--bg-panel);color:var(--texto);
+    border:1px solid var(--dorado);border-radius:12px;
+    padding:14px 22px;z-index:300;
+    font-size:12px;letter-spacing:1px;font-weight:700;
+    box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 30px rgba(212,176,96,.2);
+    opacity:0;pointer-events:none;
+    transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    display:flex;align-items:center;gap:10px;
+    max-width:90vw;
+  }
+  .toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.success{border-color:var(--verde);box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 30px rgba(74,222,128,.2);}
+  .toast.error{border-color:var(--rojo);box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 30px rgba(239,68,68,.2);}
+  .toast.info{border-color:var(--cian);box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 30px rgba(38,198,218,.2);}
+  .toast-icon{font-size:16px;}
+
   @media (max-width:600px){
     .header-text h1{font-size:13px;letter-spacing:1px;}
-    .view-buttons{grid-template-columns:repeat(2,1fr);}
-    .view-btn-count{font-size:20px;}
+    .home-buttons{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .home-btn{padding:18px 10px;}
+    .home-btn-icon{font-size:26px;}
+    .home-btn-count{font-size:22px;}
+    .home-btn.buscar{grid-column:span 2;padding:18px;}
+    .home-btn.buscar .home-btn-label{font-size:12px;}
     .bien-detalle-foto{width:60px;height:60px;font-size:24px;}
     .bien-detalle-label{flex:0 0 45%;}
     .header-status{display:none;}
+    .btn-search-go{padding:0 14px;font-size:11px;letter-spacing:1px;}
   }
 </style>
 </head>
@@ -255,8 +384,7 @@
 <div class="bg-layer"></div>
 <div class="scanline"></div>
 
-<div class="app" id="app">
-
+<div class="app">
   <header class="header">
     <div class="header-content">
       <div class="header-logo">
@@ -266,49 +394,19 @@
         </div>
       </div>
       <div class="header-actions">
-        <button class="btn-header" id="btnReload" onclick="recargarArchivo()" title="Actualizar datos">
+        <button class="btn-icon cyan" id="btnReload" onclick="recargarDesdeNube()" title="Actualizar datos">
           ⟳
         </button>
-        <button class="btn-header search-btn" id="btnSearchToggle" onclick="toggleSearch()" title="Buscar (Ctrl+K)">
-          ⌕
-        </button>
-        <button class="btn-header theme" id="btnTheme" onclick="toggleTheme()" title="Cambiar tema (Ctrl+T)">
+        <button class="btn-icon gold" id="btnTheme" onclick="toggleTheme()" title="Cambiar tema (Ctrl+T)">
           <span id="themeIcon">◐</span>
         </button>
         <div class="header-status">
-          <div class="status-dot" id="statusDot"></div>
+          <div class="status-dot"></div>
           <span id="statusText">CARGANDO</span>
         </div>
       </div>
     </div>
   </header>
-
-  <section class="search-section" id="searchSection">
-    <div class="search-box">
-      <span class="search-icon">⌕</span>
-      <input type="text" class="search-input" id="buscador" placeholder="Buscar por nombre, código o ID asignación...">
-      <button class="search-clear" id="searchClear" onclick="limpiarBuscador()">×</button>
-    </div>
-
-    <div class="view-buttons" id="viewButtons">
-      <button class="view-btn" data-color="verde" onclick="verGeneral('fijos', event, this)">
-        <span class="view-btn-label">Fijos</span>
-        <span class="view-btn-count" id="count-fijos">0</span>
-      </button>
-      <button class="view-btn" data-color="azul" onclick="verGeneral('fungibles', event, this)">
-        <span class="view-btn-label">Fungibles</span>
-        <span class="view-btn-count" id="count-fungibles">0</span>
-      </button>
-      <button class="view-btn" data-color="marron" onclick="verGeneral('internos', event, this)">
-        <span class="view-btn-label">Internos</span>
-        <span class="view-btn-count" id="count-internos">0</span>
-      </button>
-      <button class="view-btn" data-color="vino" onclick="verGeneral('prestados', event, this)">
-        <span class="view-btn-label">Prestados</span>
-        <span class="view-btn-count" id="count-prestados">0</span>
-      </button>
-    </div>
-  </section>
 
   <main class="main" id="contenido"></main>
 
@@ -329,26 +427,34 @@
   <img id="lightbox-img" src="" alt="">
 </div>
 
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✔</span>
+  <span id="toastMsg">Mensaje</span>
+</div>
+
 <script>
 /* ============================================================
    CONFIGURACIÓN
    ============================================================ */
 const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1ZZZcNDDou-pZhNuM9ISanIoArFFnsMh_A6yracR78WXZ1jv5wwFg/exec";
-const CACHE_KEY = "div10_data_cache_v1";
-const CACHE_TTL = 1000 * 60 * 60; /* 1 hora */
+const CACHE_KEY = "control_div10_data_v1";
+const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
+/* ============================================================
+   ESTADO GLOBAL
+   ============================================================ */
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
 let estado = {
-  pantalla: "carga",
+  pantalla: "home",         /* "home" | "busqueda" | "vistaGeneral" | "cargando" */
   modalVista: "oficinas",
   responsableActual: null,
   oficinaActual: null,
-  bienActual: null
+  bienActual: null,
+  vistaGeneralActual: null,
+  oficinaFiltroActual: null,
+  historial: []             /* pila para navegación del botón atrás */
 };
-
-/* Historial de navegación interna */
-let historialInterno = [];
 
 /* ============================================================
    TEMA
@@ -369,34 +475,21 @@ function toggleTheme(){
 cargarTema();
 
 /* ============================================================
-   VISIBILIDAD DEL BUSCADOR
+   TOAST
    ============================================================ */
-function aplicarVisibilidadBuscador(){
-  const visible = localStorage.getItem("buscador_visible") !== "false";
-  const section = document.getElementById("searchSection");
-  const btn = document.getElementById("btnSearchToggle");
-  if(visible){
-    section.classList.add("visible");
-    btn.classList.add("active");
-  } else {
-    section.classList.remove("visible");
-    btn.classList.remove("active");
-  }
-}
-function toggleSearch(){
-  const section = document.getElementById("searchSection");
-  const btn = document.getElementById("btnSearchToggle");
-  const visible = section.classList.contains("visible");
-  if(visible){
-    section.classList.remove("visible");
-    btn.classList.remove("active");
-    localStorage.setItem("buscador_visible", "false");
-  } else {
-    section.classList.add("visible");
-    btn.classList.add("active");
-    localStorage.setItem("buscador_visible", "true");
-    setTimeout(() => document.getElementById("buscador").focus(), 100);
-  }
+let toastTimer = null;
+function mostrarToast(msg, tipo = "info", icono = null){
+  const toast = document.getElementById("toast");
+  const iconEl = document.getElementById("toastIcon");
+  const msgEl = document.getElementById("toastMsg");
+  toast.className = "toast visible " + tipo;
+  if(icono) iconEl.textContent = icono;
+  else if(tipo === "success") iconEl.textContent = "✔";
+  else if(tipo === "error") iconEl.textContent = "⚠";
+  else iconEl.textContent = "ℹ";
+  msgEl.textContent = msg;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { toast.classList.remove("visible"); }, 3200);
 }
 
 /* ============================================================
@@ -431,7 +524,9 @@ function getVal(obj, ...claves){
 function obtenerIdAsig(o){
   return getVal(o, "ASIGNACION ID", "ASIGNACIÓN ID", "ASIGNACON ID", "ASIGNACION", "ASIGNACIÓN", "ID");
 }
-function obtenerFoto(o){ return getVal(o, "FOTO", "URL_IMAGEN", "IMAGEN"); }
+function obtenerFoto(o){
+  return getVal(o, "FOTO", "URL_IMAGEN", "IMAGEN");
+}
 function renderEstado(val){
   const v = (val || "").toString().trim();
   if(!v) return "—";
@@ -504,69 +599,32 @@ function csvAObjetos(texto){
 }
 
 /* ============================================================
-   CACHÉ
+   CARGA Y CACHÉ
    ============================================================ */
-function guardarCache(){
-  try{
-    const payload = {
-      timestamp: Date.now(),
-      data: DATA
-    };
-    localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
-    console.log("💾 Datos guardados en caché");
-  }catch(e){
-    console.warn("⚠ No se pudo guardar caché:", e.message);
-  }
-}
+async function cargarDesdeNube(forzar = false){
+  const cont = document.getElementById("contenido");
 
-function cargarCache(){
-  try{
-    const raw = localStorage.getItem(CACHE_KEY);
-    if(!raw) return false;
-    const payload = JSON.parse(raw);
-    if(!payload.data) return false;
-
-    /* Restaurar datos */
-    DATA.fijos = payload.data.fijos || [];
-    DATA.fungibles = payload.data.fungibles || [];
-    DATA.internos = payload.data.internos || [];
-    DATA.prestados = payload.data.prestados || [];
-    DATA.resp = payload.data.resp || [];
-
-    const edad = Date.now() - (payload.timestamp || 0);
-    const edadMin = Math.round(edad / 60000);
-    console.log(`📦 Caché cargado (edad: ${edadMin} min)`);
-
-    return true;
-  }catch(e){
-    console.warn("⚠ Error leyendo caché:", e.message);
-    return false;
-  }
-}
-
-/* ============================================================
-   STATUS DEL HEADER
-   ============================================================ */
-function setStatus(tipo, texto){
-  const dot = document.getElementById("statusDot");
-  const txt = document.getElementById("statusText");
-  dot.className = "status-dot";
-  if(tipo === "loading") dot.classList.add("loading");
-  if(tipo === "error") dot.classList.add("error");
-  txt.textContent = texto;
-}
-
-/* ============================================================
-   CARGA DE DATOS
-   ============================================================ */
-async function cargarDesdeNube(silencioso = false){
-  if(!silencioso){
-    const cont = document.getElementById("contenido");
-    if(!DATA.fijos.length){
-      cont.innerHTML = `<div class="loading fade-in">☁ Cargando datos desde Google Drive...</div>`;
+  /* Si no forzamos y hay caché válido → usar caché */
+  if(!forzar){
+    const cache = localStorage.getItem(CACHE_KEY);
+    if(cache){
+      try{
+        const parsed = JSON.parse(cache);
+        if(parsed && parsed.fijos && parsed.resp){
+          aplicarDatos(parsed);
+          const ts = localStorage.getItem(CACHE_HOJA_KEY);
+          const fecha = ts ? new Date(parseInt(ts)).toLocaleString() : "—";
+          console.log("✔ Datos cargados desde caché — Última actualización:", fecha);
+          mostrarHome();
+          return;
+        }
+      }catch(e){ console.warn("Caché corrupto, recargando desde nube"); }
     }
   }
-  setStatus("loading", "CARGANDO");
+
+  /* Sin caché o forzado → cargar desde Drive */
+  cont.innerHTML = `<div class="loading fade-in">☁ Cargando datos desde Google Drive...</div>`;
+  document.getElementById("statusText").textContent = "CARGANDO";
 
   try{
     const hojas = [
@@ -584,73 +642,77 @@ async function cargarDesdeNube(silencioso = false){
       )
     );
 
+    const nuevo = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
     resultados.forEach(({ key, nombre, texto }) => {
       if(texto.trim().startsWith("<")){
         console.warn(`⚠ ${nombre}: respuesta HTML`);
+        nuevo[key] = [];
         return;
       }
       if(texto.trim().startsWith("{")){
         try{
           const j = JSON.parse(texto);
-          if(j.error){
-            console.warn(`⚠ ${nombre}:`, j.error);
-            return;
-          }
+          if(j.error){ console.warn(`⚠ ${nombre}:`, j.error); nuevo[key] = []; return; }
         }catch(_){}
       }
-      DATA[key] = csvAObjetos(texto);
-      console.log(`✔ ${nombre}: ${DATA[key].length} registros`);
+      nuevo[key] = csvAObjetos(texto);
+      console.log(`✔ ${nombre}: ${nuevo[key].length} registros`);
     });
 
-    DATA.fijos = DATA.fijos.filter(o => obtenerIdAsig(o));
-    DATA.fungibles = DATA.fungibles.filter(o => obtenerIdAsig(o));
-    DATA.internos = DATA.internos.filter(o => obtenerIdAsig(o));
-    DATA.prestados = DATA.prestados.filter(o => obtenerIdAsig(o) || getVal(o, "DESCRIPCION DEL ACTIVO"));
-    DATA.resp = DATA.resp.filter(o => getVal(o, "ID") && getNombreCompletoResp(o));
+    nuevo.fijos = nuevo.fijos.filter(o => obtenerIdAsig(o));
+    nuevo.fungibles = nuevo.fungibles.filter(o => obtenerIdAsig(o));
+    nuevo.internos = nuevo.internos.filter(o => obtenerIdAsig(o));
+    nuevo.prestados = nuevo.prestados.filter(o => obtenerIdAsig(o) || getVal(o, "DESCRIPCION DEL ACTIVO"));
+    nuevo.resp = nuevo.resp.filter(o => getVal(o, "ID") && getNombreCompletoResp(o));
 
-    guardarCache();
-    actualizarContadores();
-    document.getElementById("searchSection").classList.add("visible");
-    setStatus("online", "ONLINE");
-    estado.pantalla = "listo";
-
-    /* Si había contenido visual, mantenerlo; si no, mostrar vacío */
-    const cont = document.getElementById("contenido");
-    if(!cont.querySelector(".resp-card, .bien-card, .tabla-section")){
-      renderVacio();
+    /* Comparar con datos actuales si estamos forzando */
+    if(forzar){
+      const cambios = contarCambios(DATA, nuevo);
+      if(cambios === 0) mostrarToast("Datos al día — sin cambios", "info", "ℹ");
+      else mostrarToast(`Datos actualizados — ${cambios} cambio(s) detectado(s)`, "success", "✔");
     }
+
+    /* Guardar en caché */
+    localStorage.setItem(CACHE_KEY, JSON.stringify(nuevo));
+    localStorage.setItem(CACHE_HOJA_KEY, Date.now().toString());
+
+    aplicarDatos(nuevo);
+    document.getElementById("statusText").textContent = "ONLINE";
+    mostrarHome();
 
   }catch(err){
     console.error(err);
-    if(!silencioso){
-      const cont = document.getElementById("contenido");
-      cont.innerHTML = `<div class="error fade-in">
-        ⚠ No se pudieron cargar los datos<br><br>
-        <small>${esc(err.message)}</small>
-      </div>`;
-    }
-    setStatus("error", "ERROR");
+    cont.innerHTML = `<div class="error fade-in">
+      ⚠ No se pudieron cargar los datos desde Drive<br><br>
+      <small>${esc(err.message)}</small><br><br>
+      <small style="opacity:.7;font-size:10px;">Verifique que el Apps Script esté implementado con acceso "Cualquier usuario"</small>
+    </div>`;
+    document.getElementById("statusText").textContent = "ERROR";
+    mostrarToast("Error al cargar datos", "error", "⚠");
   }
 }
 
-function recargarArchivo(){
-  cargarDesdeNube(false);
+function aplicarDatos(obj){
+  DATA.fijos = obj.fijos || [];
+  DATA.fungibles = obj.fungibles || [];
+  DATA.internos = obj.internos || [];
+  DATA.prestados = obj.prestados || [];
+  DATA.resp = obj.resp || [];
 }
 
-/* ============================================================
-   CONTADORES
-   ============================================================ */
-function actualizarContadores(){
-  const conteos = {
-    fijos: DATA.fijos.length,
-    fungibles: DATA.fungibles.length,
-    internos: DATA.internos.length,
-    prestados: DATA.prestados.length
-  };
-  Object.keys(conteos).forEach(tipo => {
-    const el = document.getElementById(`count-${tipo}`);
-    if(el) el.textContent = conteos[tipo];
+function contarCambios(antes, despues){
+  let cambios = 0;
+  ["fijos","fungibles","internos","prestados","resp"].forEach(k => {
+    if((antes[k] || []).length !== (despues[k] || []).length) cambios++;
   });
+  return cambios;
+}
+
+function recargarDesdeNube(){
+  const btn = document.getElementById("btnReload");
+  btn.classList.add("spinning");
+  setTimeout(() => btn.classList.remove("spinning"), 1500);
+  cargarDesdeNube(true);
 }
 
 /* ============================================================
@@ -688,6 +750,194 @@ function ordenarIdAsignacion(a, b){
   if(numA !== numB) return numA - numB;
   return letA.localeCompare(letB);
 }
+function contarBienesPorAsignacion(id){
+  const idLimpio = (id || "").trim();
+  let total = 0;
+  total += DATA.fijos.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  total += DATA.fungibles.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  total += DATA.internos.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  total += DATA.prestados.filter(o => obtenerIdAsig(o) === idLimpio).length;
+  return total;
+}
+
+/* ============================================================
+   NAVEGACIÓN CON BOTÓN ATRÁS
+   ============================================================ */
+function pushEstado(nombreEstado){
+  try{
+    history.pushState({ pantalla: nombreEstado }, "");
+    estado.historial.push(nombreEstado);
+  }catch(e){}
+}
+
+window.addEventListener("popstate", (e) => {
+  /* Resolver qué hacer según el estado actual */
+  if(estado.modalVista && document.getElementById("modal").classList.contains("visible")){
+    cerrarModal();
+    /* Empujar estado de nuevo para mantener la pila */
+    pushEstado(estado.pantalla);
+    return;
+  }
+  if(estado.pantalla === "busqueda"){
+    estado.pantalla = "home";
+    mostrarHome();
+    pushEstado("home");
+    return;
+  }
+  if(estado.pantalla === "vistaGeneral"){
+    estado.pantalla = "home";
+    estado.vistaGeneralActual = null;
+    estado.oficinaFiltroActual = null;
+    mostrarHome();
+    pushEstado("home");
+    return;
+  }
+  if(estado.pantalla === "home"){
+    /* Preguntar si desea salir */
+    const salir = confirm("¿Está seguro que desea salir del sistema?");
+    if(salir){
+      /* Dejar que el navegador haga el back real */
+      history.back();
+    } else {
+      /* Re-empujar estado para no salir */
+      pushEstado("home");
+    }
+    return;
+  }
+});
+
+/* ============================================================
+   RENDER — PANTALLA HOME
+   ============================================================ */
+function mostrarHome(){
+  estado.pantalla = "home";
+  estado.modalVista = "oficinas";
+  estado.responsableActual = null;
+  estado.oficinaActual = null;
+  estado.bienActual = null;
+  estado.vistaGeneralActual = null;
+  estado.oficinaFiltroActual = null;
+
+  const cont = document.getElementById("contenido");
+  cont.innerHTML = `
+    <div class="home">
+      <div class="home-buttons">
+        <button class="home-btn" data-color="verde" onclick="irVistaGeneral('fijos', event, this)">
+          <span class="home-btn-icon">◈</span>
+          <span class="home-btn-label">Fijos</span>
+          <span class="home-btn-count" id="count-fijos">0</span>
+        </button>
+        <button class="home-btn" data-color="azul" onclick="irVistaGeneral('fungibles', event, this)">
+          <span class="home-btn-icon">◈</span>
+          <span class="home-btn-label">Fungibles</span>
+          <span class="home-btn-count" id="count-fungibles">0</span>
+        </button>
+        <button class="home-btn" data-color="marron" onclick="irVistaGeneral('internos', event, this)">
+          <span class="home-btn-icon">◈</span>
+          <span class="home-btn-label">Internos</span>
+          <span class="home-btn-count" id="count-internos">0</span>
+        </button>
+        <button class="home-btn" data-color="vino" onclick="irVistaGeneral('prestados', event, this)">
+          <span class="home-btn-icon">◈</span>
+          <span class="home-btn-label">Prestados</span>
+          <span class="home-btn-count" id="count-prestados">0</span>
+        </button>
+        <button class="home-btn buscar" data-color="buscar" onclick="irBusqueda(event, this)">
+          <span class="home-btn-icon">🔍</span>
+          <span class="home-btn-label">Buscar</span>
+        </button>
+      </div>
+    </div>
+  `;
+
+  actualizarContadores();
+  document.getElementById("statusText").textContent = "ONLINE";
+}
+
+function actualizarContadores(){
+  const c = {
+    fijos: DATA.fijos.length,
+    fungibles: DATA.fungibles.length,
+    internos: DATA.internos.length,
+    prestados: DATA.prestados.length
+  };
+  Object.keys(c).forEach(k => {
+    const el = document.getElementById(`count-${k}`);
+    if(el) el.textContent = c[k];
+  });
+}
+
+/* ============================================================
+   NAVEGACIÓN — IR A MODO BÚSQUEDA
+   ============================================================ */
+function irBusqueda(ev, btn){
+  if(ev && btn) ripple(ev, btn);
+  estado.pantalla = "busqueda";
+  pushEstado("busqueda");
+  mostrarModoBusqueda();
+}
+
+function mostrarModoBusqueda(){
+  const cont = document.getElementById("contenido");
+  cont.innerHTML = `
+    <div class="modo-busqueda">
+      <div class="modo-busqueda-top">
+        <button class="btn-volver" onclick="volverDeBusqueda()">← Volver</button>
+        <div class="search-wrapper">
+          <div class="search-box">
+            <span class="search-icon">⌕</span>
+            <input type="text" class="search-input" id="buscador" placeholder="Nombre, código o ID asignación..." autofocus>
+          </div>
+          <button class="btn-search-go" onclick="ejecutarBusqueda()">
+            <span>🔍</span><span>Buscar</span>
+          </button>
+        </div>
+      </div>
+      <div id="resultados-busqueda"></div>
+    </div>
+  `;
+  const input = document.getElementById("buscador");
+  input.focus();
+  initBusquedaLive();
+}
+
+function volverDeBusqueda(){
+  const input = document.getElementById("buscador");
+  if(input) input.value = "";
+  estado.pantalla = "home";
+  mostrarHome();
+  pushEstado("home");
+}
+
+function initBusquedaLive(){
+  const input = document.getElementById("buscador");
+  if(!input) return;
+  let timer;
+  input.addEventListener("input", e => {
+    clearTimeout(timer);
+    const val = e.target.value.trim();
+    if(val.length < 1){
+      document.getElementById("resultados-busqueda").innerHTML = "";
+      return;
+    }
+    timer = setTimeout(() => ejecutarBusqueda(val), 150);
+  });
+  input.addEventListener("keydown", e => {
+    if(e.key === "Enter"){
+      e.preventDefault();
+      ejecutarBusqueda(e.target.value.trim());
+    }
+  });
+}
+
+function ejecutarBusqueda(texto){
+  const val = (texto || document.getElementById("buscador").value || "").trim();
+  const res = document.getElementById("resultados-busqueda");
+  if(!val){ res.innerHTML = ""; return; }
+  const tipo = detectarTipoBusqueda(val);
+  if(tipo === "nombre") renderResultadosResponsables(val, res);
+  else renderResultadosBienes(val, tipo, res);
+}
 
 /* ============================================================
    BÚSQUEDA
@@ -709,118 +959,36 @@ function buscarResponsables(termino){
   lista.sort((a,b) => a.nombre.localeCompare(b.nombre));
   return lista;
 }
+
 function buscarBienesPorCodigo(termino){
   const t = norm(termino);
-  const todos = [
-    ...DATA.fijos.map(b => ({...b, __tipo: "FIJOS"})),
-    ...DATA.fungibles.map(b => ({...b, __tipo: "FUNGIBLES"})),
-    ...DATA.internos.map(b => ({...b, __tipo: "INTERNOS"})),
-    ...DATA.prestados.map(b => ({...b, __tipo: "PRESTADOS"}))
-  ];
+  const todos = todosLosBienes();
   return todos.filter(b => norm(getVal(b, "CODIGO")).includes(t));
 }
+
 function buscarBienesPorIdAsig(idAsig){
   const t = norm(idAsig);
-  const todos = [
+  const todos = todosLosBienes();
+  return todos.filter(b => norm(obtenerIdAsig(b)) === t);
+}
+
+function todosLosBienes(){
+  return [
     ...DATA.fijos.map(b => ({...b, __tipo: "FIJOS"})),
     ...DATA.fungibles.map(b => ({...b, __tipo: "FUNGIBLES"})),
     ...DATA.internos.map(b => ({...b, __tipo: "INTERNOS"})),
     ...DATA.prestados.map(b => ({...b, __tipo: "PRESTADOS"}))
   ];
-  return todos.filter(b => norm(obtenerIdAsig(b)) === t);
-}
-function contarBienesPorAsignacion(id){
-  const idLimpio = (id || "").trim();
-  let total = 0;
-  total += DATA.fijos.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  total += DATA.fungibles.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  total += DATA.internos.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  total += DATA.prestados.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  return total;
 }
 
-/* ============================================================
-   HISTORIAL DE NAVEGACIÓN (para botón atrás del navegador)
-   ============================================================ */
-function pushHistorial(vista){
-  historialInterno.push(vista);
-  history.pushState({ vista }, "", "");
-}
-
-function popHistorial(){
-  if(historialInterno.length > 0){
-    historialInterno.pop();
-  }
-  if(historialInterno.length === 0){
-    /* Estamos en la pantalla principal */
-    const confirmar = confirm("¿Está seguro de salir del sistema?");
-    if(confirmar){
-      window.history.back();
-    } else {
-      /* Reingresar un estado para "cancelar" el back */
-      history.pushState({ vista: "root" }, "", "");
-    }
-    return;
-  }
-
-  /* Recuperar el estado anterior */
-  const anterior = historialInterno[historialInterno.length - 1];
-  aplicarVista(anterior, false);
-}
-
-function aplicarVista(vista, guardarHistorial = true){
-  if(vista.tipo === "inicio"){
-    renderVacio();
-  } else if(vista.tipo === "listaResponsables"){
-    renderListaResponsables(vista.filtro);
-  } else if(vista.tipo === "listaBienes"){
-    renderListaBienes(vista.filtro, vista.subtipo);
-  } else if(vista.tipo === "vistaGeneral"){
-    renderVistaGeneral(vista.categoria, vista.oficina, vista.textoBusqueda);
-  } else if(vista.tipo === "modalResponsable"){
-    /* Reabrir modal */
-    estado.responsableActual = vista.responsable;
-    estado.modalVista = vista.modalVista || "oficinas";
-    estado.oficinaActual = vista.oficina || null;
-    document.getElementById("modal-titulo").textContent = vista.responsable ? vista.responsable.nombre : "";
-    document.getElementById("modal-body").innerHTML = renderModalBody();
-    document.getElementById("modal").classList.add("visible");
-  } else if(vista.tipo === "modalDetalleBien"){
-    estado.responsableActual = vista.responsable || null;
-    estado.bienActual = vista.bien;
-    estado.modalVista = "detalleBien";
-    document.getElementById("modal-titulo").textContent = "Detalle del Bien";
-    document.getElementById("modal-body").innerHTML = renderDetalleBien(vista.bien);
-    document.getElementById("modal").classList.add("visible");
-  }
-}
-
-/* Manejo del botón atrás del navegador */
-window.addEventListener("popstate", () => {
-  popHistorial();
-});
-
-/* ============================================================
-   RENDER
-   ============================================================ */
-function renderVacio(){
-  document.getElementById("contenido").innerHTML = `
-    <div class="empty-state">
-      <div class="empty-state-icon">◈</div>
-      <div class="empty-state-title">Sistema listo</div>
-      <div class="empty-state-sub">Escriba un nombre, código o ID de asignación</div>
-    </div>`;
-}
-
-function renderListaResponsables(filtro){
+function renderResultadosResponsables(filtro, cont){
   const lista = buscarResponsables(filtro);
   if(!lista.length){
-    document.getElementById("contenido").innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">◌</div>
-        <div class="empty-state-title">Sin resultados</div>
-        <div class="empty-state-sub">No hay responsables con "${esc(filtro)}"</div>
-      </div>`;
+    cont.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">◌</div>
+      <div class="empty-state-title">Sin resultados</div>
+      <div class="empty-state-sub">No hay responsables con "${esc(filtro)}"</div>
+    </div>`;
     return;
   }
   let html = `<div class="list-title">
@@ -830,7 +998,7 @@ function renderListaResponsables(filtro){
   lista.forEach((r, i) => {
     const totalBienes = r.asignaciones.reduce((a, o) => a + contarBienesPorAsignacion(o.id), 0);
     html += `
-      <div class="resp-card" style="animation-delay:${i * 50}ms" onclick="abrirModalResponsable(${i})">
+      <div class="resp-card" style="animation-delay:${i * 40}ms" onclick="abrirModalResponsable(${i})">
         <div class="resp-card-info">
           <div class="resp-card-name">${esc(r.nombre)}</div>
           <div class="resp-card-meta">
@@ -842,19 +1010,18 @@ function renderListaResponsables(filtro){
         <div class="resp-card-arrow">›</div>
       </div>`;
   });
-  document.getElementById("contenido").innerHTML = html;
+  cont.innerHTML = html;
   window.__listaResponsablesActual = lista;
 }
 
-function renderListaBienes(filtro, tipoBusqueda){
+function renderResultadosBienes(filtro, tipoBusqueda, cont){
   const bienes = tipoBusqueda === "id" ? buscarBienesPorIdAsig(filtro) : buscarBienesPorCodigo(filtro);
   if(!bienes.length){
-    document.getElementById("contenido").innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">◌</div>
-        <div class="empty-state-title">Sin resultados</div>
-        <div class="empty-state-sub">No hay bienes con "${esc(filtro)}"</div>
-      </div>`;
+    cont.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">◌</div>
+      <div class="empty-state-title">Sin resultados</div>
+      <div class="empty-state-sub">No hay bienes con "${esc(filtro)}"</div>
+    </div>`;
     return;
   }
   if(bienes.length === 1){ abrirDetalleBienDirecto(bienes[0]); return; }
@@ -868,7 +1035,7 @@ function renderListaBienes(filtro, tipoBusqueda){
     const tipoClase = b.__tipo.toLowerCase();
     const foto = obtenerFoto(b);
     html += `
-      <div class="bien-card" style="animation-delay:${i * 40}ms" onclick="abrirDetalleBienDirectoPorCodigo('${escAttr(getVal(b, 'CODIGO'))}', '${escAttr(b.__tipo)}')">
+      <div class="bien-card" style="animation-delay:${i * 35}ms" onclick="abrirDetalleBienDirectoPorCodigo('${escAttr(getVal(b, 'CODIGO'))}', '${escAttr(b.__tipo)}')">
         <div class="bien-card-thumb">${renderFotoMiniatura(foto)}</div>
         <div class="bien-card-info">
           <div class="bien-card-code">${esc(getVal(b, "CODIGO"))}</div>
@@ -882,7 +1049,140 @@ function renderListaBienes(filtro, tipoBusqueda){
         <div class="resp-card-arrow">›</div>
       </div>`;
   });
-  document.getElementById("contenido").innerHTML = html;
+  cont.innerHTML = html;
+}
+
+/* ============================================================
+   VISTAS GENERALES
+   ============================================================ */
+function irVistaGeneral(tipo, ev, btn){
+  if(ev && btn) ripple(ev, btn);
+  estado.pantalla = "vistaGeneral";
+  estado.vistaGeneralActual = tipo;
+  estado.oficinaFiltroActual = null;
+  pushEstado("vistaGeneral");
+  renderVistaGeneral(tipo);
+}
+
+function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
+  const cont = document.getElementById("contenido");
+  const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
+  const listaCompleta = DATA[tipo] || [];
+  const titulo = titulos[tipo] || tipo.toUpperCase();
+
+  if(!oficinaFiltro){
+    let html = `<button class="btn-volver" onclick="volverDeVistaGeneral()">← Volver</button>
+      <div class="list-title">
+        <span>◈ ${titulo} — Total</span>
+        <span class="list-count">${listaCompleta.length}</span>
+      </div>`;
+    if(!listaCompleta.length){
+      html += `<div class="empty-state">
+        <div class="empty-state-icon">◌</div>
+        <div class="empty-state-title">Sin registros</div>
+        <div class="empty-state-sub">No hay bienes en esta categoría</div>
+      </div>`;
+      cont.innerHTML = html;
+      return;
+    }
+    const grupos = new Map();
+    listaCompleta.forEach(b => {
+      const idAsig = obtenerIdAsig(b);
+      const ofi = getOficinaResponsablePorId(idAsig) || "SIN OFICINA";
+      if(!grupos.has(ofi)) grupos.set(ofi, []);
+      grupos.get(ofi).push(b);
+    });
+    const arr = Array.from(grupos.entries()).sort((a,b) => b[1].length - a[1].length);
+    arr.forEach(([ofi, regs], i) => {
+      html += `
+        <div class="resp-card" style="animation-delay:${i * 25}ms" onclick="filtrarPorOficina('${escAttr(ofi)}')">
+          <div class="resp-card-info">
+            <div class="resp-card-name">${esc(ofi)}</div>
+            <div class="resp-card-meta"><span>◈ ${regs.length} registro(s)</span></div>
+          </div>
+          <div class="resp-card-arrow">›</div>
+        </div>`;
+    });
+    cont.innerHTML = html;
+    return;
+  }
+
+  const listaFiltrada = listaCompleta.filter(b => getOficinaResponsablePorId(obtenerIdAsig(b)) === oficinaFiltro);
+  let listaParaMostrar = listaFiltrada;
+  if(textoBusqueda && textoBusqueda.trim().length){
+    const t = norm(textoBusqueda);
+    listaParaMostrar = listaFiltrada.filter(o => Object.values(o).some(v => norm(v).includes(t)));
+  }
+  let html = `<button class="btn-volver" onclick="renderVistaGeneral('${tipo}')">← Volver</button>
+    <div class="oficina-encabezado">
+      <div class="oficina-encabezado-info">
+        <div class="oficina-encabezado-nombre">${esc(oficinaFiltro)}</div>
+        <div class="oficina-encabezado-sub">◈ ${esc(titulo)} · ${listaFiltrada.length} bien(es)</div>
+      </div>
+      <div class="oficina-encabezado-count">${listaFiltrada.length}</div>
+    </div>`;
+  if(!listaParaMostrar.length){
+    html += `<div class="empty-state">
+      <div class="empty-state-icon">◌</div>
+      <div class="empty-state-title">Sin resultados</div>
+      <div class="empty-state-sub">No hay bienes que coincidan</div>
+    </div>`;
+    cont.innerHTML = html;
+    return;
+  }
+  html += tablaGeneral(tipo, listaParaMostrar);
+  cont.innerHTML = html;
+}
+
+function volverDeVistaGeneral(){
+  estado.pantalla = "home";
+  estado.vistaGeneralActual = null;
+  estado.oficinaFiltroActual = null;
+  mostrarHome();
+  pushEstado("home");
+}
+
+function filtrarPorOficina(oficina){
+  estado.oficinaFiltroActual = oficina;
+  renderVistaGeneral(estado.vistaGeneralActual, oficina, "");
+}
+
+function tablaGeneral(tipo, lista){
+  const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
+  const colorMap = { fijos: "verde", fungibles: "azul", internos: "marron", prestados: "vino" };
+  const titulo = titulos[tipo] || tipo.toUpperCase();
+  const color = colorMap[tipo] || "verde";
+  let columnas = [];
+  if(tipo === "fijos") columnas = ["ASIGNACIÓN", "RESPONSABLE", "CODIGO", "DESCRIPCION DEL ACTIVO", "ESTADO"];
+  else if(tipo === "fungibles") columnas = ["ASIGNACIÓN", "RESPONSABLE", "CODIGO", "DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO"];
+  else columnas = ["ASIGNACIÓN", "RESPONSABLE", "DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO", "OBS"];
+  let html = `<div class="tabla-section">
+    <div class="tabla-header" data-color="${color}">
+      <div class="tabla-header-titulo"><span class="dot"></span>${titulo}</div>
+      <div class="tabla-header-count">${lista.length}</div>
+    </div>
+    <div class="tabla-scroll"><table><thead><tr>`;
+  columnas.forEach(c => html += `<th>${c}</th>`);
+  html += `</tr></thead><tbody>`;
+  const listaOrdenada = [...lista].sort((a, b) => ordenarIdAsignacion(obtenerIdAsig(a), obtenerIdAsig(b)));
+  const tipoUpper = tipo.toUpperCase();
+  listaOrdenada.forEach((item, i) => {
+    html += `<tr style="animation-delay:${i * 8}ms" onclick="abrirDetalleBienDesdeModal('${escAttr(getVal(item, 'CODIGO'))}', '${tipoUpper}')">`;
+    columnas.forEach(col => {
+      let val = "";
+      if(col === "ASIGNACIÓN") val = esc(obtenerIdAsig(item)) || "—";
+      else if(col === "RESPONSABLE") val = esc(getNombreResponsablePorId(obtenerIdAsig(item)));
+      else if(col === "CODIGO") val = getVal(item, "CODIGO") || "—";
+      else if(col === "DESCRIPCION DEL ACTIVO") val = getVal(item, "DESCRIPCION DEL ACTIVO");
+      else if(col === "CANTIDAD") val = getVal(item, "CANTIDAD") || "—";
+      else if(col === "ESTADO") val = renderEstado(getVal(item, "ESTADO"));
+      else if(col === "OBS") val = getVal(item, "OBS") || "—";
+      html += `<td>${val}</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody></table></div></div>`;
+  return html;
 }
 
 /* ============================================================
@@ -903,13 +1203,7 @@ function abrirModalResponsable(idx){
   document.getElementById("modal-titulo").textContent = r.nombre;
   document.getElementById("modal-body").innerHTML = renderModalBody();
   document.getElementById("modal").classList.add("visible");
-
-  pushHistorial({
-    tipo: "modalResponsable",
-    responsable: r,
-    modalVista: estado.modalVista,
-    oficina: estado.oficinaActual
-  });
+  pushEstado("modal");
 }
 
 function abrirOficinaModal(idAsig){
@@ -920,26 +1214,12 @@ function abrirOficinaModal(idAsig){
   estado.modalVista = "tablas";
   estado.oficinaActual = oficina;
   document.getElementById("modal-body").innerHTML = renderModalBody();
-
-  pushHistorial({
-    tipo: "modalResponsable",
-    responsable: r,
-    modalVista: "tablas",
-    oficina: oficina
-  });
 }
 
 function volverAOficinasModal(){
   estado.modalVista = "oficinas";
   estado.oficinaActual = null;
   document.getElementById("modal-body").innerHTML = renderModalBody();
-
-  pushHistorial({
-    tipo: "modalResponsable",
-    responsable: estado.responsableActual,
-    modalVista: "oficinas",
-    oficina: null
-  });
 }
 
 function abrirDetalleBienDirecto(bien){
@@ -948,12 +1228,7 @@ function abrirDetalleBienDirecto(bien){
   document.getElementById("modal-titulo").textContent = "Detalle del Bien";
   document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
   document.getElementById("modal").classList.add("visible");
-
-  pushHistorial({
-    tipo: "modalDetalleBien",
-    responsable: estado.responsableActual,
-    bien: bien
-  });
+  pushEstado("modal");
 }
 
 function abrirDetalleBienDirectoPorCodigo(codigo, tipo){
@@ -979,12 +1254,6 @@ function abrirDetalleBienDesdeModal(codigo, tipo){
   estado.modalVista = "detalleBien";
   document.getElementById("modal-titulo").textContent = "Detalle del Bien";
   document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
-
-  pushHistorial({
-    tipo: "modalDetalleBien",
-    responsable: estado.responsableActual,
-    bien: bien
-  });
 }
 
 function volverATablasDesdeDetalleBien(){
@@ -992,13 +1261,6 @@ function volverATablasDesdeDetalleBien(){
   estado.bienActual = null;
   document.getElementById("modal-titulo").textContent = estado.responsableActual ? estado.responsableActual.nombre : "Bienes";
   document.getElementById("modal-body").innerHTML = renderModalBody();
-
-  pushHistorial({
-    tipo: "modalResponsable",
-    responsable: estado.responsableActual,
-    modalVista: "tablas",
-    oficina: estado.oficinaActual
-  });
 }
 
 function cerrarModal(){
@@ -1023,7 +1285,7 @@ function renderModalOficinas(){
   r.asignaciones.forEach((of, i) => {
     const cant = contarBienesPorAsignacion(of.id);
     html += `
-      <div class="oficina-card" style="animation-delay:${i * 50}ms" onclick="abrirOficinaModal('${escAttr(of.id)}')">
+      <div class="oficina-card" style="animation-delay:${i * 40}ms" onclick="abrirOficinaModal('${escAttr(of.id)}')">
         <div class="oficina-card-info">
           <div class="oficina-card-nombre">${esc(of.oficina)}</div>
           <div class="oficina-card-id">ID ASIGNACIÓN: ${esc(of.id)}</div>
@@ -1085,7 +1347,7 @@ function tablaModal(titulo, lista, color){
   html += `</tr></thead><tbody>`;
   lista.forEach((item, i) => {
     const cod = getVal(item, "CODIGO");
-    html += `<tr style="animation-delay:${i * 15}ms" onclick="abrirDetalleBienDesdeModal('${escAttr(cod)}', '${titulo}')">`;
+    html += `<tr style="animation-delay:${i * 12}ms" onclick="abrirDetalleBienDesdeModal('${escAttr(cod)}', '${titulo}')">`;
     columnas.forEach(col => {
       let val = "";
       if(col === "CODIGO") val = getVal(item, "CODIGO") || "—";
@@ -1175,142 +1437,6 @@ function renderDetalleBien(bien){
 }
 
 /* ============================================================
-   VISTAS GENERALES
-   ============================================================ */
-let vistaGeneralActual = null;
-function verGeneral(tipo, ev, btn){
-  if(ev && btn) ripple(ev, btn);
-  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-  if(btn) btn.classList.add("active");
-  vistaGeneralActual = tipo;
-  renderVistaGeneral(tipo);
-
-  pushHistorial({ tipo: "vistaGeneral", categoria: tipo });
-}
-function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
-  const cont = document.getElementById("contenido");
-  const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
-  const listaCompleta = DATA[tipo] || [];
-  const titulo = titulos[tipo] || tipo.toUpperCase();
-  if(!oficinaFiltro){
-    let html = `<div class="list-title">
-      <span>◈ ${titulo} — Total</span>
-      <span class="list-count">${listaCompleta.length}</span>
-    </div>`;
-    if(!listaCompleta.length){
-      html += `<div class="empty-state">
-        <div class="empty-state-icon">◌</div>
-        <div class="empty-state-title">Sin registros</div>
-        <div class="empty-state-sub">No hay bienes en esta categoría</div>
-      </div>`;
-      cont.innerHTML = html;
-      return;
-    }
-    const grupos = new Map();
-    listaCompleta.forEach(b => {
-      const idAsig = obtenerIdAsig(b);
-      const ofi = getOficinaResponsablePorId(idAsig) || "SIN OFICINA";
-      if(!grupos.has(ofi)) grupos.set(ofi, []);
-      grupos.get(ofi).push(b);
-    });
-    const arr = Array.from(grupos.entries()).sort((a,b) => b[1].length - a[1].length);
-    arr.forEach(([ofi, regs], i) => {
-      html += `
-        <div class="resp-card" style="animation-delay:${i * 30}ms" onclick="filtrarPorOficina('${escAttr(ofi)}')">
-          <div class="resp-card-info">
-            <div class="resp-card-name">${esc(ofi)}</div>
-            <div class="resp-card-meta"><span>◈ ${regs.length} registro(s)</span></div>
-          </div>
-          <div class="resp-card-arrow">›</div>
-        </div>`;
-    });
-    cont.innerHTML = html;
-    return;
-  }
-  const listaFiltrada = listaCompleta.filter(b => getOficinaResponsablePorId(obtenerIdAsig(b)) === oficinaFiltro);
-  let listaParaMostrar = listaFiltrada;
-  if(textoBusqueda && textoBusqueda.trim().length){
-    const t = norm(textoBusqueda);
-    listaParaMostrar = listaFiltrada.filter(o => Object.values(o).some(v => norm(v).includes(t)));
-  }
-  let html = `<button class="btn-nav" onclick="renderVistaGeneral('${tipo}')">← Volver a oficinas</button>
-    <div class="oficina-encabezado">
-      <div class="oficina-encabezado-info">
-        <div class="oficina-encabezado-nombre">${esc(oficinaFiltro)}</div>
-        <div class="oficina-encabezado-sub">◈ ${esc(titulo)} · ${listaFiltrada.length} bien(es)</div>
-      </div>
-      <div class="oficina-encabezado-count">${listaFiltrada.length}</div>
-    </div>
-    <div class="search-box" style="margin-bottom:16px;">
-      <span class="search-icon">⌕</span>
-      <input type="text" class="search-input" id="miniBuscador"
-             placeholder="Filtrar dentro de esta oficina..."
-             value="${escAttr(textoBusqueda || "")}"
-             oninput="filtrarDentroOficina('${escAttr(oficinaFiltro)}', this.value)"
-             style="font-size:13px;padding:10px 0;">
-    </div>`;
-  if(!listaParaMostrar.length){
-    html += `<div class="empty-state">
-      <div class="empty-state-icon">◌</div>
-      <div class="empty-state-title">Sin resultados</div>
-      <div class="empty-state-sub">No hay bienes que coincidan</div>
-    </div>`;
-    cont.innerHTML = html;
-    return;
-  }
-  html += tablaGeneral(tipo, listaParaMostrar);
-  cont.innerHTML = html;
-}
-function filtrarPorOficina(oficina){
-  renderVistaGeneral(vistaGeneralActual, oficina, "");
-  pushHistorial({ tipo: "vistaGeneral", categoria: vistaGeneralActual, oficina });
-}
-function filtrarDentroOficina(oficina, texto){
-  renderVistaGeneral(vistaGeneralActual, oficina, texto);
-  setTimeout(() => {
-    const mb = document.getElementById("miniBuscador");
-    if(mb){ mb.focus(); mb.setSelectionRange(mb.value.length, mb.value.length); }
-  }, 10);
-}
-function tablaGeneral(tipo, lista){
-  const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
-  const colorMap = { fijos: "verde", fungibles: "azul", internos: "marron", prestados: "vino" };
-  const titulo = titulos[tipo] || tipo.toUpperCase();
-  const color = colorMap[tipo] || "verde";
-  let columnas = [];
-  if(tipo === "fijos") columnas = ["ASIGNACIÓN", "RESPONSABLE", "CODIGO", "DESCRIPCION DEL ACTIVO", "ESTADO"];
-  else if(tipo === "fungibles") columnas = ["ASIGNACIÓN", "RESPONSABLE", "CODIGO", "DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO"];
-  else columnas = ["ASIGNACIÓN", "RESPONSABLE", "DESCRIPCION DEL ACTIVO", "CANTIDAD", "ESTADO", "OBS"];
-  let html = `<div class="tabla-section">
-    <div class="tabla-header" data-color="${color}">
-      <div class="tabla-header-titulo"><span class="dot"></span>${titulo}</div>
-      <div class="tabla-header-count">${lista.length}</div>
-    </div>
-    <div class="tabla-scroll"><table><thead><tr>`;
-  columnas.forEach(c => html += `<th>${c}</th>`);
-  html += `</tr></thead><tbody>`;
-  const listaOrdenada = [...lista].sort((a, b) => ordenarIdAsignacion(obtenerIdAsig(a), obtenerIdAsig(b)));
-  const tipoUpper = tipo.toUpperCase();
-  listaOrdenada.forEach((item, i) => {
-    html += `<tr style="animation-delay:${i * 10}ms" onclick="abrirDetalleBienDesdeModal('${escAttr(getVal(item, 'CODIGO'))}', '${tipoUpper}')">`;
-    columnas.forEach(col => {
-      let val = "";
-      if(col === "ASIGNACIÓN") val = esc(obtenerIdAsig(item)) || "—";
-      else if(col === "RESPONSABLE") val = esc(getNombreResponsablePorId(obtenerIdAsig(item)));
-      else if(col === "CODIGO") val = getVal(item, "CODIGO") || "—";
-      else if(col === "DESCRIPCION DEL ACTIVO") val = getVal(item, "DESCRIPCION DEL ACTIVO");
-      else if(col === "CANTIDAD") val = getVal(item, "CANTIDAD") || "—";
-      else if(col === "ESTADO") val = renderEstado(getVal(item, "ESTADO"));
-      else if(col === "OBS") val = getVal(item, "OBS") || "—";
-      html += `<td>${val}</td>`;
-    });
-    html += `</tr>`;
-  });
-  html += `</tbody></table></div></div>`;
-  return html;
-}
-
-/* ============================================================
    LIGHTBOX / RIPPLE
    ============================================================ */
 function abrirLightbox(url){
@@ -1334,72 +1460,18 @@ function ripple(e, btn){
 }
 
 /* ============================================================
-   BUSCADOR
-   ============================================================ */
-function initBuscador(){
-  const input = document.getElementById("buscador");
-  const clear = document.getElementById("searchClear");
-  let timer;
-
-  input.addEventListener("input", e => {
-    clearTimeout(timer);
-    const val = e.target.value.trim();
-
-    /* Mostrar/ocultar botón de limpiar */
-    if(val.length > 0) clear.classList.add("visible");
-    else clear.classList.remove("visible");
-
-    /* Modo focus: ocultar header, botones vista y footer */
-    const app = document.getElementById("app");
-    if(val.length > 0){
-      app.classList.add("focus-mode");
-    } else {
-      app.classList.remove("focus-mode");
-    }
-
-    /* Quitar estado activo de botones de vista */
-    document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-
-    if(val.length < 1){ renderVacio(); return; }
-
-    timer = setTimeout(() => {
-      const tipoBusqueda = detectarTipoBusqueda(val);
-      if(tipoBusqueda === "nombre"){
-        renderListaResponsables(val);
-        pushHistorial({ tipo: "listaResponsables", filtro: val });
-      } else {
-        renderListaBienes(val, tipoBusqueda);
-        pushHistorial({ tipo: "listaBienes", filtro: val, subtipo: tipoBusqueda });
-      }
-    }, 200);
-  });
-}
-
-function limpiarBuscador(){
-  const input = document.getElementById("buscador");
-  input.value = "";
-  document.getElementById("searchClear").classList.remove("visible");
-  document.getElementById("app").classList.remove("focus-mode");
-  document.querySelectorAll(".view-btn").forEach(b => b.classList.remove("active"));
-  renderVacio();
-  input.focus();
-}
-
-/* ============================================================
-   ATAJOS
+   ATAJOS DE TECLADO
    ============================================================ */
 document.addEventListener("keydown", e => {
   if((e.ctrlKey || e.metaKey) && e.key === "k"){
     e.preventDefault();
-    const section = document.getElementById("searchSection");
-    if(!section.classList.contains("visible")) toggleSearch();
-    setTimeout(() => document.getElementById("buscador").focus(), 100);
+    if(estado.pantalla !== "busqueda") irBusqueda();
+    else document.getElementById("buscador").focus();
   }
   if((e.ctrlKey || e.metaKey) && e.key === "t"){ e.preventDefault(); toggleTheme(); }
   if(e.key === "Escape"){
     if(document.getElementById("lightbox").classList.contains("visible")) cerrarLightbox();
     else if(document.getElementById("modal").classList.contains("visible")) cerrarModal();
-    else if(document.getElementById("buscador").value.trim().length) limpiarBuscador();
   }
 });
 
@@ -1407,30 +1479,13 @@ document.addEventListener("keydown", e => {
    INICIALIZACIÓN
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
-  initBuscador();
-  aplicarVisibilidadBuscador();
+  /* Empujar estado inicial para poder capturar el back */
+  try{
+    history.replaceState({ pantalla: "home" }, "");
+    history.pushState({ pantalla: "home" }, "");
+  }catch(e){}
 
-  /* Estado inicial del historial */
-  history.replaceState({ vista: "root" }, "", "");
-  historialInterno = [];
-
-  /* Intentar cargar desde caché primero */
-  const hayCache = cargarCache();
-
-  if(hayCache){
-    /* Mostrar datos del caché inmediatamente */
-    actualizarContadores();
-    document.getElementById("searchSection").classList.add("visible");
-    setStatus("online", "ONLINE");
-    estado.pantalla = "listo";
-    renderVacio();
-
-    /* Actualizar en segundo plano (silencioso) */
-    setTimeout(() => cargarDesdeNube(true), 500);
-  } else {
-    /* Sin caché: cargar desde la nube */
-    cargarDesdeNube(false);
-  }
+  cargarDesdeNube(false);
 });
 </script>
 </body>
