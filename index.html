@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control DIV-10 V3.2</title>
+<title>Control DIV-10 V3.3</title>
 <style>
   :root{
     --bg:#0a0e12;
@@ -104,17 +104,10 @@
   /* MAIN */
   .main{flex:1;padding:20px;max-width:1200px;margin:0 auto;width:100%;}
 
-  /* PANTALLA PRINCIPAL */
-  .home{
-    display:flex;flex-direction:column;gap:14px;
-    animation:fadeIn .5s ease both;
-    padding-top:20px;
-  }
+  /* HOME */
+  .home{display:flex;flex-direction:column;gap:14px;animation:fadeIn .5s ease both;padding-top:20px;}
   @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
-
-  .home-buttons{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:12px;
-  }
+  .home-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
   .home-btn{
     position:relative;background:var(--bg-panel);border:1px solid var(--borde);
     border-radius:12px;padding:22px 14px;cursor:pointer;
@@ -139,35 +132,23 @@
   .home-btn[data-color="marron"]{--color:#d4a060;}
   .home-btn[data-color="vino"]{--color:var(--vino);}
   .home-btn[data-color="buscar"]{--color:var(--dorado);}
-
   .home-btn-icon{font-size:32px;color:var(--color,var(--dorado));text-shadow:0 0 20px color-mix(in srgb,var(--color,var(--dorado)) 50%,transparent);}
   .home-btn-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:800;}
   .home-btn-count{font-size:26px;font-weight:800;color:var(--color,var(--dorado));font-family:var(--mono);text-shadow:0 0 15px color-mix(in srgb,var(--color,var(--dorado)) 40%,transparent);}
-
   .home-btn.buscar{
-    grid-column:span 4;
-    padding:24px;
+    grid-column:span 4;padding:24px;
     background:linear-gradient(135deg,rgba(212,176,96,.08),rgba(212,176,96,.02));
-    flex-direction:row;
-    justify-content:center;
-    gap:16px;
+    flex-direction:row;justify-content:center;gap:16px;
   }
   .home-btn.buscar .home-btn-icon{font-size:28px;}
   .home-btn.buscar .home-btn-label{font-size:14px;letter-spacing:3px;color:var(--dorado-brillante);}
   .home-btn.buscar:hover{background:linear-gradient(135deg,rgba(212,176,96,.15),rgba(212,176,96,.05));}
-
   .home-btn .ripple{position:absolute;border-radius:50%;background:var(--color,var(--dorado));transform:scale(0);animation:ripple .6s ease-out;opacity:.5;pointer-events:none;}
   @keyframes ripple{to{transform:scale(4);opacity:0;}}
 
   /* MODO BÚSQUEDA */
-  .modo-busqueda{
-    animation:fadeIn .35s ease both;
-    display:flex;flex-direction:column;gap:14px;
-    min-height:60vh;
-  }
-  .modo-busqueda-top{
-    display:flex;gap:10px;align-items:center;
-  }
+  .modo-busqueda{animation:fadeIn .35s ease both;display:flex;flex-direction:column;gap:14px;min-height:60vh;}
+  .modo-busqueda-top{display:flex;gap:10px;align-items:center;}
   .btn-volver{
     display:inline-flex;align-items:center;gap:8px;
     background:var(--bg-elevado);color:var(--dorado);
@@ -180,11 +161,9 @@
   }
   .btn-volver:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:translateX(-4px);box-shadow:0 0 20px var(--dorado-glow);}
 
-  .search-wrapper{
-    flex:1;position:relative;display:flex;gap:8px;
-  }
+  .search-wrapper{flex:1;position:relative;}
   .search-box{
-    flex:1;display:flex;align-items:center;
+    display:flex;align-items:center;
     background:var(--bg-panel);
     border:1px solid var(--borde);
     border-radius:12px;
@@ -196,16 +175,31 @@
   .search-input{flex:1;background:transparent;border:none;outline:none;padding:14px 0;font-size:15px;color:var(--texto);font-family:var(--sans);font-weight:500;letter-spacing:.5px;}
   .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
 
-  .btn-search-go{
-    background:var(--dorado);color:var(--bg);
-    border:1px solid var(--dorado-brillante);
-    border-radius:12px;padding:0 22px;
-    font-size:12px;letter-spacing:1.5px;
-    text-transform:uppercase;font-weight:800;
-    cursor:pointer;display:flex;align-items:center;gap:8px;
-    transition:all .3s ease;flex-shrink:0;
+  /* Botón ✖ Limpiar */
+  .btn-clear{
+    background:transparent;
+    border:none;
+    color:var(--texto-muy-suave);
+    font-size:16px;
+    cursor:pointer;
+    width:32px;height:32px;
+    border-radius:50%;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    transition:all .25s ease;
+    flex-shrink:0;
+    padding:0;
+    margin-left:8px;
+    font-weight:800;
   }
-  .btn-search-go:hover{background:var(--dorado-brillante);transform:translateY(-2px);box-shadow:0 6px 20px var(--dorado-glow);}
+  .btn-clear.visible{display:flex;}
+  .btn-clear:hover{
+    background:var(--rojo);
+    color:#fff;
+    transform:rotate(90deg) scale(1.1);
+    box-shadow:0 0 15px var(--rojo-glow);
+  }
 
   /* LISTAS Y TARJETAS */
   .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;}
@@ -375,7 +369,7 @@
     .bien-detalle-foto{width:60px;height:60px;font-size:24px;}
     .bien-detalle-label{flex:0 0 45%;}
     .header-status{display:none;}
-    .btn-search-go{padding:0 14px;font-size:11px;letter-spacing:1px;}
+    .btn-volver{padding:10px 12px;font-size:11px;}
   }
 </style>
 </head>
@@ -410,7 +404,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v3.2 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v3.3 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -446,14 +440,14 @@ const CACHE_HOJA_KEY = "control_div10_cache_ts";
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
 let estado = {
-  pantalla: "home",         /* "home" | "busqueda" | "vistaGeneral" | "cargando" */
+  pantalla: "home",
   modalVista: "oficinas",
   responsableActual: null,
   oficinaActual: null,
   bienActual: null,
   vistaGeneralActual: null,
   oficinaFiltroActual: null,
-  historial: []             /* pila para navegación del botón atrás */
+  historial: []
 };
 
 /* ============================================================
@@ -604,7 +598,6 @@ function csvAObjetos(texto){
 async function cargarDesdeNube(forzar = false){
   const cont = document.getElementById("contenido");
 
-  /* Si no forzamos y hay caché válido → usar caché */
   if(!forzar){
     const cache = localStorage.getItem(CACHE_KEY);
     if(cache){
@@ -622,7 +615,6 @@ async function cargarDesdeNube(forzar = false){
     }
   }
 
-  /* Sin caché o forzado → cargar desde Drive */
   cont.innerHTML = `<div class="loading fade-in">☁ Cargando datos desde Google Drive...</div>`;
   document.getElementById("statusText").textContent = "CARGANDO";
 
@@ -665,14 +657,12 @@ async function cargarDesdeNube(forzar = false){
     nuevo.prestados = nuevo.prestados.filter(o => obtenerIdAsig(o) || getVal(o, "DESCRIPCION DEL ACTIVO"));
     nuevo.resp = nuevo.resp.filter(o => getVal(o, "ID") && getNombreCompletoResp(o));
 
-    /* Comparar con datos actuales si estamos forzando */
     if(forzar){
       const cambios = contarCambios(DATA, nuevo);
       if(cambios === 0) mostrarToast("Datos al día — sin cambios", "info", "ℹ");
       else mostrarToast(`Datos actualizados — ${cambios} cambio(s) detectado(s)`, "success", "✔");
     }
 
-    /* Guardar en caché */
     localStorage.setItem(CACHE_KEY, JSON.stringify(nuevo));
     localStorage.setItem(CACHE_HOJA_KEY, Date.now().toString());
 
@@ -771,10 +761,8 @@ function pushEstado(nombreEstado){
 }
 
 window.addEventListener("popstate", (e) => {
-  /* Resolver qué hacer según el estado actual */
   if(estado.modalVista && document.getElementById("modal").classList.contains("visible")){
     cerrarModal();
-    /* Empujar estado de nuevo para mantener la pila */
     pushEstado(estado.pantalla);
     return;
   }
@@ -793,15 +781,9 @@ window.addEventListener("popstate", (e) => {
     return;
   }
   if(estado.pantalla === "home"){
-    /* Preguntar si desea salir */
     const salir = confirm("¿Está seguro que desea salir del sistema?");
-    if(salir){
-      /* Dejar que el navegador haga el back real */
-      history.back();
-    } else {
-      /* Re-empujar estado para no salir */
-      pushEstado("home");
-    }
+    if(salir){ history.back(); }
+    else { pushEstado("home"); }
     return;
   }
 });
@@ -868,7 +850,7 @@ function actualizarContadores(){
 }
 
 /* ============================================================
-   NAVEGACIÓN — IR A MODO BÚSQUEDA
+   MODO BÚSQUEDA
    ============================================================ */
 function irBusqueda(ev, btn){
   if(ev && btn) ripple(ev, btn);
@@ -887,10 +869,8 @@ function mostrarModoBusqueda(){
           <div class="search-box">
             <span class="search-icon">⌕</span>
             <input type="text" class="search-input" id="buscador" placeholder="Nombre, código o ID asignación..." autofocus>
+            <button class="btn-clear" id="btnClear" onclick="limpiarBusqueda()" title="Limpiar búsqueda">✖</button>
           </div>
-          <button class="btn-search-go" onclick="ejecutarBusqueda()">
-            <span>🔍</span><span>Buscar</span>
-          </button>
         </div>
       </div>
       <div id="resultados-busqueda"></div>
@@ -916,6 +896,14 @@ function initBusquedaLive(){
   input.addEventListener("input", e => {
     clearTimeout(timer);
     const val = e.target.value.trim();
+
+    /* Mostrar/ocultar botón ✖ */
+    const btnClear = document.getElementById("btnClear");
+    if(btnClear){
+      if(val.length > 0) btnClear.classList.add("visible");
+      else btnClear.classList.remove("visible");
+    }
+
     if(val.length < 1){
       document.getElementById("resultados-busqueda").innerHTML = "";
       return;
@@ -928,6 +916,16 @@ function initBusquedaLive(){
       ejecutarBusqueda(e.target.value.trim());
     }
   });
+}
+
+function limpiarBusqueda(){
+  const input = document.getElementById("buscador");
+  if(!input) return;
+  input.value = "";
+  input.focus();
+  const btnClear = document.getElementById("btnClear");
+  if(btnClear) btnClear.classList.remove("visible");
+  document.getElementById("resultados-busqueda").innerHTML = "";
 }
 
 function ejecutarBusqueda(texto){
@@ -960,18 +958,6 @@ function buscarResponsables(termino){
   return lista;
 }
 
-function buscarBienesPorCodigo(termino){
-  const t = norm(termino);
-  const todos = todosLosBienes();
-  return todos.filter(b => norm(getVal(b, "CODIGO")).includes(t));
-}
-
-function buscarBienesPorIdAsig(idAsig){
-  const t = norm(idAsig);
-  const todos = todosLosBienes();
-  return todos.filter(b => norm(obtenerIdAsig(b)) === t);
-}
-
 function todosLosBienes(){
   return [
     ...DATA.fijos.map(b => ({...b, __tipo: "FIJOS"})),
@@ -979,6 +965,15 @@ function todosLosBienes(){
     ...DATA.internos.map(b => ({...b, __tipo: "INTERNOS"})),
     ...DATA.prestados.map(b => ({...b, __tipo: "PRESTADOS"}))
   ];
+}
+
+function buscarBienesPorCodigo(termino){
+  const t = norm(termino);
+  return todosLosBienes().filter(b => norm(getVal(b, "CODIGO")).includes(t));
+}
+function buscarBienesPorIdAsig(idAsig){
+  const t = norm(idAsig);
+  return todosLosBienes().filter(b => norm(obtenerIdAsig(b)) === t);
 }
 
 function renderResultadosResponsables(filtro, cont){
@@ -1479,7 +1474,6 @@ document.addEventListener("keydown", e => {
    INICIALIZACIÓN
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
-  /* Empujar estado inicial para poder capturar el back */
   try{
     history.replaceState({ pantalla: "home" }, "");
     history.pushState({ pantalla: "home" }, "");
