@@ -358,7 +358,7 @@
   .toast.info{border-color:var(--cian);box-shadow:0 10px 40px rgba(0,0,0,.5),0 0 30px rgba(38,198,218,.2);}
   .toast-icon{font-size:16px;}
 
-  @media (max-width:600px){
+    @media (max-width:600px){
     .header-text h1{font-size:13px;letter-spacing:1px;}
     .home-buttons{grid-template-columns:repeat(2,1fr);gap:10px;}
     .home-btn{padding:18px 10px;}
@@ -369,7 +369,12 @@
     .bien-detalle-foto{width:60px;height:60px;font-size:24px;}
     .bien-detalle-label{flex:0 0 45%;}
     .header-status{display:none;}
-    .btn-volver{padding:10px 12px;font-size:11px;}
+
+    /* NUEVAS REGLAS para móvil */
+    .btn-volver{padding:10px 10px;font-size:10px;letter-spacing:.5px;gap:4px;}
+    .search-input{font-size:14px;padding:12px 0;}
+    .search-box{padding:4px 10px;}
+    .search-icon{font-size:16px;margin-right:8px;}
   }
 </style>
 </head>
