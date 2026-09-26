@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V3.4</title>
+<title>Sistema de Control DIV-10 V3.5</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -78,7 +78,6 @@
   .home-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
   .home-btn{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:22px 14px;cursor:pointer;transition:all .3s ease;overflow:hidden;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;}
   .home-btn:hover{transform:translateY(-4px);border-color:var(--color,var(--dorado));box-shadow:0 10px 30px rgba(0,0,0,.4),0 0 25px color-mix(in srgb,var(--color,var(--dorado)) 30%,transparent);}
-  .home-btn:active{transform:translateY(-2px) scale(.98);}
   .home-btn[data-color="verde"]{--color:var(--verde);}
   .home-btn[data-color="azul"]{--color:var(--cian);}
   .home-btn[data-color="marron"]{--color:#d4a060;}
@@ -90,7 +89,6 @@
   .home-btn.buscar{grid-column:span 4;padding:24px;background:linear-gradient(135deg,rgba(212,176,96,.08),rgba(212,176,96,.02));flex-direction:row;justify-content:center;gap:16px;}
   .home-btn.buscar .home-btn-icon{font-size:28px;}
   .home-btn.buscar .home-btn-label{font-size:14px;letter-spacing:3px;color:var(--dorado-brillante);}
-  .home-btn.buscar:hover{background:linear-gradient(135deg,rgba(212,176,96,.15),rgba(212,176,96,.05));}
 
   /* MODO BÚSQUEDA */
   .modo-busqueda{animation:fadeIn .35s ease both;display:flex;flex-direction:column;gap:14px;min-height:60vh;}
@@ -119,7 +117,6 @@
   .resp-card:hover .resp-card-name{color:var(--dorado-brillante);}
   body.light .resp-card:hover .resp-card-name{color:var(--dorado);}
   .resp-card-meta{display:flex;flex-wrap:wrap;gap:10px;font-size:11px;color:var(--texto-suave);font-family:var(--mono);}
-  .resp-card-meta span{display:flex;align-items:center;gap:4px;}
   .resp-card-arrow{font-size:28px;color:var(--texto-muy-suave);transition:all .4s ease;flex-shrink:0;}
   .resp-card:hover .resp-card-arrow{color:var(--dorado);transform:translateX(8px);}
 
@@ -143,24 +140,26 @@
   .modal-overlay.visible{display:flex;}
   .modal{background:var(--bg-panel);border:1px solid var(--dorado);border-radius:16px;max-width:720px;width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.7);}
   .modal-form{max-width:640px;}
+  .modal-vista{max-width:900px;}
   .modal-header{padding:18px 22px;border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(212,176,96,.05),transparent);}
   .modal-header h2{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:700;flex:1;min-width:0;word-break:break-word;}
   .modal-close{width:32px;height:32px;background:transparent;border:1px solid var(--borde);color:var(--texto-suave);border-radius:8px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .3s ease;flex-shrink:0;}
   .modal-close:hover{background:var(--rojo);border-color:var(--rojo);color:white;transform:rotate(90deg);}
   .modal-body{padding:20px 22px;overflow-y:auto;flex:1;min-height:200px;}
 
-  .btn-nav{display:inline-flex;align-items:center;gap:8px;background:var(--bg-elevado);color:var(--dorado);border:1px solid var(--borde);padding:9px 16px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:8px;font-weight:700;transition:all .3s ease;margin-bottom:16px;}
+  .btn-nav{display:inline-flex;align-items:center;gap:8px;background:var(--bg-elevado);color:var(--dorado);border:1px solid var(--borde);padding:9px 16px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;border-radius:8px;font-weight:700;transition:all .3s ease;margin-bottom:16px;font-family:var(--sans);}
   .btn-nav:hover{background:var(--dorado);color:var(--bg);border-color:var(--dorado-brillante);transform:translateX(-4px);box-shadow:0 0 20px var(--dorado-glow);}
 
   .modal-titulo-seccion{text-align:center;padding:8px 0 16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;font-family:var(--mono);border-bottom:1px solid var(--borde);margin-bottom:16px;}
-  .oficina-card{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg-elevado);border:1px solid var(--borde);border-left:4px solid var(--dorado);padding:14px 16px;margin-bottom:10px;border-radius:10px;transition:all .3s ease;}
-  .oficina-card:hover{border-color:var(--dorado);border-left-color:var(--cian);background:var(--bg-hover);box-shadow:var(--sombra-panel);}
+
+  .oficina-card{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--bg-elevado);border:1px solid var(--borde);border-left:4px solid var(--dorado);padding:14px 16px;margin-bottom:10px;border-radius:10px;cursor:pointer;transition:all .3s ease;}
+  .oficina-card:hover{border-color:var(--dorado);border-left-color:var(--cian);background:var(--bg-hover);box-shadow:var(--sombra-panel),0 0 25px rgba(212,176,96,.15);transform:translateX(6px);}
   .oficina-card-info{flex:1;min-width:0;}
   .oficina-card-nombre{font-size:13px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:4px;}
   .oficina-card-id{font-size:10px;font-family:var(--mono);color:var(--cian);letter-spacing:1px;}
-  .oficina-card-actions{display:flex;gap:8px;align-items:center;flex-shrink:0;}
   .oficina-card-count{background:rgba(212,176,96,.1);border:1px solid var(--dorado);color:var(--dorado-brillante);padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800;font-family:var(--mono);flex-shrink:0;}
-  .btn-imprimir{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:11px;font-weight:800;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s ease;font-family:var(--sans);}
+
+  .btn-imprimir{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:1.2px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s ease;font-family:var(--sans);text-transform:uppercase;margin-bottom:16px;}
   .btn-imprimir:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
 
   .form-group{margin-bottom:14px;}
@@ -187,10 +186,10 @@
   .tabla-header[data-color="vino"]{--color:var(--vino);}
   .tabla-header-count{font-family:var(--mono);font-size:12px;color:var(--dorado);font-weight:800;background:rgba(212,176,96,.1);padding:2px 10px;border-radius:10px;border:1px solid rgba(212,176,96,.3);}
   .tabla-scroll{overflow-x:auto;}
-  table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px;}
-  thead th{background:rgba(0,0,0,.15);color:var(--texto-suave);text-align:left;padding:10px 12px;font-size:9px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;border-bottom:1px solid var(--borde);}
+  table{width:100%;border-collapse:collapse;font-size:11px;font-family:Arial,sans-serif;min-width:400px;}
+  thead th{background:rgba(0,0,0,.15);color:var(--texto-suave);text-align:left;padding:10px 12px;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;font-weight:800;border-bottom:1px solid var(--borde);font-family:Arial,sans-serif;}
   body.light thead th{background:rgba(30,51,37,.04);}
-  tbody td{padding:10px 12px;border-bottom:1px solid rgba(212,176,96,.08);color:var(--texto);vertical-align:top;word-break:break-word;}
+  tbody td{padding:10px 12px;border-bottom:1px solid rgba(212,176,96,.08);color:var(--texto);vertical-align:top;word-break:break-word;font-family:Arial,sans-serif;font-size:11px;}
   body.light tbody td{border-bottom-color:rgba(30,51,37,.06);}
   tbody tr{cursor:pointer;transition:all .2s ease;}
   tbody tr:nth-child(even){background:rgba(0,0,0,.15);}
@@ -212,7 +211,6 @@
   .bien-detalle{background:var(--bg-elevado);border:1px solid var(--borde);border-radius:12px;overflow:hidden;}
   .bien-detalle-header{padding:20px;background:linear-gradient(135deg,rgba(212,176,96,.1),rgba(38,198,218,.05));border-bottom:2px solid var(--dorado);display:flex;gap:16px;align-items:flex-start;}
   .bien-detalle-foto{width:80px;height:80px;background:var(--bg);border:2px solid var(--dorado);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--dorado);flex-shrink:0;overflow:hidden;cursor:pointer;transition:all .3s ease;}
-  .bien-detalle-foto:hover{transform:scale(1.05);box-shadow:0 0 25px var(--dorado-glow);}
   .bien-detalle-foto img{width:100%;height:100%;object-fit:cover;}
   .bien-detalle-codigo{font-size:11px;font-family:var(--mono);color:var(--dorado);letter-spacing:2px;font-weight:800;text-transform:uppercase;margin-bottom:6px;}
   .bien-detalle-nombre{font-size:15px;font-weight:700;color:var(--texto);line-height:1.3;margin-bottom:8px;}
@@ -232,8 +230,7 @@
   .bien-detalle-valor.pendiente{color:var(--rojo);font-weight:800;text-transform:uppercase;}
 
   .empty-state{text-align:center;padding:60px 20px;color:var(--texto-suave);animation:fadeIn .6s ease both;}
-  .empty-state-icon{font-size:64px;margin-bottom:16px;opacity:.4;animation:float 3s ease-in-out infinite;}
-  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+  .empty-state-icon{font-size:64px;margin-bottom:16px;opacity:.4;}
   .empty-state-title{font-size:14px;letter-spacing:2px;text-transform:uppercase;color:var(--texto);margin-bottom:8px;font-weight:700;}
   .empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
   .loading,.error{text-align:center;padding:32px;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:800;}
@@ -254,50 +251,117 @@
   .toast-icon{font-size:16px;}
 
   /* ============================================================
-     ACTA — SOLO AL IMPRIMIR
+     VISTA PREVIA DEL ACTA (dentro del modal)
+     ============================================================ */
+  .preview-acta-wrap{
+    background:#fff;
+    color:#000;
+    padding:30px 40px;
+    font-family:Arial, sans-serif;
+    font-size:11pt;
+    line-height:1.0;
+    box-shadow:0 0 0 1px #ccc inset;
+    max-height:65vh;
+    overflow-y:auto;
+  }
+  .preview-acta-wrap .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.3;margin:0 0 16pt 0;text-transform:uppercase;text-align:left;}
+  .preview-acta-wrap .acta-membrete .linea1{padding-left:0;}
+  .preview-acta-wrap .acta-membrete .linea2{padding-left:9pt;}
+  .preview-acta-wrap .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
+  .preview-acta-wrap .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 14pt 0;line-height:1.2;}
+  .preview-acta-wrap .acta-seccion{margin-top:14pt;}
+  .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 6pt 0;}
+  .preview-acta-wrap .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:11pt;margin-bottom:6pt;}
+  .preview-acta-wrap .acta-tabla th{border:1px solid #000;padding:3pt 5pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:11pt;}
+  .preview-acta-wrap .acta-tabla td{border:1px solid #000;padding:3pt 5pt;font-size:11pt;vertical-align:top;}
+  .preview-acta-wrap .acta-tabla td.center{text-align:center;}
+  .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
+  .preview-acta-wrap .acta-fecha{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:20pt 0 16pt 0;line-height:1.0;}
+  .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;margin-top:30pt;}
+  .preview-acta-wrap .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:30pt;}
+  .preview-acta-wrap .acta-firma-bloque-lado{flex:1;text-align:center;}
+  .preview-acta-wrap .acta-firma-bloque{text-align:center;margin-bottom:30pt;}
+  .preview-acta-wrap .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:36pt;font-size:12pt;text-align:center;}
+  .preview-acta-wrap .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;}
+  .preview-acta-wrap .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;}
+  .preview-acta-wrap .acta-vobo{font-weight:bold;text-transform:uppercase;margin-bottom:36pt;text-align:center;font-size:12pt;}
+  .preview-acta-wrap .preview-pie{text-align:right;font-family:Arial,sans-serif;font-size:10pt;color:#666;margin-top:20pt;padding-top:10pt;border-top:1px solid #ccc;}
+
+  .preview-actions{
+    padding:14px 20px;
+    border-top:1px solid var(--borde);
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    flex-wrap:wrap;
+    background:var(--bg-panel);
+  }
+  .btn-preview{background:var(--bg-elevado);color:var(--texto);border:1px solid var(--borde);padding:10px 16px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);transition:all .2s ease;display:inline-flex;align-items:center;gap:6px;}
+  .btn-preview:hover{background:var(--bg-hover);}
+  .btn-preview.primary{background:linear-gradient(135deg,var(--dorado),#a88840);color:#0a0e12;border-color:transparent;}
+  .btn-preview.primary:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--dorado-glow);}
+  .btn-preview.green{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border-color:transparent;}
+  .btn-preview.green:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
+
+  /* ============================================================
+     ACTA PARA IMPRIMIR (oculta en pantalla, visible al imprimir)
      ============================================================ */
   .acta-print{display:none;}
 
   @media print{
-    .bg-layer,.app,.modal-overlay,.no-print,.toast{display:none !important;}
+    .bg-layer,.app,.modal-overlay,.no-print,.toast,.lightbox{display:none !important;}
     body{background:#fff !important;color:#000 !important;}
     .acta-print{display:block !important;}
 
-    @page{size: letter portrait; margin: 12mm 15mm 12mm 15mm;}
+    @page{
+      size: letter portrait;
+      margin: 1.8cm 2.5cm 1.8cm 1.8cm;
+    }
 
-    .acta-print{font-family: Arial, Helvetica, sans-serif;font-size: 11pt;color: #000;line-height: 1.3;}
+    .acta-print{
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 11pt;
+      color: #000;
+      line-height: 1.0;
+    }
 
-    .acta-membrete{font-family: Arial, sans-serif;font-size: 10pt;font-weight: bold;line-height: 1.3;margin: 0 0 16pt 0;text-transform: uppercase;text-align: left;}
+    .acta-membrete{font-family: Arial, sans-serif;font-size: 10pt;font-weight: bold;line-height: 1.0;margin: 0 0 16pt 0;text-transform: uppercase;text-align: left;}
     .acta-membrete .linea1{text-align: left;padding-left: 0;}
     .acta-membrete .linea2{text-align: left;padding-left: 9pt;}
     .acta-membrete .linea3{text-align: left;padding-left: 75pt;text-decoration: underline;}
 
-    .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 14pt 0;line-height: 1.3;}
-
-    .acta-parrafo{font-family: Arial, sans-serif;font-size: 11pt;text-align: justify;text-transform: uppercase;line-height: 1.4;margin: 0;padding: 0;}
-
-    .acta-distribucion{font-family: Arial, sans-serif;font-size: 11pt;text-transform: uppercase;line-height: 1.4;margin: 0;padding: 0;}
-    .acta-distribucion .linea{display: block;margin: 0;padding: 0;}
+    .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 14pt 0;line-height: 1.0;}
 
     .acta-seccion{margin-top: 14pt;page-break-inside: avoid;}
-    .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 6pt 0;}
+    .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 6pt 0;line-height: 1.0;}
 
-    .acta-tabla{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 10pt;margin-bottom: 6pt;}
-    .acta-tabla th{border: 1px solid #000;padding: 3pt 5pt;text-align: center;font-weight: bold;text-transform: uppercase;background: #fff;font-size: 10pt;}
-    .acta-tabla td{border: 1px solid #000;padding: 3pt 5pt;font-size: 10pt;vertical-align: top;}
+    .acta-tabla{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 11pt;margin-bottom: 6pt;}
+    .acta-tabla th{border: 1px solid #000;padding: 3pt 5pt;text-align: center;font-weight: bold;text-transform: uppercase;background: #fff;font-size: 11pt;line-height: 1.0;}
+    .acta-tabla td{border: 1px solid #000;padding: 3pt 5pt;font-size: 11pt;vertical-align: top;line-height: 1.0;}
     .acta-tabla td.center{text-align: center;}
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;}
 
-    .acta-fecha{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 20pt 0 16pt 0;line-height: 1.3;}
+    .acta-fecha{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 20pt 0 16pt 0;line-height: 1.0;}
 
-    .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;margin-top: 30pt;}
+    .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;margin-top: 30pt;line-height: 1.0;}
     .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 30pt;}
     .acta-firma-bloque-lado{flex: 1;text-align: center;page-break-inside: avoid;}
     .acta-firma-bloque{text-align: center;margin-bottom: 30pt;page-break-inside: avoid;}
-    .acta-firma-rol{font-weight: bold;text-transform: uppercase;margin-bottom: 36pt;font-size: 12pt;text-align: center;}
-    .acta-firma-nombre{font-weight: normal;text-transform: none;font-size: 12pt;margin-top: 4pt;}
-    .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;}
-    .acta-vobo{font-weight: bold;text-transform: uppercase;margin-bottom: 36pt;text-align: center;font-size: 12pt;}
+    .acta-firma-rol{font-weight: bold;text-transform: uppercase;margin-bottom: 36pt;font-size: 12pt;text-align: center;line-height: 1.0;}
+    .acta-firma-nombre{font-weight: normal;text-transform: none;font-size: 12pt;margin-top: 4pt;line-height: 1.0;}
+    .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;line-height: 1.0;}
+    .acta-vobo{font-weight: bold;text-transform: uppercase;margin-bottom: 36pt;text-align: center;font-size: 12pt;line-height: 1.0;}
+
+    /* Pie de página — 1 - 2, 2 - 2 */
+    .acta-print .acta-pie{
+      display: block;
+      text-align: right;
+      font-family: Arial, sans-serif;
+      font-size: 10pt;
+      margin-top: 20pt;
+      padding-top: 4pt;
+      border-top: 1px solid #000;
+    }
   }
 
   @media (max-width:600px){
@@ -307,7 +371,6 @@
     .home-btn-icon{font-size:26px;}
     .home-btn-count{font-size:22px;}
     .home-btn.buscar{grid-column:span 2;padding:18px;}
-    .home-btn.buscar .home-btn-label{font-size:12px;}
     .bien-detalle-foto{width:60px;height:60px;font-size:24px;}
     .bien-detalle-label{flex:0 0 45%;}
     .header-status{display:none;}
@@ -315,6 +378,9 @@
     .search-input{font-size:14px;padding:12px 0;}
     .search-box{padding:4px 10px;}
     .search-icon{font-size:16px;margin-right:8px;}
+    .preview-acta-wrap{padding:20px 20px;font-size:10pt;}
+    .preview-actions{flex-direction:column;}
+    .btn-preview{width:100%;justify-content:center;}
   }
 </style>
 </head>
@@ -343,7 +409,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v3.4 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v3.5 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -357,7 +423,7 @@
   </div>
 </div>
 
-<!-- MODAL ENTRANTE (Acta) -->
+<!-- MODAL ENTRANTE -->
 <div class="modal-overlay" id="modalEntrante" onclick="if(event.target===this)cerrarModalEntrante()">
   <div class="modal modal-form">
     <div class="modal-header">
@@ -378,7 +444,7 @@
         <div class="form-seccion-titulo">SUPERVISORES (opcional)</div>
         <div class="form-group">
           <label>Supervisor 1 — Nombre</label>
-          <input type="text" id="sup1_nombre" value="Cap. DIM. Giorka G. Corrales Fernández" autocomplete="off">
+          <input type="text" id="sup1_nombre" value="Cap. DIM. Giorka Giovanna Corrales Fernández" autocomplete="off">
         </div>
         <div class="form-group">
           <label>Supervisor 1 — Cargo</label>
@@ -408,8 +474,26 @@
 
       <div class="form-actions">
         <button class="btn-cancelar" onclick="cerrarModalEntrante()">Cancelar</button>
-        <button class="btn-confirmar" onclick="generarActaFinal()">🖨 Generar Acta</button>
+        <button class="btn-confirmar" onclick="generarVistaPrevia()">Ver Vista Previa</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL VISTA PREVIA -->
+<div class="modal-overlay" id="modalVistaPrevia" onclick="if(event.target===this)cerrarModalVistaPrevia()">
+  <div class="modal modal-vista">
+    <div class="modal-header">
+      <h2>Vista Previa del Acta</h2>
+      <button class="modal-close" onclick="cerrarModalVistaPrevia()">×</button>
+    </div>
+    <div class="modal-body" style="padding:0;background:#e8e8e8;">
+      <div class="preview-acta-wrap" id="previewActa"></div>
+    </div>
+    <div class="preview-actions">
+      <button class="btn-preview" onclick="cerrarModalVistaPrevia()">Cerrar</button>
+      <button class="btn-preview primary" onclick="guardarPDF()">💾 Guardar PDF</button>
+      <button class="btn-preview green" onclick="imprimirActaDirecta()">🖨 Imprimir</button>
     </div>
   </div>
 </div>
@@ -436,9 +520,6 @@ const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1Z
 const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
-/* ============================================================
-   ESTADO GLOBAL
-   ============================================================ */
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
 let estado = {
@@ -451,7 +532,7 @@ let estado = {
   oficinaFiltroActual: null
 };
 
-let actaEnProceso = { responsable: null, oficina: null };
+let actaEnProceso = { responsable: null, oficina: null, datos: null, html: null };
 
 /* ============================================================
    TEMA
@@ -608,9 +689,7 @@ async function cargarDesdeNube(forzar = false){
         const parsed = JSON.parse(cache);
         if(parsed && parsed.fijos && parsed.resp){
           aplicarDatos(parsed);
-          const ts = localStorage.getItem(CACHE_HOJA_KEY);
-          const fecha = ts ? new Date(parseInt(ts)).toLocaleString() : "—";
-          console.log("✔ Datos cargados desde caché — Última actualización:", fecha);
+          console.log("✔ Datos desde caché");
           mostrarHome();
           return;
         }
@@ -645,7 +724,6 @@ async function cargarDesdeNube(forzar = false){
         return;
       }
       nuevo[key] = csvAObjetos(texto);
-      console.log(`✔ ${nombre}: ${nuevo[key].length} registros`);
     });
 
     nuevo.fijos = nuevo.fijos.filter(o => obtenerIdAsig(o));
@@ -656,7 +734,7 @@ async function cargarDesdeNube(forzar = false){
 
     if(forzar){
       const cambios = contarCambios(DATA, nuevo);
-      if(cambios === 0) mostrarToast("Datos al día — sin cambios", "info", "ℹ");
+      if(cambios === 0) mostrarToast("Datos al día", "info", "ℹ");
       else mostrarToast(`Datos actualizados — ${cambios} cambio(s)`, "success", "✔");
     }
 
@@ -669,10 +747,7 @@ async function cargarDesdeNube(forzar = false){
 
   }catch(err){
     console.error(err);
-    cont.innerHTML = `<div class="error fade-in">
-      ⚠ No se pudieron cargar los datos desde Drive<br><br>
-      <small>${esc(err.message)}</small>
-    </div>`;
+    cont.innerHTML = `<div class="error fade-in">⚠ No se pudieron cargar los datos desde Drive<br><br><small>${esc(err.message)}</small></div>`;
     document.getElementById("statusText").textContent = "ERROR";
     mostrarToast("Error al cargar datos", "error", "⚠");
   }
@@ -747,13 +822,18 @@ function contarBienesPorAsignacion(id){
 }
 
 /* ============================================================
-   NAVEGACIÓN — BOTÓN ATRÁS
+   NAVEGACIÓN
    ============================================================ */
 function pushEstado(nombreEstado){
   try{ history.pushState({ pantalla: nombreEstado }, ""); }catch(e){}
 }
 
 window.addEventListener("popstate", (e) => {
+  if(document.getElementById("modalVistaPrevia").classList.contains("visible")){
+    cerrarModalVistaPrevia();
+    pushEstado(estado.pantalla);
+    return;
+  }
   if(document.getElementById("modalEntrante").classList.contains("visible")){
     cerrarModalEntrante();
     pushEstado(estado.pantalla);
@@ -961,7 +1041,7 @@ function buscarBienesPorIdAsig(idAsig){
 function renderResultadosResponsables(filtro, cont){
   const lista = buscarResponsables(filtro);
   if(!lista.length){
-    cont.innerHTML = `<div class="empty-state"><div class="empty-state-icon">◌</div><div class="empty-state-title">Sin resultados</div><div class="empty-state-sub">No hay responsables con "${esc(filtro)}"</div></div>`;
+    cont.innerHTML = `<div class="empty-state"><div class="empty-state-icon">◌</div><div class="empty-state-title">Sin resultados</div></div>`;
     return;
   }
   let html = `<div class="list-title"><span>◈ Responsables encontrados</span><span class="list-count">${lista.length}</span></div>`;
@@ -987,7 +1067,7 @@ function renderResultadosResponsables(filtro, cont){
 function renderResultadosBienes(filtro, tipoBusqueda, cont){
   const bienes = tipoBusqueda === "id" ? buscarBienesPorIdAsig(filtro) : buscarBienesPorCodigo(filtro);
   if(!bienes.length){
-    cont.innerHTML = `<div class="empty-state"><div class="empty-state-icon">◌</div><div class="empty-state-title">Sin resultados</div><div class="empty-state-sub">No hay bienes con "${esc(filtro)}"</div></div>`;
+    cont.innerHTML = `<div class="empty-state"><div class="empty-state-icon">◌</div><div class="empty-state-title">Sin resultados</div></div>`;
     return;
   }
   if(bienes.length === 1){ abrirDetalleBienDirecto(bienes[0]); return; }
@@ -1064,11 +1144,6 @@ function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
   }
 
   const listaFiltrada = listaCompleta.filter(b => getOficinaResponsablePorId(obtenerIdAsig(b)) === oficinaFiltro);
-  let listaParaMostrar = listaFiltrada;
-  if(textoBusqueda && textoBusqueda.trim().length){
-    const t = norm(textoBusqueda);
-    listaParaMostrar = listaFiltrada.filter(o => Object.values(o).some(v => norm(v).includes(t)));
-  }
   let html = `<button class="btn-volver" onclick="renderVistaGeneral('${tipo}')">← Volver</button>
     <div class="oficina-encabezado">
       <div>
@@ -1077,12 +1152,12 @@ function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
       </div>
       <div class="oficina-encabezado-count">${listaFiltrada.length}</div>
     </div>`;
-  if(!listaParaMostrar.length){
+  if(!listaFiltrada.length){
     html += `<div class="empty-state"><div class="empty-state-icon">◌</div><div class="empty-state-title">Sin resultados</div></div>`;
     cont.innerHTML = html;
     return;
   }
-  html += tablaGeneral(tipo, listaParaMostrar);
+  html += tablaGeneral(tipo, listaFiltrada);
   cont.innerHTML = html;
 }
 
@@ -1237,16 +1312,12 @@ function renderModalOficinas(){
   r.asignaciones.forEach((of, i) => {
     const cant = contarBienesPorAsignacion(of.id);
     html += `
-      <div class="oficina-card" style="animation-delay:${i * 40}ms">
+      <div class="oficina-card" style="animation-delay:${i * 40}ms" onclick="abrirOficinaModal('${escAttr(of.id)}')">
         <div class="oficina-card-info">
           <div class="oficina-card-nombre">${esc(of.oficina)}</div>
           <div class="oficina-card-id">ID ASIGNACIÓN: ${esc(of.id)}</div>
         </div>
-        <div class="oficina-card-actions">
-          <button class="btn-imprimir" onclick="abrirModalEntrante('${escAttr(of.id)}')" title="Imprimir Acta">🖨 Acta</button>
-          <button class="btn-nav" style="margin-bottom:0;padding:6px 12px;" onclick="abrirOficinaModal('${escAttr(of.id)}')">Ver</button>
-          <span class="oficina-card-count">${cant}</span>
-        </div>
+        <div class="oficina-card-count">${cant}</div>
       </div>`;
   });
   return html;
@@ -1262,6 +1333,10 @@ function renderModalTablas(){
   const prestados = DATA.prestados.filter(b => obtenerIdAsig(b) === of.id);
   const total = fijos.length + fungibles.length + internos.length + prestados.length;
   const btnVolver = r.asignaciones.length > 1 ? `<button class="btn-nav" onclick="volverAOficinasModal()">← Oficinas</button>` : "";
+
+  /* BOTÓN IMPRIMIR — aparece en el detalle de la oficina */
+  const btnImprimir = `<button class="btn-imprimir" onclick="abrirModalEntrante('${escAttr(of.id)}')">🖨 Imprimir</button>`;
+
   let html = `${btnVolver}
     <div class="oficina-encabezado">
       <div>
@@ -1269,7 +1344,9 @@ function renderModalTablas(){
         <div class="oficina-encabezado-sub">◈ ID ${esc(of.id)} · ${total} bien(es)</div>
       </div>
       <div class="oficina-encabezado-count">${total}</div>
-    </div>`;
+    </div>
+    ${btnImprimir}`;
+
   html += tablaModal("FIJOS", fijos, "verde");
   html += tablaModal("FUNGIBLES", fungibles, "azul");
   html += tablaModal("INTERNOS", internos, "marron");
@@ -1382,7 +1459,7 @@ function renderDetalleBien(bien){
 }
 
 /* ============================================================
-   MÓDULO DE ACTA
+   MÓDULO DE ACTA — Vista Previa
    ============================================================ */
 function abrirModalEntrante(idAsignacion){
   const r = estado.responsableActual;
@@ -1393,13 +1470,9 @@ function abrirModalEntrante(idAsignacion){
   actaEnProceso.responsable = r;
   actaEnProceso.oficina = oficina;
 
-  /* Cerrar modal principal para evitar stacking */
   cerrarModal();
-
-  /* Limpiar solo entrante */
   document.getElementById("ent_nombre").value = "";
   document.getElementById("ent_cargo").value = "";
-
   document.getElementById("modalEntrante").classList.add("visible");
   pushEstado("modalActa");
 }
@@ -1408,7 +1481,7 @@ function cerrarModalEntrante(){
   document.getElementById("modalEntrante").classList.remove("visible");
 }
 
-function generarActaFinal(){
+function generarVistaPrevia(){
   const datos = {
     entrante: document.getElementById("ent_nombre").value.trim(),
     entranteCargo: document.getElementById("ent_cargo").value.trim(),
@@ -1419,11 +1492,34 @@ function generarActaFinal(){
     vobo: document.getElementById("vobo_nombre").value.trim(),
     voboCargo: document.getElementById("vobo_cargo").value.trim()
   };
+  actaEnProceso.datos = datos;
+  actaEnProceso.html = generarHTMLActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
   cerrarModalEntrante();
-  imprimirActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
+  document.getElementById("previewActa").innerHTML = actaEnProceso.html;
+  document.getElementById("modalVistaPrevia").classList.add("visible");
+  pushEstado("modalVistaPrevia");
 }
 
-function imprimirActa(r, oficina, datos){
+function cerrarModalVistaPrevia(){
+  document.getElementById("modalVistaPrevia").classList.remove("visible");
+}
+
+function guardarPDF(){
+  /* Preparar el acta para imprimir */
+  document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
+  mostrarToast("Elija 'Guardar como PDF' en el diálogo de impresión", "info", "💾");
+  setTimeout(() => window.print(), 400);
+}
+
+function imprimirActaDirecta(){
+  document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
+  setTimeout(() => window.print(), 300);
+}
+
+/* ============================================================
+   GENERAR HTML DEL ACTA
+   ============================================================ */
+function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
   const fijos = DATA.fijos.filter(b => obtenerIdAsig(b) === idAsignacion);
   const fungibles = DATA.fungibles.filter(b => obtenerIdAsig(b) === idAsignacion);
@@ -1431,80 +1527,10 @@ function imprimirActa(r, oficina, datos){
   const prestados = DATA.prestados.filter(b => obtenerIdAsig(b) === idAsignacion);
 
   const fechaActual = new Date();
-
-  const nombreEntrante = datos.entrante ? datos.entrante.toUpperCase() : "_________________________________";
-  const cargoEntrante = datos.entranteCargo ? datos.entranteCargo.toUpperCase() : "";
-  const nombreSup1 = datos.sup1 ? datos.sup1.toUpperCase() : "_________________________________";
-  const cargoSup1 = datos.sup1Cargo ? datos.sup1Cargo.toUpperCase() : "";
-  const nombreVobo = datos.vobo ? datos.vobo.toUpperCase() : "_________________________________";
-  const cargoVobo = datos.voboCargo ? datos.voboCargo.toUpperCase() : "";
-
-  let html = `
-    <div class="acta-membrete">
-      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
-      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
-      <div class="linea3">BOLIVIA</div>
-    </div>
-
-    <div class="acta-titulo">
-      ACTA DE ENTREGA Y RECEPCIÓN<br>
-      DEL INVENTARIO DE LA ${esc(oficina.oficina.toUpperCase())} DE LA DIV-10
-    </div>
-
-    <div class="acta-parrafo">
-      EN LA CIUDAD DE TUPIZA, CAPITAL DE LA PROVINCIA SUD CHICHAS DEL DEPARTAMENTO DE POTOSÍ, A LOS ${numeroEnLetras(fechaActual.getDate())} DÍAS DEL MES DE ${nombreMes(fechaActual.getMonth()).toUpperCase()} DE ${numeroEnLetras(fechaActual.getFullYear())} AÑOS, SE HICIERON PRESENTES EN LA ${esc(oficina.oficina.toUpperCase())} DE LA DÉCIMA DIVISIÓN DEL EJÉRCITO, EL SR. ${esc(r.nombre.toUpperCase())}, ${esc(r.cargo.toUpperCase())} (SALIENTE), SR. ${esc(nombreEntrante)}${cargoEntrante ? ", " + esc(cargoEntrante) : ""} (ENTRANTE), A OBJETO DE PROCEDER CON LA ENTREGA Y RECEPCIÓN DEL INVENTARIO DE LA ${esc(oficina.oficina.toUpperCase())}, BAJO LA SUPERVISIÓN DEL SR. ${esc(nombreSup1)}${cargoSup1 ? ", " + esc(cargoSup1) : ""} Y EL VISTO BUENO DEL SR. ${esc(nombreVobo)}${cargoVobo ? ", " + esc(cargoVobo) : ""}.
-    </div>
-
-    <div class="acta-parrafo">
-      PARA VERACIDAD Y CONFORMIDAD FIRMAN AL PIE DEL PRESENTE DOCUMENTO, EN UN ORIGINAL Y DOS COPIAS.
-    </div>
-
-    <div class="acta-distribucion">
-      <span class="linea">ORIGINAL : SUBSECCIÓN ACTIVOS FIJOS.</span>
-      <span class="linea">COPIA 1 : SALIENTE.</span>
-      <span class="linea">COPIA 2 : ENTRANTE.</span>
-    </div>
-  `;
-
-  if(fijos.length){
-    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">I.- INVENTARIO DE ACTIVOS FIJOS (VSIAF.).</div>
-      <table class="acta-tabla"><thead><tr>
-        <th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-      </tr></thead><tbody>
-        ${fijos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CODIGO"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
-      </tbody></table></div>`;
-  }
-
-  if(fungibles.length){
-    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">II.- INVENTARIO DE ACTIVOS FUNGIBLES.</div>
-      <table class="acta-tabla"><thead><tr>
-        <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-      </tr></thead><tbody>
-        ${fungibles.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
-      </tbody></table></div>`;
-  }
-
-  if(internos.length){
-    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">III.- INVENTARIO INTERNO.</div>
-      <table class="acta-tabla"><thead><tr>
-        <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-      </tr></thead><tbody>
-        ${internos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
-      </tbody></table></div>`;
-  }
-
-  if(prestados.length){
-    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">IV.- INVENTARIO DE BIENES PRESTADOS.</div>
-      <table class="acta-tabla"><thead><tr>
-        <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-      </tr></thead><tbody>
-        ${prestados.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
-      </tbody></table></div>`;
-  }
-
   const fechaLarga = `Tupiza, ${mesCapitalizado(fechaActual.getMonth())} ${fechaActual.getDate()} del ${fechaActual.getFullYear()}`;
 
-  const nombreSaliente = r.nombre || "___________________________________";
+  /* Datos firmas */
+  const nombreSaliente = r.nombre || "";
   const cargoSaliente = (r.cargo || "").toUpperCase();
   const nombreEntranteFirma = datos.entrante || "___________________________________";
   const cargoEntranteFirma = datos.entranteCargo ? datos.entranteCargo.toUpperCase() : "RESPONSABLE ENTRANTE";
@@ -1515,8 +1541,66 @@ function imprimirActa(r, oficina, datos){
   const nombreVoboFirma = datos.vobo || "___________________________________";
   const cargoVoboFirma = datos.voboCargo ? datos.voboCargo.toUpperCase() : "";
 
-  let bloqueFirmas = "";
-  bloqueFirmas += `
+  let html = `
+    <!-- MEMBRETE -->
+    <div class="acta-membrete">
+      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
+      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
+      <div class="linea3">BOLIVIA</div>
+    </div>
+
+    <!-- TÍTULO -->
+    <div class="acta-titulo">
+      ACTA DE ENTREGA Y RECEPCIÓN<br>
+      DEL INVENTARIO DE LA ${esc(oficina.oficina.toUpperCase())} DE LA DIV-10
+    </div>
+  `;
+
+  /* TABLA I — FIJOS */
+  if(fijos.length){
+    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">I.- INVENTARIO DE ACTIVOS FIJOS (VSIAF.).</div>
+      <table class="acta-tabla"><thead><tr>
+        <th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+      </tr></thead><tbody>
+        ${fijos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CODIGO"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+
+  /* TABLA II — FUNGIBLES */
+  if(fungibles.length){
+    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">II.- INVENTARIO DE ACTIVOS FUNGIBLES.</div>
+      <table class="acta-tabla"><thead><tr>
+        <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+      </tr></thead><tbody>
+        ${fungibles.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+
+  /* TABLA III — INTERNOS */
+  if(internos.length){
+    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">III.- INVENTARIO INTERNO.</div>
+      <table class="acta-tabla"><thead><tr>
+        <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+      </tr></thead><tbody>
+        ${internos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+
+  /* TABLA IV — PRESTADOS */
+  if(prestados.length){
+    html += `<div class="acta-seccion"><div class="acta-seccion-titulo">IV.- INVENTARIO DE BIENES PRESTADOS.</div>
+      <table class="acta-tabla"><thead><tr>
+        <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+      </tr></thead><tbody>
+        ${prestados.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+
+  /* FECHA */
+  html += `<div class="acta-fecha">${fechaLarga}</div>`;
+
+  /* FIRMAS */
+  let bloqueFirmas = `
     <div class="acta-firmas-fila">
       <div class="acta-firma-bloque-lado">
         <div class="acta-firma-rol">ENTREGUÉ CONFORME:</div>
@@ -1565,10 +1649,12 @@ function imprimirActa(r, oficina, datos){
     </div>
   `;
 
-  html += `<div class="acta-fecha">${fechaLarga}</div><div class="acta-firmas">${bloqueFirmas}</div>`;
+  html += `<div class="acta-firmas">${bloqueFirmas}</div>`;
 
-  document.getElementById("actaPrint").innerHTML = html;
-  setTimeout(() => window.print(), 300);
+  /* PIE DE PÁGINA */
+  html += `<div class="acta-pie">1 - 1</div>`;
+
+  return html;
 }
 
 /* ============================================================
@@ -1637,6 +1723,7 @@ document.addEventListener("keydown", e => {
   if((e.ctrlKey || e.metaKey) && e.key === "t"){ e.preventDefault(); toggleTheme(); }
   if(e.key === "Escape"){
     if(document.getElementById("lightbox").classList.contains("visible")) cerrarLightbox();
+    else if(document.getElementById("modalVistaPrevia").classList.contains("visible")) cerrarModalVistaPrevia();
     else if(document.getElementById("modalEntrante").classList.contains("visible")) cerrarModalEntrante();
     else if(document.getElementById("modal").classList.contains("visible")) cerrarModal();
   }
