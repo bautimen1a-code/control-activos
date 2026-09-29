@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V3.9</title>
+<title>Sistema de Control DIV-10 V4.0</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -105,7 +105,7 @@
   .btn-clear.visible{display:flex;}
   .btn-clear:hover{background:var(--rojo);color:#fff;transform:rotate(90deg) scale(1.1);box-shadow:0 0 15px var(--rojo-glow);}
 
-  /* LISTAS Y TARJETAS */
+  /* LISTAS */
   .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;}
   .list-title .list-count{background:var(--bg-panel);border:1px solid var(--borde);color:var(--dorado);padding:3px 12px;border-radius:12px;font-family:var(--mono);font-weight:800;}
   .resp-card{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .4s ease;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px;}
@@ -250,6 +250,50 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
+  /* CONTENEDOR DE MEDICIÓN (invisible, solo para calcular alturas) */
+  .acta-medicion{
+    position:absolute;
+    left:-99999px;
+    top:0;
+    visibility:hidden;
+    pointer-events:none;
+    width: 21.59cm; /* Letter width 8.5in */
+    padding: 0;
+    margin: 0;
+    font-family:Arial, sans-serif;
+    font-size:11pt;
+    line-height:1.0;
+    color:#000;
+    background:#fff;
+  }
+  .acta-medicion .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 8pt 0;text-transform:uppercase;text-align:left;}
+  .acta-medicion .acta-membrete .linea1{padding-left:0;}
+  .acta-medicion .acta-membrete .linea2{padding-left:9pt;}
+  .acta-medicion .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
+  .acta-medicion .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 8pt 0;line-height:1.1;}
+  .acta-medicion .acta-titulo .titulo-linea1{display:block;}
+  .acta-medicion .acta-titulo .titulo-linea2{display:block;}
+  .acta-medicion .acta-seccion{margin-top:8pt;}
+  .acta-medicion .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 3pt 0;line-height:1.0;}
+  .acta-medicion .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:4pt;border:1px solid #000;}
+  .acta-medicion .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;}
+  .acta-medicion .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
+  .acta-medicion .acta-tabla td.center{text-align:center;}
+  .acta-medicion .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
+  .acta-medicion .acta-tabla td.vacia{text-align:center;padding:8pt 4pt;font-style:italic;text-transform:uppercase;}
+  .acta-medicion .acta-bloque-firmas{margin-top:24pt;}
+  .acta-medicion .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;}
+  .acta-medicion .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
+  .acta-medicion .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
+  .acta-medicion .acta-firma-bloque-lado{flex:1;text-align:center;}
+  .acta-medicion .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
+  .acta-medicion .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;line-height:1.0;}
+  .acta-medicion .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;line-height:1.2;}
+  .acta-medicion .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;line-height:1.0;}
+  .acta-medicion .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
+  .acta-medicion .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
+  .acta-medicion .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
+
   /* VISTA PREVIA DEL ACTA */
   .preview-acta-wrap{
     background:#fff;color:#000;padding:30px 40px;
@@ -273,8 +317,9 @@
   .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
   .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
   .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
-  .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;margin-top:24pt;}
+  .preview-acta-wrap .acta-bloque-firmas{margin-top:24pt;}
   .preview-acta-wrap .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
   .preview-acta-wrap .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
   .preview-acta-wrap .acta-firma-bloque-lado{flex:1;text-align:center;}
   .preview-acta-wrap .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
@@ -299,7 +344,7 @@
   .acta-print{display:none;}
 
   @media print{
-    .bg-layer,.app,.modal-overlay,.no-print,.toast,.lightbox{display:none !important;}
+    .bg-layer,.app,.modal-overlay,.no-print,.toast,.lightbox,.acta-medicion{display:none !important;}
     body{background:#fff !important;color:#000 !important;}
     .acta-print{display:block !important;}
 
@@ -325,7 +370,7 @@
     .acta-membrete .linea2{text-align: left;padding-left: 9pt;}
     .acta-membrete .linea3{text-align: left;padding-left: 75pt;text-decoration: underline;}
 
-    /* TÍTULO — FIJO 16pt */
+    /* TÍTULO */
     .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 8pt 0;line-height: 1.1;color:#000;}
     .acta-titulo .titulo-linea1{display: block;}
     .acta-titulo .titulo-linea2{display: block;}
@@ -369,12 +414,11 @@
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
     .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
 
-    /* Control de cortes */
     .acta-tabla thead{break-after: avoid;page-break-after: avoid;}
     .acta-tabla tbody tr:first-child{break-before: avoid;page-break-before: avoid;}
     .acta-tabla tr{break-inside: avoid;page-break-inside: avoid;}
 
-    /* BLOQUE FECHA + FIRMAS (siempre juntos) */
+    /* BLOQUE FECHA + FIRMAS */
     .acta-bloque-firmas{
       margin-top: 24pt;
       break-inside: avoid;
@@ -384,7 +428,7 @@
     }
     .acta-fecha-firmas{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 0 0 20pt 0;line-height: 1.0;color:#000;}
 
-    /* ENCABEZADO DE CONTINUACIÓN (solo si firmas van en hoja 2+) */
+    /* ENCABEZADO DE CONTINUACIÓN */
     .acta-continuacion{
       font-family: Arial, sans-serif;
       font-size: 8pt;
@@ -412,7 +456,6 @@
       color:#000;
     }
 
-    /* FIRMAS */
     .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;line-height: 1.0;}
     .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
     .acta-firma-bloque-lado{flex: 1;text-align: center;break-inside: avoid;page-break-inside: avoid;}
@@ -422,7 +465,6 @@
     .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;line-height: 1.0;color:#000;}
     .acta-vobo{font-weight: bold;margin-bottom: 32pt;text-align: center;font-size: 12pt;line-height: 1.0;color:#000;}
 
-    /* PIE */
     .acta-pie{display: block;text-align: right;font-family: Arial, sans-serif;font-size: 10pt;margin-top: 16pt;padding-top: 4pt;color:#000;}
   }
 
@@ -471,7 +513,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v3.9 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v4.0 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -573,6 +615,9 @@
 
 <!-- ACTA (solo visible al imprimir) -->
 <div class="acta-print" id="actaPrint"></div>
+
+<!-- CONTENEDOR DE MEDICIÓN (invisible) -->
+<div class="acta-medicion" id="actaMedicion"></div>
 
 <script>
 /* ============================================================
@@ -697,7 +742,7 @@ function detectarTipoBusqueda(texto){
 }
 
 /* ============================================================
-   ARTÍCULO DEFINIDO (DE LA / DEL)
+   ARTÍCULO DEFINIDO
    ============================================================ */
 const PALABRAS_DEL = [
   "CONSULTORIO","COMANDO","MURO","GABINETE","TINGLADO","PATIO","JARDIN","JARDÍN",
@@ -804,13 +849,6 @@ function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPresta
   if(partes.length === 2) return partes[0] + " Y " + partes[1];
   return partes.slice(0, -1).join(", ") + " Y " + partes[partes.length - 1];
 }
-
-/* ============================================================
-   UMBRAL DE FILAS (para saber si las firmas caen solas)
-   ------------------------------------------------------------
-   Si el total de filas > 30, el acta ocupa 2+ hojas.
-   ============================================================ */
-const UMBRAL_FILAS = 30;
 
 /* ============================================================
    PARSEO CSV
@@ -1693,7 +1731,12 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   GENERAR HTML DEL ACTA
+   GENERAR HTML DEL ACTA CON DETECCIÓN INTELIGENTE
+   ------------------------------------------------------------
+   Medimos el contenido en un contenedor oculto con las
+   dimensiones reales de una página. Calculamos en qué hoja
+   caen las firmas. Si quedan solas → mostramos encabezado.
+   Si van acompañadas de al menos 1 fila de tabla → no lo mostramos.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -1720,89 +1763,11 @@ function generarHTMLActa(r, oficina, datos){
   const nombreVoboFirma = datos.vobo || "___________________________________";
   const cargoVoboFirma = datos.voboCargo ? datos.voboCargo.toUpperCase() : "";
 
-  /* Título con corte */
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
-  /* Determinar si el acta ocupa 2+ hojas */
-  const totalFilas = fijos.length + fungibles.length + internos.length + prestados.length;
-  const mostrarContinuacion = totalFilas > UMBRAL_FILAS;
-
-  let html = `
-    <div class="acta-membrete">
-      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
-      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
-      <div class="linea3">BOLIVIA</div>
-    </div>
-
-    <div class="acta-titulo">
-      <span class="titulo-linea1">${esc(tituloL1)}</span>
-      <span class="titulo-linea2">${tituloL2}</span>
-    </div>
-  `;
-
-  /* TABLA I — FIJOS */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">I.- <span class="subrayado">INVENTARIO DE ACTIVOS FIJOS (VSIAF.)</span>.</div>
-    <table class="acta-tabla"><thead><tr>
-      <th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-    </tr></thead><tbody>`;
-  if(fijos.length){
-    html += fijos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CODIGO"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
-  } else {
-    html += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
-  }
-  html += `</tbody></table></div>`;
-
-  /* TABLA II — FUNGIBLES */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">II.- <span class="subrayado">INVENTARIO DE ACTIVOS FUNGIBLES</span>.</div>
-    <table class="acta-tabla"><thead><tr>
-      <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-    </tr></thead><tbody>`;
-  if(fungibles.length){
-    html += fungibles.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
-  } else {
-    html += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
-  }
-  html += `</tbody></table></div>`;
-
-  /* TABLA III — INTERNOS */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">III.- <span class="subrayado">INVENTARIO INTERNO</span>.</div>
-    <table class="acta-tabla"><thead><tr>
-      <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-    </tr></thead><tbody>`;
-  if(internos.length){
-    html += internos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
-  } else {
-    html += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
-  }
-  html += `</tbody></table></div>`;
-
-  /* TABLA IV — PRESTADOS */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">IV.- <span class="subrayado">INVENTARIO DE BIENES PRESTADOS</span>.</div>
-    <table class="acta-tabla"><thead><tr>
-      <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
-    </tr></thead><tbody>`;
-  if(prestados.length){
-    html += prestados.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
-  } else {
-    html += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
-  }
-  html += `</tbody></table></div>`;
-
-  /* BLOQUE FECHA + FIRMAS (siempre juntos) */
-  let bloqueContinuacion = "";
-  if(mostrarContinuacion){
-    const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
-    const numHojaContinuacion = 2;
-    const textoContinuacion = `${ordinalHoja(numHojaContinuacion)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
-    bloqueContinuacion = `
-      <div class="acta-continuacion">${esc(textoContinuacion)}</div>
-      ${resumenBienes ? `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>` : ""}
-    `;
-  }
-
-  /* FIRMAS */
-  let bloqueFirmas = `
+  /* Generar el bloque de firmas (compartido) */
+  let bloqueFirmasHTML = `
     <div class="acta-firmas-fila">
       <div class="acta-firma-bloque-lado">
         <div class="acta-firma-rol">ENTREGUÉ CONFORME:</div>
@@ -1818,7 +1783,7 @@ function generarHTMLActa(r, oficina, datos){
   `;
 
   if(datos.sup1 && datos.sup2){
-    bloqueFirmas += `
+    bloqueFirmasHTML += `
       <div class="acta-firmas-fila">
         <div class="acta-firma-bloque-lado">
           <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup1Firma)}</div>
@@ -1830,20 +1795,20 @@ function generarHTMLActa(r, oficina, datos){
         </div>
       </div>`;
   } else if(datos.sup1){
-    bloqueFirmas += `
+    bloqueFirmasHTML += `
       <div class="acta-firma-bloque">
         <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup1Firma)}</div>
         <div class="acta-firma-cargo">${esc(cargoSup1Firma)}</div>
       </div>`;
   } else if(datos.sup2){
-    bloqueFirmas += `
+    bloqueFirmasHTML += `
       <div class="acta-firma-bloque">
         <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup2Firma)}</div>
         <div class="acta-firma-cargo">${esc(cargoSup2Firma)}</div>
       </div>`;
   }
 
-  bloqueFirmas += `
+  bloqueFirmasHTML += `
     <div class="acta-firma-bloque">
       <div class="acta-vobo">Vo. Bo.</div>
       <div class="acta-firma-nombre">${esc(nombreVoboFirma)}</div>
@@ -1851,16 +1816,193 @@ function generarHTMLActa(r, oficina, datos){
     </div>
   `;
 
-  /* Bloque completo fecha+firmas — se mantiene todo junto */
+  /* Generar HTML de las tablas (compartido) */
+  let tablasHTML = "";
+
+  /* TABLA I */
+  tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">I.- <span class="subrayado">INVENTARIO DE ACTIVOS FIJOS (VSIAF.)</span>.</div>
+    <table class="acta-tabla"><thead><tr>
+      <th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+    </tr></thead><tbody>`;
+  if(fijos.length){
+    tablasHTML += fijos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CODIGO"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
+  } else {
+    tablasHTML += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
+  }
+  tablasHTML += `</tbody></table></div>`;
+
+  /* TABLA II */
+  tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">II.- <span class="subrayado">INVENTARIO DE ACTIVOS FUNGIBLES</span>.</div>
+    <table class="acta-tabla"><thead><tr>
+      <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+    </tr></thead><tbody>`;
+  if(fungibles.length){
+    tablasHTML += fungibles.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
+  } else {
+    tablasHTML += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
+  }
+  tablasHTML += `</tbody></table></div>`;
+
+  /* TABLA III */
+  tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">III.- <span class="subrayado">INVENTARIO INTERNO</span>.</div>
+    <table class="acta-tabla"><thead><tr>
+      <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+    </tr></thead><tbody>`;
+  if(internos.length){
+    tablasHTML += internos.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
+  } else {
+    tablasHTML += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
+  }
+  tablasHTML += `</tbody></table></div>`;
+
+  /* TABLA IV */
+  tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">IV.- <span class="subrayado">INVENTARIO DE BIENES PRESTADOS</span>.</div>
+    <table class="acta-tabla"><thead><tr>
+      <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
+    </tr></thead><tbody>`;
+  if(prestados.length){
+    tablasHTML += prestados.map((b,i) => `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(b,"CANTIDAD"))}</td><td class="descripcion">${esc(getVal(b,"DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(b,"ESTADO"))}</td></tr>`).join("");
+  } else {
+    tablasHTML += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
+  }
+  tablasHTML += `</tbody></table></div>`;
+
+  /* Ahora medimos para saber si las firmas quedan solas */
+  const mostrarEncabezado = debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados, tituloL1, tituloL2, tablasHTML, fechaLarga, bloqueFirmasHTML);
+
+  /* Bloque de continuación (solo si aplica) */
+  let bloqueContinuacion = "";
+  if(mostrarEncabezado){
+    const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
+    const numHojaContinuacion = 2;
+    const textoContinuacion = `${ordinalHoja(numHojaContinuacion)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
+    bloqueContinuacion = `
+      <div class="acta-continuacion">${esc(textoContinuacion)}</div>
+      ${resumenBienes ? `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>` : ""}
+    `;
+  }
+
+  let html = `
+    <div class="acta-membrete">
+      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
+      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
+      <div class="linea3">BOLIVIA</div>
+    </div>
+
+    <div class="acta-titulo">
+      <span class="titulo-linea1">${esc(tituloL1)}</span>
+      <span class="titulo-linea2">${tituloL2}</span>
+    </div>
+  `;
+
+  html += tablasHTML;
+
   html += `
     <div class="acta-bloque-firmas">
       ${bloqueContinuacion}
       <div class="acta-fecha-firmas">${fechaLarga}</div>
-      <div class="acta-firmas">${bloqueFirmas}</div>
+      <div class="acta-firmas">${bloqueFirmasHTML}</div>
     </div>
   `;
 
   return html;
+}
+
+/* ============================================================
+   MEDICIÓN — Detectar si las firmas quedan solas
+   ------------------------------------------------------------
+   Estrategia:
+   1. Insertar el HTML completo del acta (sin encabezado de
+      continuación) en un contenedor oculto con las dimensiones
+      reales de una hoja letter (21.59 cm de ancho) y el mismo
+      CSS de impresión.
+   2. Medir la altura real de:
+      - Todo el contenido hasta el final de la última fila de tabla.
+      - El bloque fecha + firmas.
+   3. Calcular en qué "hoja" cae el final de la última tabla y si
+      las firmas caben en esa misma hoja.
+   4. Retornar true si las firmas van a la siguiente hoja (solas).
+   ============================================================ */
+function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados, tituloL1, tituloL2, tablasHTML, fechaLarga, bloqueFirmasHTML){
+  /* Altura útil de una hoja letter con márgenes 2cm 2cm 2cm 3cm:
+     letter = 11in = 27.94cm
+     márgenes: 2 arriba + 2 abajo = 4cm
+     altura útil = 23.94cm ≈ 905px (1cm ≈ 37.8px) */
+
+  const alturaUtil = 905;
+
+  /* Crear contenedor de medición */
+  const cont = document.getElementById("actaMedicion");
+  if(!cont) return false;
+
+  /* Construir el HTML SIN el encabezado de continuación */
+  const htmlMedicion = `
+    <div class="acta-membrete">
+      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
+      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
+      <div class="linea3">BOLIVIA</div>
+    </div>
+    <div class="acta-titulo">
+      <span class="titulo-linea1">${esc(tituloL1)}</span>
+      <span class="titulo-linea2">${tituloL2}</span>
+    </div>
+    ${tablasHTML}
+    <div class="acta-bloque-firmas">
+      <div class="acta-fecha-firmas">${fechaLarga}</div>
+      <div class="acta-firmas">${bloqueFirmasHTML}</div>
+    </div>
+  `;
+
+  cont.innerHTML = htmlMedicion;
+
+  /* Forzar layout */
+  void cont.offsetHeight;
+
+  /* Medir */
+  const alturaTotal = cont.scrollHeight;
+
+  /* Altura del bloque firmas (fecha + firmas) */
+  const bloqueFirmas = cont.querySelector(".acta-bloque-firmas");
+  const alturaBloqueFirmas = bloqueFirmas ? bloqueFirmas.offsetHeight : 0;
+
+  /* Altura de todo lo anterior al bloque de firmas */
+  const alturaAntesFirmas = alturaTotal - alturaBloqueFirmas;
+
+  /* Espacio restante en la hoja donde termina la última tabla */
+  const hojasAntes = Math.floor(alturaAntesFirmas / alturaUtil);
+  const alturaAcumuladaAntes = alturaAntesFirmas;
+  const espacioRestanteEnHoja = alturaUtil - (alturaAcumuladaAntes - (hojasAntes * alturaUtil));
+
+  /* Si el bloque de firmas cabe en el espacio restante de la hoja actual → NO mostrar encabezado */
+  if(alturaBloqueFirmas <= espacioRestanteEnHoja){
+    return false;
+  }
+
+  /* Si el bloque de firmas NO cabe → las firmas irán a la siguiente hoja.
+     Verificar si hay al menos 1 fila de tabla en esa siguiente hoja:
+     Comparar con la altura de la última fila de tabla. */
+
+  /* Buscar el bloque fecha+firmas en el contenedor de medición, y ver
+     si el final de la última tabla queda en la hoja actual o en la siguiente */
+  const ultimaFila = cont.querySelector(".acta-tabla tbody tr:last-child");
+  if(ultimaFila){
+    /* Altura hasta el fin de la última fila */
+    const alturaFinTabla = ultimaFila.getBoundingClientRect().top - cont.getBoundingClientRect().top + ultimaFila.offsetHeight;
+    const hojasFinTabla = Math.floor(alturaFinTabla / alturaUtil);
+    const hojasAntesFirmas = Math.floor(alturaAntesFirmas / alturaUtil);
+
+    /* Si el fin de la última tabla y las firmas caen en la MISMA hoja → significa que quedan juntas */
+    if(hojasFinTabla === hojasAntesFirmas && (alturaFinTabla - hojasFinTabla * alturaUtil) > (alturaUtil - alturaBloqueFirmas - 10)){
+      /* La tabla termina muy cerca del final, y las firmas caen justo en el límite.
+         En este caso, las firmas irán solas → mostrar encabezado */
+      return true;
+    }
+  }
+
+  /* Caso por defecto: si el bloque firmas no cabe en la hoja actual,
+     y hay tabla en esa misma hoja, entonces las firmas van a la
+     siguiente hoja solas → mostrar encabezado */
+  return true;
 }
 
 /* ============================================================
