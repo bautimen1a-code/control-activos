@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V3.7</title>
+<title>Sistema de Control DIV-10 V3.8</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -262,6 +262,8 @@
   .preview-acta-wrap .acta-membrete .linea2{padding-left:9pt;}
   .preview-acta-wrap .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
   .preview-acta-wrap .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.1;}
+  .preview-acta-wrap .acta-titulo .titulo-linea1{display:block;}
+  .preview-acta-wrap .acta-titulo .titulo-linea2{display:block;}
   .preview-acta-wrap .acta-seccion{margin-top:10pt;}
   .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;color:#000;}
   .preview-acta-wrap .acta-seccion-titulo .subrayado{text-decoration:underline;}
@@ -280,6 +282,8 @@
   .preview-acta-wrap .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;color:#000;}
   .preview-acta-wrap .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;color:#000;}
   .preview-acta-wrap .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;color:#000;}
+  .preview-acta-wrap .acta-continuacion{font-family:Arial,sans-serif;font-size:12pt;font-weight:bold;text-align:center;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;color:#000;}
+  .preview-acta-wrap .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:12pt;font-weight:bold;text-align:center;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;color:#000;}
 
   .preview-actions{padding:14px 20px;border-top:1px solid var(--borde);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--bg-panel);}
   .btn-preview{background:var(--bg-elevado);color:var(--texto);border:1px solid var(--borde);padding:10px 16px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);transition:all .2s ease;display:inline-flex;align-items:center;gap:6px;}
@@ -304,7 +308,7 @@
       margin: 2cm 2cm 2cm 3cm;
     }
 
-    /* ⚠️ REGLA DE SEGURIDAD GLOBAL: todo el texto del acta en negro */
+    /* Regla de seguridad: todo el texto en negro */
     .acta-print,
     .acta-print *{
       color:#000 !important;
@@ -322,15 +326,15 @@
     .acta-membrete .linea2{text-align: left;padding-left: 9pt;}
     .acta-membrete .linea3{text-align: left;padding-left: 75pt;text-decoration: underline;}
 
-    /* TÍTULO */
+    /* TÍTULO — FIJO 16pt */
     .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 8pt 0;line-height: 1.1;color:#000;}
     .acta-titulo .titulo-linea1{display: block;}
     .acta-titulo .titulo-linea2{display: block;}
 
-    /* SECCIONES */
+    /* SECCIONES — El subtítulo nunca se separa de la tabla */
     .acta-seccion{margin-top: 8pt;}
 
-    .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;}
+    .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;break-after: avoid;page-break-after: avoid;}
     .acta-seccion-titulo .subrayado{text-decoration: underline;}
 
     /* TABLAS — 9pt Arial con bordes negros */
@@ -366,7 +370,10 @@
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
     .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
 
-    /* Control de cortes de página */
+    /* Control de cortes:
+       - thead nunca solo → break-after avoid
+       - primera fila va con thead → break-before avoid
+       - filas no se cortan */
     .acta-tabla thead{break-after: avoid;page-break-after: avoid;}
     .acta-tabla tbody tr:first-child{break-before: avoid;page-break-before: avoid;}
     .acta-tabla tr{break-inside: avoid;page-break-inside: avoid;}
@@ -374,26 +381,45 @@
     /* FECHA */
     .acta-fecha{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 16pt 0 14pt 0;line-height: 1.0;color:#000;}
 
+    /* ENCABEZADO DE CONTINUACIÓN (antes de firmas si van en hoja 2+) */
+    .acta-continuacion{
+      font-family: Arial, sans-serif;
+      font-size: 12pt;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      margin: 20pt 0 4pt 0;
+      padding-top: 8pt;
+      border-top: 1px solid #000;
+      line-height: 1.2;
+      color:#000;
+      break-before: auto;
+    }
+    .acta-continuacion-resumen{
+      font-family: Arial, sans-serif;
+      font-size: 12pt;
+      font-weight: bold;
+      text-align: center;
+      text-transform: uppercase;
+      margin: 0 0 20pt 0;
+      padding-bottom: 8pt;
+      border-bottom: 1px solid #000;
+      line-height: 1.2;
+      color:#000;
+    }
+
     /* FIRMAS */
     .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;margin-top: 24pt;line-height: 1.0;break-before: avoid;page-break-before: avoid;}
     .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
     .acta-firma-bloque-lado{flex: 1;text-align: center;break-inside: avoid;page-break-inside: avoid;}
     .acta-firma-bloque{text-align: center;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
     .acta-firma-rol{font-weight: bold;text-transform: uppercase;margin-bottom: 32pt;font-size: 12pt;text-align: center;line-height: 1.0;color:#000;}
-    .acta-firma-nombre{font-weight: normal;text-transform: none;margin-top: 4pt;line-height: 1.2;color:#000;}
+    .acta-firma-nombre{font-weight: normal;text-transform: none;font-size: 12pt;margin-top: 4pt;line-height: 1.2;color:#000;}
     .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;line-height: 1.0;color:#000;}
     .acta-vobo{font-weight: bold;margin-bottom: 32pt;text-align: center;font-size: 12pt;line-height: 1.0;color:#000;}
 
     /* PIE */
-    .acta-pie{
-      display: block;
-      text-align: right;
-      font-family: Arial, sans-serif;
-      font-size: 10pt;
-      margin-top: 16pt;
-      padding-top: 4pt;
-      color:#000;
-    }
+    .acta-pie{display: block;text-align: right;font-family: Arial, sans-serif;font-size: 10pt;margin-top: 16pt;padding-top: 4pt;color:#000;}
   }
 
   @media (max-width:600px){
@@ -441,7 +467,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v3.7 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v3.8 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -667,34 +693,70 @@ function detectarTipoBusqueda(texto){
 }
 
 /* ============================================================
-   ABREVIACIÓN DE NOMBRES (solo para firmas)
-   ------------------------------------------------------------
-   Regla:
-   1. Conserva grado/título completo (palabras con punto inicial
-      como Cap. DIM., Cnl. DAEN., Sof. My. DEPSS., Adm. I, etc.)
-   2. Conserva primer nombre completo.
-   3. Abrevia 2do+ nombres a inicial + punto.
-   4. Conserva los 2 últimos apellidos completos.
+   ARTÍCULO DEFINIDO (DE LA / DEL) SEGÚN NOMBRE DE OFICINA
+   ============================================================ */
+const PALABRAS_DEL = [
+  "CONSULTORIO","COMANDO","MURO","GABINETE","TINGLADO","PATIO","JARDIN","JARDÍN",
+  "DEPOSITO","DEPÓSITO","AMBIENTE","PARRILLERO","PALCO","GIMNASIO","MUSEO",
+  "BASURERO","POLIGONO","POLÍGONO","SNACK","ESTACIONAMIENTO","SEFAM","TELECENTRO",
+  "SALON","SALÓN","HORNO","PABELLON","PABELLÓN","MERCADO","PASILLO","PASILLO"
+];
+const PALABRAS_DE_LA = [
+  "OFICINA","SECRETARIA","SECRETARÍA","AYUDANTIA","AYUDANTÍA","INSPECTORIA","INSPECTORÍA",
+  "JEFATURA","COCINA","PANADERIA","PANADERÍA","PELUQUERIA","PELUQUERÍA","SASTRERIA","SASTRERÍA",
+  "BIBLIOTECA","VIVIENDA","AVENIDA","PLAZA","SALA","SECCION","SECCIÓN","SUBSECCION","SUBSECCIÓN",
+  "COMPANIA","COMPAÑÍA","BANDA","UNIDAD","CASA","ESCUELA","CANCHA"
+];
 
-   Heurística:
-   - Detecta palabras de "grado" mientras tengan punto (o sean
-     muy cortas y terminen en letra seguida de punto).
-   - Los 2 últimos tokens = apellidos.
-   - Primer token después del grado = nombre 1 (completo).
-   - Los tokens entre nombre 1 y apellidos = nombres 2+ (abreviar).
+function obtenerArticuloArticulo(nombreOficina){
+  if(!nombreOficina) return "DEL";
+  const limpio = nombreOficina.trim().toUpperCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
+  /* Si el nombre ya empieza con "DE LA" o "DEL", no agregamos artículo */
+  if(/^DE LA\s/.test(limpio) || /^DEL\s/.test(limpio)) return "";
+  if(/^DE\s/.test(limpio)) return "";
+
+  /* Primera palabra */
+  const primera = limpio.split(/\s+/)[0];
+
+  /* Buscar en las listas */
+  const primeraNorm = primera.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  for(const p of PALABRAS_DEL){
+    const pn = p.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    if(primeraNorm === pn) return "DEL";
+  }
+  for(const p of PALABRAS_DE_LA){
+    const pn = p.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+    if(primeraNorm === pn) return "DE LA";
+  }
+
+  /* Fallback */
+  return "DEL";
+}
+
+/* Devuelve el "título de oficina" ya con el artículo correcto:
+   - "DEL CONSULTORIO DENTAL"
+   - "DE LA SECRETARÍA"
+   - "" (si el nombre ya incluía artículo) */
+function oficinaConArticulo(nombreOficina){
+  if(!nombreOficina) return "";
+  const art = obtenerArticuloArticulo(nombreOficina);
+  if(art === "") return nombreOficina;
+  return art + " " + nombreOficina;
+}
+
+/* ============================================================
+   ABREVIACIÓN DE NOMBRES
    ============================================================ */
 function abreviarNombre(nombreCompleto){
   if(!nombreCompleto) return "";
   const tokens = nombreCompleto.trim().split(/\s+/);
   if(tokens.length < 3) return nombreCompleto;
 
-  /* Detectar el final del grado: mientras el token tenga un punto
-     y NO sea el último token, es parte del grado. También tolera
-     "I" como grado romano sin punto al final del grado. */
   let finGrado = -1;
   for(let i = 0; i < tokens.length - 2; i++){
     const t = tokens[i];
-    /* Es parte del grado si termina en punto o si es una I sola (grado romano) */
     if(t.includes(".") || /^[IVX]+$/i.test(t)){
       finGrado = i;
     } else {
@@ -705,27 +767,47 @@ function abreviarNombre(nombreCompleto){
   const grado = tokens.slice(0, finGrado + 1);
   const resto = tokens.slice(finGrado + 1);
 
-  /* De "resto", los últimos 2 son apellidos, los anteriores son nombres */
-  if(resto.length <= 2){
-    /* Solo apellidos, no hay nombre que abreviar */
-    return nombreCompleto;
-  }
+  if(resto.length <= 2) return nombreCompleto;
 
   const apellidos = resto.slice(-2);
   const nombres = resto.slice(0, -2);
 
-  if(nombres.length <= 1){
-    /* Solo 1 nombre → no abreviar */
-    return nombreCompleto;
-  }
+  if(nombres.length <= 1) return nombreCompleto;
 
-  /* Abreviar 2do+ nombres */
   const nombresAbv = nombres.map((n, i) => {
-    if(i === 0) return n;                    /* primer nombre completo */
-    return n.charAt(0).toUpperCase() + ".";  /* resto abreviado */
+    if(i === 0) return n;
+    return n.charAt(0).toUpperCase() + ".";
   });
 
   return [...grado, ...nombresAbv, ...apellidos].join(" ");
+}
+
+/* ============================================================
+   ORDINALES DE HOJA
+   ============================================================ */
+function ordinalHoja(n){
+  const mapa = {
+    1: "1RA.", 2: "2DA.", 3: "3RA.", 4: "4TA.", 5: "5TA.",
+    6: "6TA.", 7: "7MA.", 8: "8VA.", 9: "9NA.", 10: "10MA."
+  };
+  if(mapa[n]) return mapa[n];
+  return n + "VA.";
+}
+
+/* ============================================================
+   RESUMEN DE BIENES
+   ============================================================ */
+function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPrestados){
+  const partes = [];
+  if(cantFijos > 0) partes.push(`${cantFijos} ${cantFijos === 1 ? 'ACTIVO FIJO' : 'ACTIVOS FIJOS'}`);
+  if(cantFungibles > 0) partes.push(`${cantFungibles} ${cantFungibles === 1 ? 'FUNGIBLE' : 'FUNGIBLES'}`);
+  if(cantInternos > 0) partes.push(`${cantInternos} ${cantInternos === 1 ? 'INTERNO' : 'INTERNOS'}`);
+  if(cantPrestados > 0) partes.push(`${cantPrestados} ${cantPrestados === 1 ? 'BIEN PRESTADO' : 'BIENES PRESTADOS'}`);
+
+  if(partes.length === 0) return "";
+  if(partes.length === 1) return partes[0];
+  if(partes.length === 2) return partes[0] + " Y " + partes[1];
+  return partes.slice(0, -1).join(", ") + " Y " + partes[partes.length - 1];
 }
 
 /* ============================================================
@@ -1621,7 +1703,11 @@ function generarHTMLActa(r, oficina, datos){
   const fechaActual = new Date();
   const fechaLarga = `Tupiza, ${mesCapitalizado(fechaActual.getMonth())} ${fechaActual.getDate()} del ${fechaActual.getFullYear()}`;
 
-  /* Firmas: nombres abreviados (excepto Vo.Bo.) */
+  /* Título con artículo correcto */
+  const nombreOficina = oficina.oficina;
+  const oficinaConArt = oficinaConArticulo(nombreOficina);
+
+  /* Firmas abreviadas */
   const nombreSaliente = abreviarNombre(r.nombre || "");
   const cargoSaliente = (r.cargo || "").toUpperCase();
   const nombreEntranteFirma = datos.entrante ? abreviarNombre(datos.entrante) : "___________________________________";
@@ -1630,15 +1716,12 @@ function generarHTMLActa(r, oficina, datos){
   const cargoSup1Firma = (datos.sup1Cargo || "").toUpperCase();
   const nombreSup2Firma = datos.sup2 ? abreviarNombre(datos.sup2) : "";
   const cargoSup2Firma = (datos.sup2Cargo || "").toUpperCase();
-  /* Vo.Bo. NO se abrevia */
   const nombreVoboFirma = datos.vobo || "___________________________________";
   const cargoVoboFirma = datos.voboCargo ? datos.voboCargo.toUpperCase() : "";
 
-  /* Título con corte automático: si es muy largo, dividir en 2 líneas
-     "ACTA DE ENTREGA Y RECEPCIÓN" + "DEL INVENTARIO DE LA X DE LA DIV-10" */
-  const textoOficina = oficina.oficina.toUpperCase();
+  /* Título con corte */
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
-  const tituloL2 = `DEL INVENTARIO DE LA ${textoOficina} DE LA DIV-10`;
+  const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
   let html = `
     <div class="acta-membrete">
@@ -1649,7 +1732,7 @@ function generarHTMLActa(r, oficina, datos){
 
     <div class="acta-titulo">
       <span class="titulo-linea1">${esc(tituloL1)}</span>
-      <span class="titulo-linea2">${esc(tituloL2)}</span>
+      <span class="titulo-linea2">${tituloL2}</span>
     </div>
   `;
 
@@ -1703,6 +1786,15 @@ function generarHTMLActa(r, oficina, datos){
 
   /* FECHA */
   html += `<div class="acta-fecha">${fechaLarga}</div>`;
+
+  /* ENCABEZADO DE CONTINUACIÓN (antes de las firmas) */
+  const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
+  const numHojaContinuacion = 2; /* Aproximado: si las firmas caen en hoja 2 */
+  const textoContinuacion = `${ordinalHoja(numHojaContinuacion)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
+  html += `<div class="acta-continuacion">${esc(textoContinuacion)}</div>`;
+  if(resumenBienes){
+    html += `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>`;
+  }
 
   /* FIRMAS */
   let bloqueFirmas = `
