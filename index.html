@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V4.2</title>
+<title>Sistema de Control DIV-10 V4.3</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -166,7 +166,6 @@
   .form-persona{background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
   .form-persona-titulo{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cian-brillante);font-weight:800;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
   .form-persona-titulo .num{background:var(--cian);color:var(--bg);width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;}
-
   .form-grid{display:grid;grid-template-columns:1fr 2fr 1.2fr 1.2fr;gap:10px;margin-bottom:10px;}
   .form-grid .form-group{margin-bottom:0;}
   .form-group label{display:block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--texto-suave);font-weight:800;margin-bottom:5px;}
@@ -438,7 +437,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v4.2 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v4.3 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -1142,6 +1141,9 @@ function ejecutarBusqueda(texto){
   else renderResultadosBienes(val, tipo, res);
 }
 
+/* ============================================================
+   BUSCAR RESPONSABLES — CON CAMPOS INDIVIDUALES (V4.3)
+   ============================================================ */
 function buscarResponsables(termino){
   const t = norm(termino);
   if(t.length < 1) return [];
@@ -1150,7 +1152,17 @@ function buscarResponsables(termino){
   coincidencias.forEach(r => {
     const ced = getCedulaResp(r) || norm(getNombreCompletoResp(r));
     if(!mapa.has(ced)){
-      mapa.set(ced, { cedula: ced, nombre: getNombreCompletoResp(r), cargo: getVal(r, "CARGO"), asignaciones: [] });
+      mapa.set(ced, {
+        cedula: ced,
+        nombre: getNombreCompletoResp(r),
+        cargo: getVal(r, "CARGO"),
+        /* CAMPOS INDIVIDUALES para el acta */
+        grado: getVal(r, "GRADO"),
+        nombres: getVal(r, "NOMBRES"),
+        apPat: getVal(r, "AP PAT"),
+        apMat: getVal(r, "AP MAT"),
+        asignaciones: []
+      });
     }
     mapa.get(ced).asignaciones.push({ id: getVal(r, "ID"), oficina: getVal(r, "OFICINA"), cargo: getVal(r, "CARGO") });
   });
@@ -1677,7 +1689,10 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   GENERAR HTML DEL ACTA
+   GENERAR HTML DEL ACTA — V4.3
+   ------------------------------------------------------------
+   Saliente: lee campos individuales del objeto agrupado
+   Entrante, supervisores, Vo.Bo.: del formulario
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -1692,35 +1707,22 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* DIAGNÓSTICO TEMPORAL */
-  console.log("=== [ACTA] Datos del responsable saliente ===");
-  console.log("ID:", idAsignacion);
-  console.log("Objeto RESP:", r);
-  console.log("GRADO:", getVal(r, "GRADO"));
-  console.log("NOMBRES:", getVal(r, "NOMBRES"));
-  console.log("AP PAT:", getVal(r, "AP PAT"));
-  console.log("AP MAT:", getVal(r, "AP MAT"));
-  console.log("CARGO:", getVal(r, "CARGO"));
-
-  /* === SALIENTE (con fallback) === */
-  const salienteGrado = getVal(r, "GRADO");
-  const salienteNombres = getVal(r, "NOMBRES");
-  const salienteApPat = getVal(r, "AP PAT");
-  const salienteApMat = getVal(r, "AP MAT");
+  /* === SALIENTE (campos individuales del objeto agrupado) === */
+  const salienteGrado = r.grado || "";
+  const salienteNombres = r.nombres || "";
+  const salienteApPat = r.apPat || "";
+  const salienteApMat = r.apMat || "";
 
   let nombreSaliente = construirNombreFirmante(salienteGrado, salienteNombres, salienteApPat, salienteApMat);
-  /* Fallback: si quedó vacío, usar la concatenación directa */
+  /* Fallback: si quedó vacío, usar el nombre completo concatenado */
   if(!nombreSaliente || nombreSaliente.trim() === ""){
-    nombreSaliente = getNombreCompletoResp(r);
+    nombreSaliente = r.nombre || "";
   }
-  /* Segundo fallback: si aún está vacío, mostrar placeholder */
+  /* Segundo fallback: placeholder */
   if(!nombreSaliente || nombreSaliente.trim() === ""){
     nombreSaliente = "___________________________________";
   }
-  const cargoSaliente = (getVal(r, "CARGO") || "").toUpperCase();
-
-  console.log("nombreSaliente final:", nombreSaliente);
-  console.log("cargoSaliente final:", cargoSaliente);
+  const cargoSaliente = (r.cargo || "").toUpperCase();
 
   /* === ENTRANTE === */
   const nombreEntrante = construirNombreFirmante(datos.entrante.grado, datos.entrante.nombres, datos.entrante.appat, datos.entrante.apmat);
@@ -1877,14 +1879,7 @@ function generarHTMLActa(r, oficina, datos){
 }
 
 /* ============================================================
-   MEDICIÓN — Detección de firmas solas (V4.2 corregida)
-   ------------------------------------------------------------
-   Nueva regla:
-   - Si el bloque fecha+firmas cabe en la hoja actual → NO encabezado.
-   - Si no cabe → verificar si hay AL MENOS 1 FILA DE TABLA
-     en la hoja donde caerán las firmas.
-     - Si SÍ hay al menos 1 fila → NO encabezado (firmas acompañadas).
-     - Si NO hay ninguna fila → SÍ encabezado (firmas solas).
+   MEDICIÓN — Detección de firmas solas
    ============================================================ */
 function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados, tituloL1, tituloL2, tablasHTML, fechaLarga, bloqueFirmasHTML){
   const alturaUtil = 905;
@@ -1912,7 +1907,6 @@ function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados
   cont.innerHTML = htmlMedicion;
   void cont.offsetHeight;
 
-  /* Calcular posición de las firmas */
   const bloqueFirmas = cont.querySelector(".acta-bloque-firmas");
   if(!bloqueFirmas) return false;
 
@@ -1920,39 +1914,29 @@ function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados
   const alturaFirmas = bloqueFirmas.offsetHeight;
   const finFirmas = posFirmas + alturaFirmas;
 
-  /* Determinar en qué hoja empiezan las firmas y si caben */
   const hojaInicioFirmas = Math.floor(posFirmas / alturaUtil);
   const hojaFinFirmas = Math.floor((finFirmas - 1) / alturaUtil);
 
-  /* Si las firmas caben completas en la misma hoja donde empiezan → cabe bien, no encabezado */
+  /* Si las firmas caben completas en la misma hoja */
   if(hojaInicioFirmas === hojaFinFirmas){
-    /* Verificar si en esa misma hoja hay filas de tabla */
     const filasEnHojaFirmas = contarFilasEnHoja(cont, hojaInicioFirmas, alturaUtil);
-    /* Si hay al menos 1 fila de tabla en la hoja donde están las firmas → NO encabezado */
-    if(filasEnHojaFirmas >= 1){
-      return false;
-    }
-    /* Sin filas → firmas solas → encabezado */
-    return true;
+    if(filasEnHojaFirmas >= 1) return false; /* Hay tabla → no encabezado */
+    return true; /* Firmas solas → encabezado */
   }
 
-  /* Si las firmas ocupan 2+ hojas, es un caso extremo; mostrar encabezado */
   return true;
 }
 
-/* Cuenta cuántas filas de tabla caen en una hoja específica */
 function contarFilasEnHoja(cont, numHoja, alturaUtil){
   const inicioHoja = numHoja * alturaUtil;
   const finHoja = inicioHoja + alturaUtil;
   const filas = cont.querySelectorAll(".acta-tabla tbody tr");
   let contador = 0;
   filas.forEach(fila => {
-    /* Ignorar filas "NO CUENTA" (colspan=4) */
     if(fila.querySelector("td.vacia")) return;
     const rect = fila.getBoundingClientRect();
     const topRel = rect.top - cont.getBoundingClientRect().top;
     const bottomRel = rect.bottom - cont.getBoundingClientRect().top;
-    /* La fila está dentro de la hoja si al menos parte de ella está en ese rango */
     if(bottomRel > inicioHoja && topRel < finHoja){
       contador++;
     }
