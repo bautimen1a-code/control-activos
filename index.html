@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V3.8</title>
+<title>Sistema de Control DIV-10 V3.9</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -273,8 +273,8 @@
   .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
   .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
   .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
-  .preview-acta-wrap .acta-fecha{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:16pt 0 14pt 0;line-height:1.0;color:#000;}
   .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;margin-top:24pt;}
+  .preview-acta-wrap .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;color:#000;}
   .preview-acta-wrap .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
   .preview-acta-wrap .acta-firma-bloque-lado{flex:1;text-align:center;}
   .preview-acta-wrap .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
@@ -282,8 +282,8 @@
   .preview-acta-wrap .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;color:#000;}
   .preview-acta-wrap .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;color:#000;}
   .preview-acta-wrap .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;color:#000;}
-  .preview-acta-wrap .acta-continuacion{font-family:Arial,sans-serif;font-size:12pt;font-weight:bold;text-align:center;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;color:#000;}
-  .preview-acta-wrap .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:12pt;font-weight:bold;text-align:center;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;color:#000;}
+  .preview-acta-wrap .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;color:#000;line-height:1.2;}
+  .preview-acta-wrap .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;color:#000;line-height:1.2;}
 
   .preview-actions{padding:14px 20px;border-top:1px solid var(--borde);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--bg-panel);}
   .btn-preview{background:var(--bg-elevado);color:var(--texto);border:1px solid var(--borde);padding:10px 16px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);transition:all .2s ease;display:inline-flex;align-items:center;gap:6px;}
@@ -308,7 +308,6 @@
       margin: 2cm 2cm 2cm 3cm;
     }
 
-    /* Regla de seguridad: todo el texto en negro */
     .acta-print,
     .acta-print *{
       color:#000 !important;
@@ -331,13 +330,13 @@
     .acta-titulo .titulo-linea1{display: block;}
     .acta-titulo .titulo-linea2{display: block;}
 
-    /* SECCIONES — El subtítulo nunca se separa de la tabla */
+    /* SECCIONES */
     .acta-seccion{margin-top: 8pt;}
 
     .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;break-after: avoid;page-break-after: avoid;}
     .acta-seccion-titulo .subrayado{text-decoration: underline;}
 
-    /* TABLAS — 9pt Arial con bordes negros */
+    /* TABLAS */
     .acta-tabla{
       width: 100%;
       border-collapse: collapse;
@@ -370,22 +369,27 @@
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
     .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
 
-    /* Control de cortes:
-       - thead nunca solo → break-after avoid
-       - primera fila va con thead → break-before avoid
-       - filas no se cortan */
+    /* Control de cortes */
     .acta-tabla thead{break-after: avoid;page-break-after: avoid;}
     .acta-tabla tbody tr:first-child{break-before: avoid;page-break-before: avoid;}
     .acta-tabla tr{break-inside: avoid;page-break-inside: avoid;}
 
-    /* FECHA */
-    .acta-fecha{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 16pt 0 14pt 0;line-height: 1.0;color:#000;}
+    /* BLOQUE FECHA + FIRMAS (siempre juntos) */
+    .acta-bloque-firmas{
+      margin-top: 24pt;
+      break-inside: avoid;
+      page-break-inside: avoid;
+      break-before: avoid;
+      page-break-before: avoid;
+    }
+    .acta-fecha-firmas{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 0 0 20pt 0;line-height: 1.0;color:#000;}
 
-    /* ENCABEZADO DE CONTINUACIÓN (antes de firmas si van en hoja 2+) */
+    /* ENCABEZADO DE CONTINUACIÓN (solo si firmas van en hoja 2+) */
     .acta-continuacion{
       font-family: Arial, sans-serif;
-      font-size: 12pt;
-      font-weight: bold;
+      font-size: 8pt;
+      font-style: italic;
+      font-weight: normal;
       text-align: center;
       text-transform: uppercase;
       margin: 20pt 0 4pt 0;
@@ -393,12 +397,12 @@
       border-top: 1px solid #000;
       line-height: 1.2;
       color:#000;
-      break-before: auto;
     }
     .acta-continuacion-resumen{
       font-family: Arial, sans-serif;
-      font-size: 12pt;
-      font-weight: bold;
+      font-size: 8pt;
+      font-style: italic;
+      font-weight: normal;
       text-align: center;
       text-transform: uppercase;
       margin: 0 0 20pt 0;
@@ -409,7 +413,7 @@
     }
 
     /* FIRMAS */
-    .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;margin-top: 24pt;line-height: 1.0;break-before: avoid;page-break-before: avoid;}
+    .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;line-height: 1.0;}
     .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
     .acta-firma-bloque-lado{flex: 1;text-align: center;break-inside: avoid;page-break-inside: avoid;}
     .acta-firma-bloque{text-align: center;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
@@ -467,7 +471,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v3.8 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v3.9 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -693,13 +697,13 @@ function detectarTipoBusqueda(texto){
 }
 
 /* ============================================================
-   ARTÍCULO DEFINIDO (DE LA / DEL) SEGÚN NOMBRE DE OFICINA
+   ARTÍCULO DEFINIDO (DE LA / DEL)
    ============================================================ */
 const PALABRAS_DEL = [
   "CONSULTORIO","COMANDO","MURO","GABINETE","TINGLADO","PATIO","JARDIN","JARDÍN",
   "DEPOSITO","DEPÓSITO","AMBIENTE","PARRILLERO","PALCO","GIMNASIO","MUSEO",
   "BASURERO","POLIGONO","POLÍGONO","SNACK","ESTACIONAMIENTO","SEFAM","TELECENTRO",
-  "SALON","SALÓN","HORNO","PABELLON","PABELLÓN","MERCADO","PASILLO","PASILLO"
+  "SALON","SALÓN","HORNO","PABELLON","PABELLÓN","MERCADO","PASILLO"
 ];
 const PALABRAS_DE_LA = [
   "OFICINA","SECRETARIA","SECRETARÍA","AYUDANTIA","AYUDANTÍA","INSPECTORIA","INSPECTORÍA",
@@ -713,15 +717,12 @@ function obtenerArticuloArticulo(nombreOficina){
   const limpio = nombreOficina.trim().toUpperCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 
-  /* Si el nombre ya empieza con "DE LA" o "DEL", no agregamos artículo */
   if(/^DE LA\s/.test(limpio) || /^DEL\s/.test(limpio)) return "";
   if(/^DE\s/.test(limpio)) return "";
 
-  /* Primera palabra */
   const primera = limpio.split(/\s+/)[0];
-
-  /* Buscar en las listas */
   const primeraNorm = primera.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
   for(const p of PALABRAS_DEL){
     const pn = p.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     if(primeraNorm === pn) return "DEL";
@@ -730,15 +731,9 @@ function obtenerArticuloArticulo(nombreOficina){
     const pn = p.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     if(primeraNorm === pn) return "DE LA";
   }
-
-  /* Fallback */
   return "DEL";
 }
 
-/* Devuelve el "título de oficina" ya con el artículo correcto:
-   - "DEL CONSULTORIO DENTAL"
-   - "DE LA SECRETARÍA"
-   - "" (si el nombre ya incluía artículo) */
 function oficinaConArticulo(nombreOficina){
   if(!nombreOficina) return "";
   const art = obtenerArticuloArticulo(nombreOficina);
@@ -809,6 +804,13 @@ function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPresta
   if(partes.length === 2) return partes[0] + " Y " + partes[1];
   return partes.slice(0, -1).join(", ") + " Y " + partes[partes.length - 1];
 }
+
+/* ============================================================
+   UMBRAL DE FILAS (para saber si las firmas caen solas)
+   ------------------------------------------------------------
+   Si el total de filas > 30, el acta ocupa 2+ hojas.
+   ============================================================ */
+const UMBRAL_FILAS = 30;
 
 /* ============================================================
    PARSEO CSV
@@ -1703,7 +1705,6 @@ function generarHTMLActa(r, oficina, datos){
   const fechaActual = new Date();
   const fechaLarga = `Tupiza, ${mesCapitalizado(fechaActual.getMonth())} ${fechaActual.getDate()} del ${fechaActual.getFullYear()}`;
 
-  /* Título con artículo correcto */
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
@@ -1722,6 +1723,10 @@ function generarHTMLActa(r, oficina, datos){
   /* Título con corte */
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
+
+  /* Determinar si el acta ocupa 2+ hojas */
+  const totalFilas = fijos.length + fungibles.length + internos.length + prestados.length;
+  const mostrarContinuacion = totalFilas > UMBRAL_FILAS;
 
   let html = `
     <div class="acta-membrete">
@@ -1784,16 +1789,16 @@ function generarHTMLActa(r, oficina, datos){
   }
   html += `</tbody></table></div>`;
 
-  /* FECHA */
-  html += `<div class="acta-fecha">${fechaLarga}</div>`;
-
-  /* ENCABEZADO DE CONTINUACIÓN (antes de las firmas) */
-  const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
-  const numHojaContinuacion = 2; /* Aproximado: si las firmas caen en hoja 2 */
-  const textoContinuacion = `${ordinalHoja(numHojaContinuacion)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
-  html += `<div class="acta-continuacion">${esc(textoContinuacion)}</div>`;
-  if(resumenBienes){
-    html += `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>`;
+  /* BLOQUE FECHA + FIRMAS (siempre juntos) */
+  let bloqueContinuacion = "";
+  if(mostrarContinuacion){
+    const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
+    const numHojaContinuacion = 2;
+    const textoContinuacion = `${ordinalHoja(numHojaContinuacion)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
+    bloqueContinuacion = `
+      <div class="acta-continuacion">${esc(textoContinuacion)}</div>
+      ${resumenBienes ? `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>` : ""}
+    `;
   }
 
   /* FIRMAS */
@@ -1846,7 +1851,14 @@ function generarHTMLActa(r, oficina, datos){
     </div>
   `;
 
-  html += `<div class="acta-firmas">${bloqueFirmas}</div>`;
+  /* Bloque completo fecha+firmas — se mantiene todo junto */
+  html += `
+    <div class="acta-bloque-firmas">
+      ${bloqueContinuacion}
+      <div class="acta-fecha-firmas">${fechaLarga}</div>
+      <div class="acta-firmas">${bloqueFirmas}</div>
+    </div>
+  `;
 
   return html;
 }
