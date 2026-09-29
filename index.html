@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V4.0</title>
+<title>Sistema de Control DIV-10 V4.1</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -139,7 +139,7 @@
   body.light .modal-overlay{background:rgba(30,37,45,.4);}
   .modal-overlay.visible{display:flex;}
   .modal{background:var(--bg-panel);border:1px solid var(--dorado);border-radius:16px;max-width:720px;width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.7);}
-  .modal-form{max-width:640px;}
+  .modal-form{max-width:680px;}
   .modal-vista{max-width:900px;}
   .modal-header{padding:18px 22px;border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,rgba(212,176,96,.05),transparent);}
   .modal-header h2{font-size:14px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:700;flex:1;min-width:0;word-break:break-word;}
@@ -162,18 +162,67 @@
   .btn-imprimir{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:1.2px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s ease;font-family:var(--sans);text-transform:uppercase;margin-bottom:16px;}
   .btn-imprimir:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
 
-  .form-group{margin-bottom:14px;}
-  .form-group label{display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto-suave);font-weight:800;margin-bottom:6px;}
-  .form-group input{width:100%;padding:11px 14px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:8px;color:var(--texto);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s ease;}
+  /* FORMULARIO CON CAMPOS SEPARADOS */
+  .form-grid{
+    display:grid;
+    grid-template-columns:1fr 2fr 1.2fr 1.2fr;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .form-grid-2{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  .form-group{margin-bottom:0;}
+  .form-group label{display:block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--texto-suave);font-weight:800;margin-bottom:5px;}
+  .form-group input{width:100%;padding:10px 12px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:8px;color:var(--texto);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s ease;}
   .form-group input:focus{border-color:var(--dorado);box-shadow:0 0 0 2px rgba(212,176,96,.15);}
   .form-group input::placeholder{color:var(--texto-muy-suave);}
-  .form-seccion{margin-top:20px;padding-top:16px;border-top:1px dashed rgba(212,176,96,.2);}
+
+  .form-seccion{margin-top:18px;padding-top:16px;border-top:1px dashed rgba(212,176,96,.2);}
   .form-seccion-titulo{font-size:11px;letter-spacing:2px;color:var(--dorado);text-transform:uppercase;font-weight:800;margin-bottom:12px;}
+
+  .form-persona{
+    background:var(--bg-elevado);
+    border:1px solid var(--borde);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-bottom:12px;
+  }
+  .form-persona-titulo{
+    font-size:10px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--cian-brillante);
+    font-weight:800;
+    margin-bottom:8px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .form-persona-titulo .num{
+    background:var(--cian);
+    color:var(--bg);
+    width:18px;height:18px;
+    border-radius:50%;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:10px;
+  }
+  .form-persona .form-grid{grid-template-columns:1fr 1.5fr 1fr 1fr;}
+
   .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--borde);}
   .btn-cancelar{background:transparent;color:var(--texto-suave);border:1px solid var(--borde);padding:10px 18px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);}
   .btn-cancelar:hover{background:var(--bg-elevado);color:var(--texto);}
   .btn-confirmar{background:linear-gradient(135deg,var(--dorado),#a88840);color:#0a0e12;border:none;padding:10px 20px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);}
   .btn-confirmar:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--dorado-glow);}
+
+  @media (max-width:600px){
+    .form-grid, .form-persona .form-grid{grid-template-columns:1fr 1fr;}
+    .form-grid .form-group.ancho-completo{grid-column:1 / -1;}
+  }
 
   /* TABLAS APP */
   .tabla-section{margin-bottom:20px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;overflow:hidden;}
@@ -250,21 +299,11 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
-  /* CONTENEDOR DE MEDICIÓN (invisible, solo para calcular alturas) */
+  /* CONTENEDOR DE MEDICIÓN */
   .acta-medicion{
-    position:absolute;
-    left:-99999px;
-    top:0;
-    visibility:hidden;
-    pointer-events:none;
-    width: 21.59cm; /* Letter width 8.5in */
-    padding: 0;
-    margin: 0;
-    font-family:Arial, sans-serif;
-    font-size:11pt;
-    line-height:1.0;
-    color:#000;
-    background:#fff;
+    position:absolute;left:-99999px;top:0;visibility:hidden;pointer-events:none;
+    width: 21.59cm;padding: 0;margin: 0;
+    font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;color:#000;background:#fff;
   }
   .acta-medicion .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 8pt 0;text-transform:uppercase;text-align:left;}
   .acta-medicion .acta-membrete .linea1{padding-left:0;}
@@ -294,7 +333,7 @@
   .acta-medicion .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
   .acta-medicion .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
 
-  /* VISTA PREVIA DEL ACTA */
+  /* VISTA PREVIA */
   .preview-acta-wrap{
     background:#fff;color:#000;padding:30px 40px;
     font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
@@ -338,9 +377,7 @@
   .btn-preview.green{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border-color:transparent;}
   .btn-preview.green:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
 
-  /* ============================================================
-     ACTA PARA IMPRIMIR
-     ============================================================ */
+  /* ACTA PARA IMPRIMIR */
   .acta-print{display:none;}
 
   @media print{
@@ -348,68 +385,28 @@
     body{background:#fff !important;color:#000 !important;}
     .acta-print{display:block !important;}
 
-    @page{
-      size: letter portrait;
-      margin: 2cm 2cm 2cm 3cm;
-    }
+    @page{size: letter portrait; margin: 2cm 2cm 2cm 3cm;}
 
-    .acta-print,
-    .acta-print *{
-      color:#000 !important;
-    }
+    .acta-print, .acta-print *{color:#000 !important;}
 
-    .acta-print{
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 11pt;
-      line-height: 1.0;
-    }
+    .acta-print{font-family: Arial, Helvetica, sans-serif;font-size: 11pt;line-height: 1.0;}
 
-    /* MEMBRETE */
     .acta-membrete{font-family: Arial, sans-serif;font-size: 10pt;font-weight: bold;line-height: 1.0;margin: 0 0 8pt 0;text-transform: uppercase;text-align: left;color:#000;}
     .acta-membrete .linea1{text-align: left;padding-left: 0;}
     .acta-membrete .linea2{text-align: left;padding-left: 9pt;}
     .acta-membrete .linea3{text-align: left;padding-left: 75pt;text-decoration: underline;}
 
-    /* TÍTULO */
     .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 8pt 0;line-height: 1.1;color:#000;}
     .acta-titulo .titulo-linea1{display: block;}
     .acta-titulo .titulo-linea2{display: block;}
 
-    /* SECCIONES */
     .acta-seccion{margin-top: 8pt;}
-
     .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;break-after: avoid;page-break-after: avoid;}
     .acta-seccion-titulo .subrayado{text-decoration: underline;}
 
-    /* TABLAS */
-    .acta-tabla{
-      width: 100%;
-      border-collapse: collapse;
-      font-family: Arial, sans-serif;
-      font-size: 9pt;
-      margin-bottom: 4pt;
-      border: 1px solid #000;
-      color:#000;
-    }
-    .acta-tabla th{
-      border: 1px solid #000;
-      padding: 2pt 4pt;
-      text-align: center;
-      font-weight: bold;
-      text-transform: uppercase;
-      background: #fff;
-      font-size: 9pt;
-      line-height: 1.0;
-      color:#000;
-    }
-    .acta-tabla td{
-      border: 1px solid #000;
-      padding: 2pt 4pt;
-      font-size: 9pt;
-      vertical-align: top;
-      line-height: 1.0;
-      color:#000;
-    }
+    .acta-tabla{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 9pt;margin-bottom: 4pt;border: 1px solid #000;color:#000;}
+    .acta-tabla th{border: 1px solid #000;padding: 2pt 4pt;text-align: center;font-weight: bold;text-transform: uppercase;background: #fff;font-size: 9pt;line-height: 1.0;color:#000;}
+    .acta-tabla td{border: 1px solid #000;padding: 2pt 4pt;font-size: 9pt;vertical-align: top;line-height: 1.0;color:#000;}
     .acta-tabla td.center{text-align: center;color:#000;}
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
     .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
@@ -418,43 +415,11 @@
     .acta-tabla tbody tr:first-child{break-before: avoid;page-break-before: avoid;}
     .acta-tabla tr{break-inside: avoid;page-break-inside: avoid;}
 
-    /* BLOQUE FECHA + FIRMAS */
-    .acta-bloque-firmas{
-      margin-top: 24pt;
-      break-inside: avoid;
-      page-break-inside: avoid;
-      break-before: avoid;
-      page-break-before: avoid;
-    }
+    .acta-bloque-firmas{margin-top: 24pt;break-inside: avoid;page-break-inside: avoid;break-before: avoid;page-break-before: avoid;}
     .acta-fecha-firmas{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 0 0 20pt 0;line-height: 1.0;color:#000;}
 
-    /* ENCABEZADO DE CONTINUACIÓN */
-    .acta-continuacion{
-      font-family: Arial, sans-serif;
-      font-size: 8pt;
-      font-style: italic;
-      font-weight: normal;
-      text-align: center;
-      text-transform: uppercase;
-      margin: 20pt 0 4pt 0;
-      padding-top: 8pt;
-      border-top: 1px solid #000;
-      line-height: 1.2;
-      color:#000;
-    }
-    .acta-continuacion-resumen{
-      font-family: Arial, sans-serif;
-      font-size: 8pt;
-      font-style: italic;
-      font-weight: normal;
-      text-align: center;
-      text-transform: uppercase;
-      margin: 0 0 20pt 0;
-      padding-bottom: 8pt;
-      border-bottom: 1px solid #000;
-      line-height: 1.2;
-      color:#000;
-    }
+    .acta-continuacion{font-family: Arial, sans-serif;font-size: 8pt;font-style: italic;font-weight: normal;text-align: center;text-transform: uppercase;margin: 20pt 0 4pt 0;padding-top: 8pt;border-top: 1px solid #000;line-height: 1.2;color:#000;}
+    .acta-continuacion-resumen{font-family: Arial, sans-serif;font-size: 8pt;font-style: italic;font-weight: normal;text-align: center;text-transform: uppercase;margin: 0 0 20pt 0;padding-bottom: 8pt;border-bottom: 1px solid #000;line-height: 1.2;color:#000;}
 
     .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;line-height: 1.0;}
     .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
@@ -464,8 +429,6 @@
     .acta-firma-nombre{font-weight: normal;text-transform: none;font-size: 12pt;margin-top: 4pt;line-height: 1.2;color:#000;}
     .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;line-height: 1.0;color:#000;}
     .acta-vobo{font-weight: bold;margin-bottom: 32pt;text-align: center;font-size: 12pt;line-height: 1.0;color:#000;}
-
-    .acta-pie{display: block;text-align: right;font-family: Arial, sans-serif;font-size: 10pt;margin-top: 16pt;padding-top: 4pt;color:#000;}
   }
 
   @media (max-width:600px){
@@ -513,7 +476,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v4.0 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v4.1 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -527,7 +490,7 @@
   </div>
 </div>
 
-<!-- MODAL ENTRANTE -->
+<!-- MODAL ENTRANTE (con campos separados) -->
 <div class="modal-overlay" id="modalEntrante" onclick="if(event.target===this)cerrarModalEntrante()">
   <div class="modal modal-form">
     <div class="modal-header">
@@ -535,44 +498,128 @@
       <button class="modal-close" onclick="cerrarModalEntrante()">×</button>
     </div>
     <div class="modal-body">
-      <div class="form-group">
-        <label>Grado y Nombre del ENTRANTE</label>
-        <input type="text" id="ent_nombre" placeholder="Ej: Cnl. DAEN. Luis Mamani Mamani" autocomplete="off">
-      </div>
-      <div class="form-group">
-        <label>Cargo del ENTRANTE</label>
-        <input type="text" id="ent_cargo" placeholder="Ej: G-4 DE LA DIV-10" autocomplete="off">
+
+      <!-- RESPONSABLE ENTRANTE -->
+      <div class="form-persona">
+        <div class="form-persona-titulo">
+          <span><span class="num">1</span> RESPONSABLE ENTRANTE</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Grado</label>
+            <input type="text" id="ent_grado" placeholder="Ej: Cnl. DAEN." autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Nombres</label>
+            <input type="text" id="ent_nombres" placeholder="Ej: Luis" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Paterno</label>
+            <input type="text" id="ent_appat" placeholder="Ej: Mamani" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Materno</label>
+            <input type="text" id="ent_apmat" placeholder="Ej: Mamani" autocomplete="off">
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
+            <label>Cargo</label>
+            <input type="text" id="ent_cargo" placeholder="Ej: G-4 DE LA DIV-10" autocomplete="off">
+          </div>
+        </div>
       </div>
 
-      <div class="form-seccion">
-        <div class="form-seccion-titulo">SUPERVISORES (opcional)</div>
-        <div class="form-group">
-          <label>Supervisor 1 — Nombre</label>
-          <input type="text" id="sup1_nombre" value="Cap. DIM. Giorka Giovanna Corrales Fernández" autocomplete="off">
+      <!-- SUPERVISOR 1 -->
+      <div class="form-persona">
+        <div class="form-persona-titulo">
+          <span><span class="num">2</span> SUPERVISOR 1 (opcional)</span>
         </div>
-        <div class="form-group">
-          <label>Supervisor 1 — Cargo</label>
-          <input type="text" id="sup1_cargo" value="ENCARGADO DE ACTIVOS FIJOS" autocomplete="off">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Grado</label>
+            <input type="text" id="sup1_grado" value="Cap. DIM." autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Nombres</label>
+            <input type="text" id="sup1_nombres" value="Giorka Giovanna" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Paterno</label>
+            <input type="text" id="sup1_appat" value="Corrales" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Materno</label>
+            <input type="text" id="sup1_apmat" value="Fernández" autocomplete="off">
+          </div>
         </div>
-        <div class="form-group">
-          <label>Supervisor 2 — Nombre</label>
-          <input type="text" id="sup2_nombre" value="Cnl. DAEN. Edgar Gregorio Oquendo Orosco" autocomplete="off">
-        </div>
-        <div class="form-group">
-          <label>Supervisor 2 — Cargo</label>
-          <input type="text" id="sup2_cargo" value="JEFE DE LA SECCIÓN IV - LOGÍSTICA" autocomplete="off">
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
+            <label>Cargo</label>
+            <input type="text" id="sup1_cargo" value="ENCARGADO DE ACTIVOS FIJOS" autocomplete="off">
+          </div>
         </div>
       </div>
 
-      <div class="form-seccion">
-        <div class="form-seccion-titulo">Vo. Bo. — Comandante</div>
-        <div class="form-group">
-          <label>Vo. Bo. — Nombre</label>
-          <input type="text" id="vobo_nombre" value="Cnl. DAEN. Boris Eiver Gutiérrez Nava" autocomplete="off">
+      <!-- SUPERVISOR 2 -->
+      <div class="form-persona">
+        <div class="form-persona-titulo">
+          <span><span class="num">3</span> SUPERVISOR 2 (opcional)</span>
         </div>
-        <div class="form-group">
-          <label>Vo. Bo. — Cargo</label>
-          <input type="text" id="vobo_cargo" value="COMANDANTE DE LA DÉCIMA DIVISIÓN DEL EJÉRCITO" autocomplete="off">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Grado</label>
+            <input type="text" id="sup2_grado" value="Cnl. DAEN." autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Nombres</label>
+            <input type="text" id="sup2_nombres" value="Edgar Gregorio" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Paterno</label>
+            <input type="text" id="sup2_appat" value="Oquendo" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Materno</label>
+            <input type="text" id="sup2_apmat" value="Orosco" autocomplete="off">
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
+            <label>Cargo</label>
+            <input type="text" id="sup2_cargo" value="JEFE DE LA SECCIÓN IV - LOGÍSTICA" autocomplete="off">
+          </div>
+        </div>
+      </div>
+
+      <!-- VO. BO. -->
+      <div class="form-persona">
+        <div class="form-persona-titulo">
+          <span><span class="num">4</span> Vo. Bo. — COMANDANTE</span>
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Grado</label>
+            <input type="text" id="vobo_grado" value="Cnl. DAEN." autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Nombres</label>
+            <input type="text" id="vobo_nombres" value="Boris Eiver" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Paterno</label>
+            <input type="text" id="vobo_appat" value="Gutiérrez" autocomplete="off">
+          </div>
+          <div class="form-group">
+            <label>Ap. Materno</label>
+            <input type="text" id="vobo_apmat" value="Nava" autocomplete="off">
+          </div>
+        </div>
+        <div class="form-grid" style="margin-top:10px;">
+          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
+            <label>Cargo</label>
+            <input type="text" id="vobo_cargo" value="COMANDANTE DE LA DÉCIMA DIVISIÓN DEL EJÉRCITO" autocomplete="off">
+          </div>
         </div>
       </div>
 
@@ -602,21 +649,16 @@
   </div>
 </div>
 
-<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="cerrarLightbox()">
   <img id="lightbox-img" src="" alt="">
 </div>
 
-<!-- TOAST -->
 <div class="toast" id="toast">
   <span class="toast-icon" id="toastIcon">✔</span>
   <span id="toastMsg">Mensaje</span>
 </div>
 
-<!-- ACTA (solo visible al imprimir) -->
 <div class="acta-print" id="actaPrint"></div>
-
-<!-- CONTENEDOR DE MEDICIÓN (invisible) -->
 <div class="acta-medicion" id="actaMedicion"></div>
 
 <script>
@@ -787,39 +829,40 @@ function oficinaConArticulo(nombreOficina){
 }
 
 /* ============================================================
-   ABREVIACIÓN DE NOMBRES
+   ABREVIACIÓN — SOLO DEL CAMPO "NOMBRES"
+   ------------------------------------------------------------
+   Recibe el campo NOMBRES (ej: "Ruben", "Juan Carlos").
+   - Si hay 1 sola palabra → devuelve tal cual.
+   - Si hay 2+ palabras → conserva la 1ra y abrevia el resto.
    ============================================================ */
-function abreviarNombre(nombreCompleto){
-  if(!nombreCompleto) return "";
-  const tokens = nombreCompleto.trim().split(/\s+/);
-  if(tokens.length < 3) return nombreCompleto;
+function abreviarNombresDePila(nombres){
+  if(!nombres) return "";
+  const tokens = nombres.trim().split(/\s+/).filter(Boolean);
+  if(tokens.length <= 1) return nombres.trim();
 
-  let finGrado = -1;
-  for(let i = 0; i < tokens.length - 2; i++){
-    const t = tokens[i];
-    if(t.includes(".") || /^[IVX]+$/i.test(t)){
-      finGrado = i;
-    } else {
-      break;
-    }
-  }
-
-  const grado = tokens.slice(0, finGrado + 1);
-  const resto = tokens.slice(finGrado + 1);
-
-  if(resto.length <= 2) return nombreCompleto;
-
-  const apellidos = resto.slice(-2);
-  const nombres = resto.slice(0, -2);
-
-  if(nombres.length <= 1) return nombreCompleto;
-
-  const nombresAbv = nombres.map((n, i) => {
+  const resultado = tokens.map((n, i) => {
     if(i === 0) return n;
+    /* Si ya es una inicial (ej: "R."), se queda igual */
+    if(n.endsWith(".")) return n;
+    /* Abreviar a inicial + punto */
     return n.charAt(0).toUpperCase() + ".";
   });
+  return resultado.join(" ");
+}
 
-  return [...grado, ...nombresAbv, ...apellidos].join(" ");
+/* ============================================================
+   CONSTRUIR NOMBRE DE FIRMANTE
+   ------------------------------------------------------------
+   Recibe los 4 campos por separado y construye el nombre
+   completo con el campo NOMBRES abreviado (si tiene 2+ nombres).
+   ============================================================ */
+function construirNombreFirmante(grado, nombres, apPat, apMat){
+  const gradoLimpio = (grado || "").trim();
+  const nombresAbr = abreviarNombresDePila(nombres || "");
+  const apPatLimpio = (apPat || "").trim();
+  const apMatLimpio = (apMat || "").trim();
+
+  return [gradoLimpio, nombresAbr, apPatLimpio, apMatLimpio].filter(Boolean).join(" ");
 }
 
 /* ============================================================
@@ -1686,8 +1729,11 @@ function abrirModalEntrante(idAsignacion){
   actaEnProceso.oficina = oficina;
 
   cerrarModal();
-  document.getElementById("ent_nombre").value = "";
-  document.getElementById("ent_cargo").value = "";
+  /* Limpiar solo los campos del entrante */
+  ["ent_grado","ent_nombres","ent_appat","ent_apmat","ent_cargo"].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = "";
+  });
   document.getElementById("modalEntrante").classList.add("visible");
   pushEstado("modalActa");
 }
@@ -1698,14 +1744,34 @@ function cerrarModalEntrante(){
 
 function generarVistaPrevia(){
   const datos = {
-    entrante: document.getElementById("ent_nombre").value.trim(),
-    entranteCargo: document.getElementById("ent_cargo").value.trim(),
-    sup1: document.getElementById("sup1_nombre").value.trim(),
-    sup1Cargo: document.getElementById("sup1_cargo").value.trim(),
-    sup2: document.getElementById("sup2_nombre").value.trim(),
-    sup2Cargo: document.getElementById("sup2_cargo").value.trim(),
-    vobo: document.getElementById("vobo_nombre").value.trim(),
-    voboCargo: document.getElementById("vobo_cargo").value.trim()
+    entrante: {
+      grado: document.getElementById("ent_grado").value.trim(),
+      nombres: document.getElementById("ent_nombres").value.trim(),
+      appat: document.getElementById("ent_appat").value.trim(),
+      apmat: document.getElementById("ent_apmat").value.trim(),
+      cargo: document.getElementById("ent_cargo").value.trim()
+    },
+    sup1: {
+      grado: document.getElementById("sup1_grado").value.trim(),
+      nombres: document.getElementById("sup1_nombres").value.trim(),
+      appat: document.getElementById("sup1_appat").value.trim(),
+      apmat: document.getElementById("sup1_apmat").value.trim(),
+      cargo: document.getElementById("sup1_cargo").value.trim()
+    },
+    sup2: {
+      grado: document.getElementById("sup2_grado").value.trim(),
+      nombres: document.getElementById("sup2_nombres").value.trim(),
+      appat: document.getElementById("sup2_appat").value.trim(),
+      apmat: document.getElementById("sup2_apmat").value.trim(),
+      cargo: document.getElementById("sup2_cargo").value.trim()
+    },
+    vobo: {
+      grado: document.getElementById("vobo_grado").value.trim(),
+      nombres: document.getElementById("vobo_nombres").value.trim(),
+      appat: document.getElementById("vobo_appat").value.trim(),
+      apmat: document.getElementById("vobo_apmat").value.trim(),
+      cargo: document.getElementById("vobo_cargo").value.trim()
+    }
   };
   actaEnProceso.datos = datos;
   actaEnProceso.html = generarHTMLActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
@@ -1731,12 +1797,11 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   GENERAR HTML DEL ACTA CON DETECCIÓN INTELIGENTE
+   GENERAR HTML DEL ACTA
    ------------------------------------------------------------
-   Medimos el contenido en un contenedor oculto con las
-   dimensiones reales de una página. Calculamos en qué hoja
-   caen las firmas. Si quedan solas → mostramos encabezado.
-   Si van acompañadas de al menos 1 fila de tabla → no lo mostramos.
+   AHORA: cada firmante tiene sus datos en campos separados.
+   El saliente (responsable) lee las columnas del Sheet.
+   El entrante, supervisores y Vo.Bo. vienen del formulario.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -1751,22 +1816,33 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* Firmas abreviadas */
-  const nombreSaliente = abreviarNombre(r.nombre || "");
-  const cargoSaliente = (r.cargo || "").toUpperCase();
-  const nombreEntranteFirma = datos.entrante ? abreviarNombre(datos.entrante) : "___________________________________";
-  const cargoEntranteFirma = datos.entranteCargo ? datos.entranteCargo.toUpperCase() : "RESPONSABLE ENTRANTE";
-  const nombreSup1Firma = datos.sup1 ? abreviarNombre(datos.sup1) : "";
-  const cargoSup1Firma = (datos.sup1Cargo || "").toUpperCase();
-  const nombreSup2Firma = datos.sup2 ? abreviarNombre(datos.sup2) : "";
-  const cargoSup2Firma = (datos.sup2Cargo || "").toUpperCase();
-  const nombreVoboFirma = datos.vobo || "___________________________________";
-  const cargoVoboFirma = datos.voboCargo ? datos.voboCargo.toUpperCase() : "";
+  /* === SALIENTE (del Sheet, columnas separadas) === */
+  const salienteGrado = getVal(r, "GRADO");
+  const salienteNombres = getVal(r, "NOMBRES");
+  const salienteApPat = getVal(r, "AP PAT");
+  const salienteApMat = getVal(r, "AP MAT");
+  const nombreSaliente = construirNombreFirmante(salienteGrado, salienteNombres, salienteApPat, salienteApMat);
+  const cargoSaliente = (getVal(r, "CARGO") || "").toUpperCase();
 
+  /* === ENTRANTE (del formulario, campos separados) === */
+  const nombreEntrante = construirNombreFirmante(datos.entrante.grado, datos.entrante.nombres, datos.entrante.appat, datos.entrante.apmat);
+  const cargoEntrante = (datos.entrante.cargo || "").toUpperCase() || "RESPONSABLE ENTRANTE";
+
+  /* === SUPERVISORES === */
+  const nombreSup1 = construirNombreFirmante(datos.sup1.grado, datos.sup1.nombres, datos.sup1.appat, datos.sup1.apmat);
+  const cargoSup1 = (datos.sup1.cargo || "").toUpperCase();
+  const nombreSup2 = construirNombreFirmante(datos.sup2.grado, datos.sup2.nombres, datos.sup2.appat, datos.sup2.apmat);
+  const cargoSup2 = (datos.sup2.cargo || "").toUpperCase();
+
+  /* === Vo.Bo. (NO se abrevia) === */
+  const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
+  const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
+
+  /* Título con corte */
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
-  /* Generar el bloque de firmas (compartido) */
+  /* Construir bloque de firmas */
   let bloqueFirmasHTML = `
     <div class="acta-firmas-fila">
       <div class="acta-firma-bloque-lado">
@@ -1776,47 +1852,47 @@ function generarHTMLActa(r, oficina, datos){
       </div>
       <div class="acta-firma-bloque-lado">
         <div class="acta-firma-rol">RECIBÍ CONFORME:</div>
-        <div class="acta-firma-nombre">${esc(nombreEntranteFirma)}</div>
-        <div class="acta-firma-cargo">${esc(cargoEntranteFirma)}</div>
+        <div class="acta-firma-nombre">${esc(nombreEntrante)}</div>
+        <div class="acta-firma-cargo">${esc(cargoEntrante)}</div>
       </div>
     </div>
   `;
 
-  if(datos.sup1 && datos.sup2){
+  if(nombreSup1 && nombreSup2){
     bloqueFirmasHTML += `
       <div class="acta-firmas-fila">
         <div class="acta-firma-bloque-lado">
-          <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup1Firma)}</div>
-          <div class="acta-firma-cargo">${esc(cargoSup1Firma)}</div>
+          <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup1)}</div>
+          <div class="acta-firma-cargo">${esc(cargoSup1)}</div>
         </div>
         <div class="acta-firma-bloque-lado">
-          <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup2Firma)}</div>
-          <div class="acta-firma-cargo">${esc(cargoSup2Firma)}</div>
+          <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup2)}</div>
+          <div class="acta-firma-cargo">${esc(cargoSup2)}</div>
         </div>
       </div>`;
-  } else if(datos.sup1){
+  } else if(nombreSup1){
     bloqueFirmasHTML += `
       <div class="acta-firma-bloque">
-        <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup1Firma)}</div>
-        <div class="acta-firma-cargo">${esc(cargoSup1Firma)}</div>
+        <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup1)}</div>
+        <div class="acta-firma-cargo">${esc(cargoSup1)}</div>
       </div>`;
-  } else if(datos.sup2){
+  } else if(nombreSup2){
     bloqueFirmasHTML += `
       <div class="acta-firma-bloque">
-        <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup2Firma)}</div>
-        <div class="acta-firma-cargo">${esc(cargoSup2Firma)}</div>
+        <div class="acta-firma-nombre" style="margin-top:0;">${esc(nombreSup2)}</div>
+        <div class="acta-firma-cargo">${esc(cargoSup2)}</div>
       </div>`;
   }
 
   bloqueFirmasHTML += `
     <div class="acta-firma-bloque">
       <div class="acta-vobo">Vo. Bo.</div>
-      <div class="acta-firma-nombre">${esc(nombreVoboFirma)}</div>
-      <div class="acta-firma-cargo">${esc(cargoVoboFirma)}</div>
+      <div class="acta-firma-nombre">${esc(nombreVobo)}</div>
+      <div class="acta-firma-cargo">${esc(cargoVobo)}</div>
     </div>
   `;
 
-  /* Generar HTML de las tablas (compartido) */
+  /* Generar HTML de las tablas */
   let tablasHTML = "";
 
   /* TABLA I */
@@ -1867,10 +1943,9 @@ function generarHTMLActa(r, oficina, datos){
   }
   tablasHTML += `</tbody></table></div>`;
 
-  /* Ahora medimos para saber si las firmas quedan solas */
+  /* Medición para encabezado de continuación */
   const mostrarEncabezado = debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados, tituloL1, tituloL2, tablasHTML, fechaLarga, bloqueFirmasHTML);
 
-  /* Bloque de continuación (solo si aplica) */
   let bloqueContinuacion = "";
   if(mostrarEncabezado){
     const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
@@ -1910,32 +1985,13 @@ function generarHTMLActa(r, oficina, datos){
 
 /* ============================================================
    MEDICIÓN — Detectar si las firmas quedan solas
-   ------------------------------------------------------------
-   Estrategia:
-   1. Insertar el HTML completo del acta (sin encabezado de
-      continuación) en un contenedor oculto con las dimensiones
-      reales de una hoja letter (21.59 cm de ancho) y el mismo
-      CSS de impresión.
-   2. Medir la altura real de:
-      - Todo el contenido hasta el final de la última fila de tabla.
-      - El bloque fecha + firmas.
-   3. Calcular en qué "hoja" cae el final de la última tabla y si
-      las firmas caben en esa misma hoja.
-   4. Retornar true si las firmas van a la siguiente hoja (solas).
    ============================================================ */
 function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados, tituloL1, tituloL2, tablasHTML, fechaLarga, bloqueFirmasHTML){
-  /* Altura útil de una hoja letter con márgenes 2cm 2cm 2cm 3cm:
-     letter = 11in = 27.94cm
-     márgenes: 2 arriba + 2 abajo = 4cm
-     altura útil = 23.94cm ≈ 905px (1cm ≈ 37.8px) */
-
   const alturaUtil = 905;
 
-  /* Crear contenedor de medición */
   const cont = document.getElementById("actaMedicion");
   if(!cont) return false;
 
-  /* Construir el HTML SIN el encabezado de continuación */
   const htmlMedicion = `
     <div class="acta-membrete">
       <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
@@ -1954,54 +2010,31 @@ function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados
   `;
 
   cont.innerHTML = htmlMedicion;
-
-  /* Forzar layout */
   void cont.offsetHeight;
 
-  /* Medir */
   const alturaTotal = cont.scrollHeight;
-
-  /* Altura del bloque firmas (fecha + firmas) */
   const bloqueFirmas = cont.querySelector(".acta-bloque-firmas");
   const alturaBloqueFirmas = bloqueFirmas ? bloqueFirmas.offsetHeight : 0;
-
-  /* Altura de todo lo anterior al bloque de firmas */
   const alturaAntesFirmas = alturaTotal - alturaBloqueFirmas;
 
-  /* Espacio restante en la hoja donde termina la última tabla */
   const hojasAntes = Math.floor(alturaAntesFirmas / alturaUtil);
-  const alturaAcumuladaAntes = alturaAntesFirmas;
-  const espacioRestanteEnHoja = alturaUtil - (alturaAcumuladaAntes - (hojasAntes * alturaUtil));
+  const espacioRestanteEnHoja = alturaUtil - (alturaAntesFirmas - (hojasAntes * alturaUtil));
 
-  /* Si el bloque de firmas cabe en el espacio restante de la hoja actual → NO mostrar encabezado */
   if(alturaBloqueFirmas <= espacioRestanteEnHoja){
     return false;
   }
 
-  /* Si el bloque de firmas NO cabe → las firmas irán a la siguiente hoja.
-     Verificar si hay al menos 1 fila de tabla en esa siguiente hoja:
-     Comparar con la altura de la última fila de tabla. */
-
-  /* Buscar el bloque fecha+firmas en el contenedor de medición, y ver
-     si el final de la última tabla queda en la hoja actual o en la siguiente */
   const ultimaFila = cont.querySelector(".acta-tabla tbody tr:last-child");
   if(ultimaFila){
-    /* Altura hasta el fin de la última fila */
     const alturaFinTabla = ultimaFila.getBoundingClientRect().top - cont.getBoundingClientRect().top + ultimaFila.offsetHeight;
     const hojasFinTabla = Math.floor(alturaFinTabla / alturaUtil);
     const hojasAntesFirmas = Math.floor(alturaAntesFirmas / alturaUtil);
 
-    /* Si el fin de la última tabla y las firmas caen en la MISMA hoja → significa que quedan juntas */
     if(hojasFinTabla === hojasAntesFirmas && (alturaFinTabla - hojasFinTabla * alturaUtil) > (alturaUtil - alturaBloqueFirmas - 10)){
-      /* La tabla termina muy cerca del final, y las firmas caen justo en el límite.
-         En este caso, las firmas irán solas → mostrar encabezado */
       return true;
     }
   }
 
-  /* Caso por defecto: si el bloque firmas no cabe en la hoja actual,
-     y hay tabla en esa misma hoja, entonces las firmas van a la
-     siguiente hoja solas → mostrar encabezado */
   return true;
 }
 
