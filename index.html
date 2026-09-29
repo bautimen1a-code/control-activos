@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V3.6</title>
+<title>Sistema de Control DIV-10 V3.7</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -105,7 +105,7 @@
   .btn-clear.visible{display:flex;}
   .btn-clear:hover{background:var(--rojo);color:#fff;transform:rotate(90deg) scale(1.1);box-shadow:0 0 15px var(--rojo-glow);}
 
-  /* LISTAS */
+  /* LISTAS Y TARJETAS */
   .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;}
   .list-title .list-count{background:var(--bg-panel);border:1px solid var(--borde);color:var(--dorado);padding:3px 12px;border-radius:12px;font-family:var(--mono);font-weight:800;}
   .resp-card{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .4s ease;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px;}
@@ -175,7 +175,7 @@
   .btn-confirmar{background:linear-gradient(135deg,var(--dorado),#a88840);color:#0a0e12;border:none;padding:10px 20px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);}
   .btn-confirmar:hover{transform:translateY(-2px);box-shadow:0 6px 16px var(--dorado-glow);}
 
-  /* TABLAS APP (11pt Arial) */
+  /* TABLAS APP */
   .tabla-section{margin-bottom:20px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;overflow:hidden;}
   .tabla-header{padding:12px 16px;background:linear-gradient(180deg,rgba(212,176,96,.08),transparent);border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;}
   .tabla-header-titulo{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:800;}
@@ -250,35 +250,36 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
-  /* VISTA PREVIA DEL ACTA (dentro del modal) */
+  /* VISTA PREVIA DEL ACTA */
   .preview-acta-wrap{
     background:#fff;color:#000;padding:30px 40px;
     font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
     box-shadow:0 0 0 1px #ccc inset;max-height:65vh;overflow-y:auto;
   }
+  .preview-acta-wrap, .preview-acta-wrap *{color:#000;}
   .preview-acta-wrap .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 10pt 0;text-transform:uppercase;text-align:left;}
   .preview-acta-wrap .acta-membrete .linea1{padding-left:0;}
   .preview-acta-wrap .acta-membrete .linea2{padding-left:9pt;}
   .preview-acta-wrap .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
-  .preview-acta-wrap .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.2;}
+  .preview-acta-wrap .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.1;}
   .preview-acta-wrap .acta-seccion{margin-top:10pt;}
-  .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;}
-  .preview-acta-wrap .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;}
-  .preview-acta-wrap .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;}
-  .preview-acta-wrap .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
-  .preview-acta-wrap .acta-tabla td.center{text-align:center;}
-  .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
-  .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;}
-  .preview-acta-wrap .acta-fecha{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:16pt 0 14pt 0;line-height:1.0;}
+  .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;color:#000;}
+  .preview-acta-wrap .acta-seccion-titulo .subrayado{text-decoration:underline;}
+  .preview-acta-wrap .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;color:#000;}
+  .preview-acta-wrap .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
+  .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
+  .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
+  .preview-acta-wrap .acta-fecha{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:16pt 0 14pt 0;line-height:1.0;color:#000;}
   .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;margin-top:24pt;}
   .preview-acta-wrap .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
   .preview-acta-wrap .acta-firma-bloque-lado{flex:1;text-align:center;}
   .preview-acta-wrap .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
-  .preview-acta-wrap .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;}
-  .preview-acta-wrap .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;}
-  .preview-acta-wrap .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;}
-  .preview-acta-wrap .acta-vobo{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;text-align:center;font-size:12pt;}
-  .preview-acta-wrap .preview-pie{text-align:right;font-family:Arial,sans-serif;font-size:10pt;color:#666;margin-top:20pt;padding-top:10pt;border-top:1px solid #ccc;}
+  .preview-acta-wrap .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;color:#000;}
+  .preview-acta-wrap .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;color:#000;}
+  .preview-acta-wrap .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;color:#000;}
+  .preview-acta-wrap .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;color:#000;}
 
   .preview-actions{padding:14px 20px;border-top:1px solid var(--borde);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--bg-panel);}
   .btn-preview{background:var(--bg-elevado);color:var(--texto);border:1px solid var(--borde);padding:10px 16px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);transition:all .2s ease;display:inline-flex;align-items:center;gap:6px;}
@@ -303,28 +304,36 @@
       margin: 2cm 2cm 2cm 3cm;
     }
 
+    /* ⚠️ REGLA DE SEGURIDAD GLOBAL: todo el texto del acta en negro */
+    .acta-print,
+    .acta-print *{
+      color:#000 !important;
+    }
+
     .acta-print{
       font-family: Arial, Helvetica, sans-serif;
       font-size: 11pt;
-      color: #000;
       line-height: 1.0;
     }
 
     /* MEMBRETE */
-    .acta-membrete{font-family: Arial, sans-serif;font-size: 10pt;font-weight: bold;line-height: 1.0;margin: 0 0 8pt 0;text-transform: uppercase;text-align: left;}
+    .acta-membrete{font-family: Arial, sans-serif;font-size: 10pt;font-weight: bold;line-height: 1.0;margin: 0 0 8pt 0;text-transform: uppercase;text-align: left;color:#000;}
     .acta-membrete .linea1{text-align: left;padding-left: 0;}
     .acta-membrete .linea2{text-align: left;padding-left: 9pt;}
     .acta-membrete .linea3{text-align: left;padding-left: 75pt;text-decoration: underline;}
 
     /* TÍTULO */
-    .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 8pt 0;line-height: 1.0;}
+    .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 8pt 0;line-height: 1.1;color:#000;}
+    .acta-titulo .titulo-linea1{display: block;}
+    .acta-titulo .titulo-linea2{display: block;}
 
-    /* SECCIONES (permitir corte entre páginas) */
+    /* SECCIONES */
     .acta-seccion{margin-top: 8pt;}
 
-    .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;}
+    .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;}
+    .acta-seccion-titulo .subrayado{text-decoration: underline;}
 
-    /* TABLAS — 9pt Arial con todos los bordes visibles */
+    /* TABLAS — 9pt Arial con bordes negros */
     .acta-tabla{
       width: 100%;
       border-collapse: collapse;
@@ -332,6 +341,7 @@
       font-size: 9pt;
       margin-bottom: 4pt;
       border: 1px solid #000;
+      color:#000;
     }
     .acta-tabla th{
       border: 1px solid #000;
@@ -342,6 +352,7 @@
       background: #fff;
       font-size: 9pt;
       line-height: 1.0;
+      color:#000;
     }
     .acta-tabla td{
       border: 1px solid #000;
@@ -349,28 +360,31 @@
       font-size: 9pt;
       vertical-align: top;
       line-height: 1.0;
+      color:#000;
     }
-    .acta-tabla td.center{text-align: center;}
-    .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;}
-    .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;}
+    .acta-tabla td.center{text-align: center;color:#000;}
+    .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
+    .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
 
-    /* Las filas no se cortan */
-    .acta-tabla tr{page-break-inside: avoid;}
+    /* Control de cortes de página */
+    .acta-tabla thead{break-after: avoid;page-break-after: avoid;}
+    .acta-tabla tbody tr:first-child{break-before: avoid;page-break-before: avoid;}
+    .acta-tabla tr{break-inside: avoid;page-break-inside: avoid;}
 
     /* FECHA */
-    .acta-fecha{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 16pt 0 14pt 0;line-height: 1.0;}
+    .acta-fecha{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 16pt 0 14pt 0;line-height: 1.0;color:#000;}
 
     /* FIRMAS */
-    .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;margin-top: 24pt;line-height: 1.0;}
-    .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 26pt;page-break-inside: avoid;}
-    .acta-firma-bloque-lado{flex: 1;text-align: center;page-break-inside: avoid;}
-    .acta-firma-bloque{text-align: center;margin-bottom: 26pt;page-break-inside: avoid;}
-    .acta-firma-rol{font-weight: bold;text-transform: uppercase;margin-bottom: 32pt;font-size: 12pt;text-align: center;line-height: 1.0;}
-    .acta-firma-nombre{font-weight: normal;text-transform: none;font-size: 12pt;margin-top: 4pt;line-height: 1.0;}
-    .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;line-height: 1.0;}
-    .acta-vobo{font-weight: bold;text-transform: uppercase;margin-bottom: 32pt;text-align: center;font-size: 12pt;line-height: 1.0;}
+    .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;margin-top: 24pt;line-height: 1.0;break-before: avoid;page-break-before: avoid;}
+    .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
+    .acta-firma-bloque-lado{flex: 1;text-align: center;break-inside: avoid;page-break-inside: avoid;}
+    .acta-firma-bloque{text-align: center;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
+    .acta-firma-rol{font-weight: bold;text-transform: uppercase;margin-bottom: 32pt;font-size: 12pt;text-align: center;line-height: 1.0;color:#000;}
+    .acta-firma-nombre{font-weight: normal;text-transform: none;margin-top: 4pt;line-height: 1.2;color:#000;}
+    .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;line-height: 1.0;color:#000;}
+    .acta-vobo{font-weight: bold;margin-bottom: 32pt;text-align: center;font-size: 12pt;line-height: 1.0;color:#000;}
 
-    /* PIE DE PÁGINA */
+    /* PIE */
     .acta-pie{
       display: block;
       text-align: right;
@@ -378,6 +392,7 @@
       font-size: 10pt;
       margin-top: 16pt;
       padding-top: 4pt;
+      color:#000;
     }
   }
 
@@ -426,7 +441,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v3.6 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v3.7 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -649,6 +664,68 @@ function detectarTipoBusqueda(texto){
   if(/^[A-Z0-9]{6,}$/.test(t) && /\d/.test(t) && /[A-Z]/.test(t)) return "codigo";
   if(/^\d+[A-Z]?$/.test(t)) return "id";
   return "nombre";
+}
+
+/* ============================================================
+   ABREVIACIÓN DE NOMBRES (solo para firmas)
+   ------------------------------------------------------------
+   Regla:
+   1. Conserva grado/título completo (palabras con punto inicial
+      como Cap. DIM., Cnl. DAEN., Sof. My. DEPSS., Adm. I, etc.)
+   2. Conserva primer nombre completo.
+   3. Abrevia 2do+ nombres a inicial + punto.
+   4. Conserva los 2 últimos apellidos completos.
+
+   Heurística:
+   - Detecta palabras de "grado" mientras tengan punto (o sean
+     muy cortas y terminen en letra seguida de punto).
+   - Los 2 últimos tokens = apellidos.
+   - Primer token después del grado = nombre 1 (completo).
+   - Los tokens entre nombre 1 y apellidos = nombres 2+ (abreviar).
+   ============================================================ */
+function abreviarNombre(nombreCompleto){
+  if(!nombreCompleto) return "";
+  const tokens = nombreCompleto.trim().split(/\s+/);
+  if(tokens.length < 3) return nombreCompleto;
+
+  /* Detectar el final del grado: mientras el token tenga un punto
+     y NO sea el último token, es parte del grado. También tolera
+     "I" como grado romano sin punto al final del grado. */
+  let finGrado = -1;
+  for(let i = 0; i < tokens.length - 2; i++){
+    const t = tokens[i];
+    /* Es parte del grado si termina en punto o si es una I sola (grado romano) */
+    if(t.includes(".") || /^[IVX]+$/i.test(t)){
+      finGrado = i;
+    } else {
+      break;
+    }
+  }
+
+  const grado = tokens.slice(0, finGrado + 1);
+  const resto = tokens.slice(finGrado + 1);
+
+  /* De "resto", los últimos 2 son apellidos, los anteriores son nombres */
+  if(resto.length <= 2){
+    /* Solo apellidos, no hay nombre que abreviar */
+    return nombreCompleto;
+  }
+
+  const apellidos = resto.slice(-2);
+  const nombres = resto.slice(0, -2);
+
+  if(nombres.length <= 1){
+    /* Solo 1 nombre → no abreviar */
+    return nombreCompleto;
+  }
+
+  /* Abreviar 2do+ nombres */
+  const nombresAbv = nombres.map((n, i) => {
+    if(i === 0) return n;                    /* primer nombre completo */
+    return n.charAt(0).toUpperCase() + ".";  /* resto abreviado */
+  });
+
+  return [...grado, ...nombresAbv, ...apellidos].join(" ");
 }
 
 /* ============================================================
@@ -1544,16 +1621,24 @@ function generarHTMLActa(r, oficina, datos){
   const fechaActual = new Date();
   const fechaLarga = `Tupiza, ${mesCapitalizado(fechaActual.getMonth())} ${fechaActual.getDate()} del ${fechaActual.getFullYear()}`;
 
-  const nombreSaliente = r.nombre || "";
+  /* Firmas: nombres abreviados (excepto Vo.Bo.) */
+  const nombreSaliente = abreviarNombre(r.nombre || "");
   const cargoSaliente = (r.cargo || "").toUpperCase();
-  const nombreEntranteFirma = datos.entrante || "___________________________________";
+  const nombreEntranteFirma = datos.entrante ? abreviarNombre(datos.entrante) : "___________________________________";
   const cargoEntranteFirma = datos.entranteCargo ? datos.entranteCargo.toUpperCase() : "RESPONSABLE ENTRANTE";
-  const nombreSup1Firma = datos.sup1 || "";
+  const nombreSup1Firma = datos.sup1 ? abreviarNombre(datos.sup1) : "";
   const cargoSup1Firma = (datos.sup1Cargo || "").toUpperCase();
-  const nombreSup2Firma = datos.sup2 || "";
+  const nombreSup2Firma = datos.sup2 ? abreviarNombre(datos.sup2) : "";
   const cargoSup2Firma = (datos.sup2Cargo || "").toUpperCase();
+  /* Vo.Bo. NO se abrevia */
   const nombreVoboFirma = datos.vobo || "___________________________________";
   const cargoVoboFirma = datos.voboCargo ? datos.voboCargo.toUpperCase() : "";
+
+  /* Título con corte automático: si es muy largo, dividir en 2 líneas
+     "ACTA DE ENTREGA Y RECEPCIÓN" + "DEL INVENTARIO DE LA X DE LA DIV-10" */
+  const textoOficina = oficina.oficina.toUpperCase();
+  const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
+  const tituloL2 = `DEL INVENTARIO DE LA ${textoOficina} DE LA DIV-10`;
 
   let html = `
     <div class="acta-membrete">
@@ -1563,13 +1648,13 @@ function generarHTMLActa(r, oficina, datos){
     </div>
 
     <div class="acta-titulo">
-      ACTA DE ENTREGA Y RECEPCIÓN<br>
-      DEL INVENTARIO DE LA ${esc(oficina.oficina.toUpperCase())} DE LA DIV-10
+      <span class="titulo-linea1">${esc(tituloL1)}</span>
+      <span class="titulo-linea2">${esc(tituloL2)}</span>
     </div>
   `;
 
   /* TABLA I — FIJOS */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">I.- INVENTARIO DE ACTIVOS FIJOS (VSIAF.).</div>
+  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">I.- <span class="subrayado">INVENTARIO DE ACTIVOS FIJOS (VSIAF.)</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
     </tr></thead><tbody>`;
@@ -1581,7 +1666,7 @@ function generarHTMLActa(r, oficina, datos){
   html += `</tbody></table></div>`;
 
   /* TABLA II — FUNGIBLES */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">II.- INVENTARIO DE ACTIVOS FUNGIBLES.</div>
+  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">II.- <span class="subrayado">INVENTARIO DE ACTIVOS FUNGIBLES</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
     </tr></thead><tbody>`;
@@ -1593,7 +1678,7 @@ function generarHTMLActa(r, oficina, datos){
   html += `</tbody></table></div>`;
 
   /* TABLA III — INTERNOS */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">III.- INVENTARIO INTERNO.</div>
+  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">III.- <span class="subrayado">INVENTARIO INTERNO</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
     </tr></thead><tbody>`;
@@ -1605,7 +1690,7 @@ function generarHTMLActa(r, oficina, datos){
   html += `</tbody></table></div>`;
 
   /* TABLA IV — PRESTADOS */
-  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">IV.- INVENTARIO DE BIENES PRESTADOS.</div>
+  html += `<div class="acta-seccion"><div class="acta-seccion-titulo">IV.- <span class="subrayado">INVENTARIO DE BIENES PRESTADOS</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
     </tr></thead><tbody>`;
