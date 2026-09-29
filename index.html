@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V4.1</title>
+<title>Sistema de Control DIV-10 V4.2</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -162,55 +162,17 @@
   .btn-imprimir{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:1.2px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s ease;font-family:var(--sans);text-transform:uppercase;margin-bottom:16px;}
   .btn-imprimir:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
 
-  /* FORMULARIO CON CAMPOS SEPARADOS */
-  .form-grid{
-    display:grid;
-    grid-template-columns:1fr 2fr 1.2fr 1.2fr;
-    gap:10px;
-    margin-bottom:14px;
-  }
-  .form-grid-2{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:14px;
-  }
-  .form-group{margin-bottom:0;}
+  /* FORMULARIO */
+  .form-persona{background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+  .form-persona-titulo{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cian-brillante);font-weight:800;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+  .form-persona-titulo .num{background:var(--cian);color:var(--bg);width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;}
+
+  .form-grid{display:grid;grid-template-columns:1fr 2fr 1.2fr 1.2fr;gap:10px;margin-bottom:10px;}
+  .form-grid .form-group{margin-bottom:0;}
   .form-group label{display:block;font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--texto-suave);font-weight:800;margin-bottom:5px;}
-  .form-group input{width:100%;padding:10px 12px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:8px;color:var(--texto);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s ease;}
+  .form-group input{width:100%;padding:10px 12px;background:var(--bg-panel);border:1px solid var(--borde);border-radius:8px;color:var(--texto);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .2s ease;}
   .form-group input:focus{border-color:var(--dorado);box-shadow:0 0 0 2px rgba(212,176,96,.15);}
   .form-group input::placeholder{color:var(--texto-muy-suave);}
-
-  .form-seccion{margin-top:18px;padding-top:16px;border-top:1px dashed rgba(212,176,96,.2);}
-  .form-seccion-titulo{font-size:11px;letter-spacing:2px;color:var(--dorado);text-transform:uppercase;font-weight:800;margin-bottom:12px;}
-
-  .form-persona{
-    background:var(--bg-elevado);
-    border:1px solid var(--borde);
-    border-radius:10px;
-    padding:12px 14px;
-    margin-bottom:12px;
-  }
-  .form-persona-titulo{
-    font-size:10px;
-    letter-spacing:1.5px;
-    text-transform:uppercase;
-    color:var(--cian-brillante);
-    font-weight:800;
-    margin-bottom:8px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-  .form-persona-titulo .num{
-    background:var(--cian);
-    color:var(--bg);
-    width:18px;height:18px;
-    border-radius:50%;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    font-size:10px;
-  }
   .form-persona .form-grid{grid-template-columns:1fr 1.5fr 1fr 1fr;}
 
   .form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--borde);}
@@ -476,7 +438,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v4.1 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v4.2 ◈</footer>
 </div>
 
 <!-- MODAL PRINCIPAL -->
@@ -490,7 +452,7 @@
   </div>
 </div>
 
-<!-- MODAL ENTRANTE (con campos separados) -->
+<!-- MODAL ENTRANTE -->
 <div class="modal-overlay" id="modalEntrante" onclick="if(event.target===this)cerrarModalEntrante()">
   <div class="modal modal-form">
     <div class="modal-header">
@@ -499,127 +461,55 @@
     </div>
     <div class="modal-body">
 
-      <!-- RESPONSABLE ENTRANTE -->
       <div class="form-persona">
-        <div class="form-persona-titulo">
-          <span><span class="num">1</span> RESPONSABLE ENTRANTE</span>
-        </div>
+        <div class="form-persona-titulo"><span><span class="num">1</span> RESPONSABLE ENTRANTE</span></div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Grado</label>
-            <input type="text" id="ent_grado" placeholder="Ej: Cnl. DAEN." autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Nombres</label>
-            <input type="text" id="ent_nombres" placeholder="Ej: Luis" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Paterno</label>
-            <input type="text" id="ent_appat" placeholder="Ej: Mamani" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Materno</label>
-            <input type="text" id="ent_apmat" placeholder="Ej: Mamani" autocomplete="off">
-          </div>
+          <div class="form-group"><label>Grado</label><input type="text" id="ent_grado" placeholder="Ej: Cnl. DAEN." autocomplete="off"></div>
+          <div class="form-group"><label>Nombres</label><input type="text" id="ent_nombres" placeholder="Ej: Luis" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="ent_appat" placeholder="Ej: Mamani" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Materno</label><input type="text" id="ent_apmat" placeholder="Ej: Mamani" autocomplete="off"></div>
         </div>
-        <div class="form-grid" style="margin-top:10px;">
-          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
-            <label>Cargo</label>
-            <input type="text" id="ent_cargo" placeholder="Ej: G-4 DE LA DIV-10" autocomplete="off">
-          </div>
+        <div class="form-grid" style="grid-template-columns:1fr;">
+          <div class="form-group"><label>Cargo</label><input type="text" id="ent_cargo" placeholder="Ej: G-4 DE LA DIV-10" autocomplete="off"></div>
         </div>
       </div>
 
-      <!-- SUPERVISOR 1 -->
       <div class="form-persona">
-        <div class="form-persona-titulo">
-          <span><span class="num">2</span> SUPERVISOR 1 (opcional)</span>
-        </div>
+        <div class="form-persona-titulo"><span><span class="num">2</span> SUPERVISOR 1 (opcional)</span></div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Grado</label>
-            <input type="text" id="sup1_grado" value="Cap. DIM." autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Nombres</label>
-            <input type="text" id="sup1_nombres" value="Giorka Giovanna" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Paterno</label>
-            <input type="text" id="sup1_appat" value="Corrales" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Materno</label>
-            <input type="text" id="sup1_apmat" value="Fernández" autocomplete="off">
-          </div>
+          <div class="form-group"><label>Grado</label><input type="text" id="sup1_grado" value="Cap. DIM." autocomplete="off"></div>
+          <div class="form-group"><label>Nombres</label><input type="text" id="sup1_nombres" value="Giorka Giovanna" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="sup1_appat" value="Corrales" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Materno</label><input type="text" id="sup1_apmat" value="Fernández" autocomplete="off"></div>
         </div>
-        <div class="form-grid" style="margin-top:10px;">
-          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
-            <label>Cargo</label>
-            <input type="text" id="sup1_cargo" value="ENCARGADO DE ACTIVOS FIJOS" autocomplete="off">
-          </div>
+        <div class="form-grid" style="grid-template-columns:1fr;">
+          <div class="form-group"><label>Cargo</label><input type="text" id="sup1_cargo" value="ENCARGADO DE ACTIVOS FIJOS" autocomplete="off"></div>
         </div>
       </div>
 
-      <!-- SUPERVISOR 2 -->
       <div class="form-persona">
-        <div class="form-persona-titulo">
-          <span><span class="num">3</span> SUPERVISOR 2 (opcional)</span>
-        </div>
+        <div class="form-persona-titulo"><span><span class="num">3</span> SUPERVISOR 2 (opcional)</span></div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Grado</label>
-            <input type="text" id="sup2_grado" value="Cnl. DAEN." autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Nombres</label>
-            <input type="text" id="sup2_nombres" value="Edgar Gregorio" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Paterno</label>
-            <input type="text" id="sup2_appat" value="Oquendo" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Materno</label>
-            <input type="text" id="sup2_apmat" value="Orosco" autocomplete="off">
-          </div>
+          <div class="form-group"><label>Grado</label><input type="text" id="sup2_grado" value="Cnl. DAEN." autocomplete="off"></div>
+          <div class="form-group"><label>Nombres</label><input type="text" id="sup2_nombres" value="Edgar Gregorio" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="sup2_appat" value="Oquendo" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Materno</label><input type="text" id="sup2_apmat" value="Orosco" autocomplete="off"></div>
         </div>
-        <div class="form-grid" style="margin-top:10px;">
-          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
-            <label>Cargo</label>
-            <input type="text" id="sup2_cargo" value="JEFE DE LA SECCIÓN IV - LOGÍSTICA" autocomplete="off">
-          </div>
+        <div class="form-grid" style="grid-template-columns:1fr;">
+          <div class="form-group"><label>Cargo</label><input type="text" id="sup2_cargo" value="JEFE DE LA SECCIÓN IV - LOGÍSTICA" autocomplete="off"></div>
         </div>
       </div>
 
-      <!-- VO. BO. -->
       <div class="form-persona">
-        <div class="form-persona-titulo">
-          <span><span class="num">4</span> Vo. Bo. — COMANDANTE</span>
-        </div>
+        <div class="form-persona-titulo"><span><span class="num">4</span> Vo. Bo. — COMANDANTE</span></div>
         <div class="form-grid">
-          <div class="form-group">
-            <label>Grado</label>
-            <input type="text" id="vobo_grado" value="Cnl. DAEN." autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Nombres</label>
-            <input type="text" id="vobo_nombres" value="Boris Eiver" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Paterno</label>
-            <input type="text" id="vobo_appat" value="Gutiérrez" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>Ap. Materno</label>
-            <input type="text" id="vobo_apmat" value="Nava" autocomplete="off">
-          </div>
+          <div class="form-group"><label>Grado</label><input type="text" id="vobo_grado" value="Cnl. DAEN." autocomplete="off"></div>
+          <div class="form-group"><label>Nombres</label><input type="text" id="vobo_nombres" value="Boris Eiver" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="vobo_appat" value="Gutiérrez" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Materno</label><input type="text" id="vobo_apmat" value="Nava" autocomplete="off"></div>
         </div>
-        <div class="form-grid" style="margin-top:10px;">
-          <div class="form-group ancho-completo" style="grid-column:1 / -1;">
-            <label>Cargo</label>
-            <input type="text" id="vobo_cargo" value="COMANDANTE DE LA DÉCIMA DIVISIÓN DEL EJÉRCITO" autocomplete="off">
-          </div>
+        <div class="form-grid" style="grid-template-columns:1fr;">
+          <div class="form-group"><label>Cargo</label><input type="text" id="vobo_cargo" value="COMANDANTE DE LA DÉCIMA DIVISIÓN DEL EJÉRCITO" autocomplete="off"></div>
         </div>
       </div>
 
@@ -830,10 +720,6 @@ function oficinaConArticulo(nombreOficina){
 
 /* ============================================================
    ABREVIACIÓN — SOLO DEL CAMPO "NOMBRES"
-   ------------------------------------------------------------
-   Recibe el campo NOMBRES (ej: "Ruben", "Juan Carlos").
-   - Si hay 1 sola palabra → devuelve tal cual.
-   - Si hay 2+ palabras → conserva la 1ra y abrevia el resto.
    ============================================================ */
 function abreviarNombresDePila(nombres){
   if(!nombres) return "";
@@ -842,9 +728,7 @@ function abreviarNombresDePila(nombres){
 
   const resultado = tokens.map((n, i) => {
     if(i === 0) return n;
-    /* Si ya es una inicial (ej: "R."), se queda igual */
     if(n.endsWith(".")) return n;
-    /* Abreviar a inicial + punto */
     return n.charAt(0).toUpperCase() + ".";
   });
   return resultado.join(" ");
@@ -852,9 +736,6 @@ function abreviarNombresDePila(nombres){
 
 /* ============================================================
    CONSTRUIR NOMBRE DE FIRMANTE
-   ------------------------------------------------------------
-   Recibe los 4 campos por separado y construye el nombre
-   completo con el campo NOMBRES abreviado (si tiene 2+ nombres).
    ============================================================ */
 function construirNombreFirmante(grado, nombres, apPat, apMat){
   const gradoLimpio = (grado || "").trim();
@@ -1729,7 +1610,6 @@ function abrirModalEntrante(idAsignacion){
   actaEnProceso.oficina = oficina;
 
   cerrarModal();
-  /* Limpiar solo los campos del entrante */
   ["ent_grado","ent_nombres","ent_appat","ent_apmat","ent_cargo"].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.value = "";
@@ -1798,10 +1678,6 @@ function imprimirActaDirecta(){
 
 /* ============================================================
    GENERAR HTML DEL ACTA
-   ------------------------------------------------------------
-   AHORA: cada firmante tiene sus datos en campos separados.
-   El saliente (responsable) lee las columnas del Sheet.
-   El entrante, supervisores y Vo.Bo. vienen del formulario.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -1816,15 +1692,37 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* === SALIENTE (del Sheet, columnas separadas) === */
+  /* DIAGNÓSTICO TEMPORAL */
+  console.log("=== [ACTA] Datos del responsable saliente ===");
+  console.log("ID:", idAsignacion);
+  console.log("Objeto RESP:", r);
+  console.log("GRADO:", getVal(r, "GRADO"));
+  console.log("NOMBRES:", getVal(r, "NOMBRES"));
+  console.log("AP PAT:", getVal(r, "AP PAT"));
+  console.log("AP MAT:", getVal(r, "AP MAT"));
+  console.log("CARGO:", getVal(r, "CARGO"));
+
+  /* === SALIENTE (con fallback) === */
   const salienteGrado = getVal(r, "GRADO");
   const salienteNombres = getVal(r, "NOMBRES");
   const salienteApPat = getVal(r, "AP PAT");
   const salienteApMat = getVal(r, "AP MAT");
-  const nombreSaliente = construirNombreFirmante(salienteGrado, salienteNombres, salienteApPat, salienteApMat);
+
+  let nombreSaliente = construirNombreFirmante(salienteGrado, salienteNombres, salienteApPat, salienteApMat);
+  /* Fallback: si quedó vacío, usar la concatenación directa */
+  if(!nombreSaliente || nombreSaliente.trim() === ""){
+    nombreSaliente = getNombreCompletoResp(r);
+  }
+  /* Segundo fallback: si aún está vacío, mostrar placeholder */
+  if(!nombreSaliente || nombreSaliente.trim() === ""){
+    nombreSaliente = "___________________________________";
+  }
   const cargoSaliente = (getVal(r, "CARGO") || "").toUpperCase();
 
-  /* === ENTRANTE (del formulario, campos separados) === */
+  console.log("nombreSaliente final:", nombreSaliente);
+  console.log("cargoSaliente final:", cargoSaliente);
+
+  /* === ENTRANTE === */
   const nombreEntrante = construirNombreFirmante(datos.entrante.grado, datos.entrante.nombres, datos.entrante.appat, datos.entrante.apmat);
   const cargoEntrante = (datos.entrante.cargo || "").toUpperCase() || "RESPONSABLE ENTRANTE";
 
@@ -1838,11 +1736,10 @@ function generarHTMLActa(r, oficina, datos){
   const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
   const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
 
-  /* Título con corte */
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
-  /* Construir bloque de firmas */
+  /* Firmas */
   let bloqueFirmasHTML = `
     <div class="acta-firmas-fila">
       <div class="acta-firma-bloque-lado">
@@ -1892,10 +1789,9 @@ function generarHTMLActa(r, oficina, datos){
     </div>
   `;
 
-  /* Generar HTML de las tablas */
+  /* Tablas */
   let tablasHTML = "";
 
-  /* TABLA I */
   tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">I.- <span class="subrayado">INVENTARIO DE ACTIVOS FIJOS (VSIAF.)</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
@@ -1907,7 +1803,6 @@ function generarHTMLActa(r, oficina, datos){
   }
   tablasHTML += `</tbody></table></div>`;
 
-  /* TABLA II */
   tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">II.- <span class="subrayado">INVENTARIO DE ACTIVOS FUNGIBLES</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
@@ -1919,7 +1814,6 @@ function generarHTMLActa(r, oficina, datos){
   }
   tablasHTML += `</tbody></table></div>`;
 
-  /* TABLA III */
   tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">III.- <span class="subrayado">INVENTARIO INTERNO</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
@@ -1931,7 +1825,6 @@ function generarHTMLActa(r, oficina, datos){
   }
   tablasHTML += `</tbody></table></div>`;
 
-  /* TABLA IV */
   tablasHTML += `<div class="acta-seccion"><div class="acta-seccion-titulo">IV.- <span class="subrayado">INVENTARIO DE BIENES PRESTADOS</span>.</div>
     <table class="acta-tabla"><thead><tr>
       <th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>
@@ -1943,7 +1836,7 @@ function generarHTMLActa(r, oficina, datos){
   }
   tablasHTML += `</tbody></table></div>`;
 
-  /* Medición para encabezado de continuación */
+  /* Medición */
   const mostrarEncabezado = debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados, tituloL1, tituloL2, tablasHTML, fechaLarga, bloqueFirmasHTML);
 
   let bloqueContinuacion = "";
@@ -1984,7 +1877,14 @@ function generarHTMLActa(r, oficina, datos){
 }
 
 /* ============================================================
-   MEDICIÓN — Detectar si las firmas quedan solas
+   MEDICIÓN — Detección de firmas solas (V4.2 corregida)
+   ------------------------------------------------------------
+   Nueva regla:
+   - Si el bloque fecha+firmas cabe en la hoja actual → NO encabezado.
+   - Si no cabe → verificar si hay AL MENOS 1 FILA DE TABLA
+     en la hoja donde caerán las firmas.
+     - Si SÍ hay al menos 1 fila → NO encabezado (firmas acompañadas).
+     - Si NO hay ninguna fila → SÍ encabezado (firmas solas).
    ============================================================ */
 function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados, tituloL1, tituloL2, tablasHTML, fechaLarga, bloqueFirmasHTML){
   const alturaUtil = 905;
@@ -2012,30 +1912,52 @@ function debeMostrarEncabezadoContinuacion(fijos, fungibles, internos, prestados
   cont.innerHTML = htmlMedicion;
   void cont.offsetHeight;
 
-  const alturaTotal = cont.scrollHeight;
+  /* Calcular posición de las firmas */
   const bloqueFirmas = cont.querySelector(".acta-bloque-firmas");
-  const alturaBloqueFirmas = bloqueFirmas ? bloqueFirmas.offsetHeight : 0;
-  const alturaAntesFirmas = alturaTotal - alturaBloqueFirmas;
+  if(!bloqueFirmas) return false;
 
-  const hojasAntes = Math.floor(alturaAntesFirmas / alturaUtil);
-  const espacioRestanteEnHoja = alturaUtil - (alturaAntesFirmas - (hojasAntes * alturaUtil));
+  const posFirmas = bloqueFirmas.getBoundingClientRect().top - cont.getBoundingClientRect().top;
+  const alturaFirmas = bloqueFirmas.offsetHeight;
+  const finFirmas = posFirmas + alturaFirmas;
 
-  if(alturaBloqueFirmas <= espacioRestanteEnHoja){
-    return false;
-  }
+  /* Determinar en qué hoja empiezan las firmas y si caben */
+  const hojaInicioFirmas = Math.floor(posFirmas / alturaUtil);
+  const hojaFinFirmas = Math.floor((finFirmas - 1) / alturaUtil);
 
-  const ultimaFila = cont.querySelector(".acta-tabla tbody tr:last-child");
-  if(ultimaFila){
-    const alturaFinTabla = ultimaFila.getBoundingClientRect().top - cont.getBoundingClientRect().top + ultimaFila.offsetHeight;
-    const hojasFinTabla = Math.floor(alturaFinTabla / alturaUtil);
-    const hojasAntesFirmas = Math.floor(alturaAntesFirmas / alturaUtil);
-
-    if(hojasFinTabla === hojasAntesFirmas && (alturaFinTabla - hojasFinTabla * alturaUtil) > (alturaUtil - alturaBloqueFirmas - 10)){
-      return true;
+  /* Si las firmas caben completas en la misma hoja donde empiezan → cabe bien, no encabezado */
+  if(hojaInicioFirmas === hojaFinFirmas){
+    /* Verificar si en esa misma hoja hay filas de tabla */
+    const filasEnHojaFirmas = contarFilasEnHoja(cont, hojaInicioFirmas, alturaUtil);
+    /* Si hay al menos 1 fila de tabla en la hoja donde están las firmas → NO encabezado */
+    if(filasEnHojaFirmas >= 1){
+      return false;
     }
+    /* Sin filas → firmas solas → encabezado */
+    return true;
   }
 
+  /* Si las firmas ocupan 2+ hojas, es un caso extremo; mostrar encabezado */
   return true;
+}
+
+/* Cuenta cuántas filas de tabla caen en una hoja específica */
+function contarFilasEnHoja(cont, numHoja, alturaUtil){
+  const inicioHoja = numHoja * alturaUtil;
+  const finHoja = inicioHoja + alturaUtil;
+  const filas = cont.querySelectorAll(".acta-tabla tbody tr");
+  let contador = 0;
+  filas.forEach(fila => {
+    /* Ignorar filas "NO CUENTA" (colspan=4) */
+    if(fila.querySelector("td.vacia")) return;
+    const rect = fila.getBoundingClientRect();
+    const topRel = rect.top - cont.getBoundingClientRect().top;
+    const bottomRel = rect.bottom - cont.getBoundingClientRect().top;
+    /* La fila está dentro de la hoja si al menos parte de ella está en ese rango */
+    if(bottomRel > inicioHoja && topRel < finHoja){
+      contador++;
+    }
+  });
+  return contador;
 }
 
 /* ============================================================
