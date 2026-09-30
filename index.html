@@ -2426,14 +2426,15 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   [S18] GENERAR HTML DEL ACTA — EMPAQUETADOR GREEDY v3
+   [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v4
    ------------------------------------------------------------
-   CAMBIOS V5.1:
-     - Encabezado de continuación SOLO si firmas van solas.
-     - Si la última hoja contiene al menos 1 fila de tabla,
-       NO lleva encabezado de continuación.
-     - Cortes de tabla NO llevan subtítulo "(CONTINUACIÓN)".
-     - El subtítulo romano solo aparece la primera vez.
+   Estrategia:
+     1. Se mide la altura del título de sección, thead, y CADA fila.
+     2. Se llena la hoja fila por fila hasta el borde real.
+     3. Si una tabla se corta, la continuación NO repite título
+        (solo thead para mantener estructura).
+     4. Firmas: se colocan al final si caben; si no, nueva hoja.
+     5. Encabezado de continuación SOLO si las firmas van solas.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -2448,7 +2449,7 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* Saliente */
+  /* --- Saliente --- */
   const salienteGrado = r.grado || "";
   const salienteNombres = r.nombres || "";
   const salienteApPat = r.apPat || "";
@@ -2458,17 +2459,17 @@ function generarHTMLActa(r, oficina, datos){
   if(!nombreSaliente || nombreSaliente.trim() === "") nombreSaliente = "___________________________________";
   const cargoSaliente = (r.cargo || "").toUpperCase();
 
-  /* Entrante */
+  /* --- Entrante --- */
   const nombreEntrante = construirNombreFirmante(datos.entrante.grado, datos.entrante.nombres, datos.entrante.appat, datos.entrante.apmat);
   const cargoEntrante = (datos.entrante.cargo || "").toUpperCase() || "RESPONSABLE ENTRANTE";
 
-  /* Supervisores */
+  /* --- Supervisores --- */
   const nombreSup1 = construirNombreFirmante(datos.sup1.grado, datos.sup1.nombres, datos.sup1.appat, datos.sup1.apmat);
   const cargoSup1 = (datos.sup1.cargo || "").toUpperCase();
   const nombreSup2 = construirNombreFirmante(datos.sup2.grado, datos.sup2.nombres, datos.sup2.appat, datos.sup2.apmat);
   const cargoSup2 = (datos.sup2.cargo || "").toUpperCase();
 
-  /* Vo.Bo. */
+  /* --- Vo.Bo. --- */
   const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
   const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
 
@@ -2476,7 +2477,7 @@ function generarHTMLActa(r, oficina, datos){
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
   /* ============================================================
-     [S18.1] MEDICIÓN DE BLOQUES
+     [S18.1] MEDICIÓN
      ============================================================ */
   const contMed = document.getElementById("actaMedicion");
   function medirHTML(html){
@@ -2499,84 +2500,6 @@ function generarHTMLActa(r, oficina, datos){
   `;
   const headerAltura = medirHTML(headerHTML);
 
-  /* ============================================================
-     [S18.2] BLOQUES ATÓMICOS
-     ------------------------------------------------------------
-     CAMBIO V5.1:
-       Cada trozo de sección es un bloque INDEPENDIENTE que NO
-       repite el título romano. Solo el PRIMER trozo de cada
-       sección lleva el título; los trozos siguientes van "pelados"
-       (solo la tabla con su thead).
-     ============================================================ */
-  const seccionesDef = [
-    { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
-    { nombre: "FUNGIBLES", num: "II.- ",  titulo: "INVENTARIO DE ACTIVOS FUNGIBLES",     lista: fungibles, tipo: "fungibles" },
-    { nombre: "INTERNOS",  num: "III.- ", titulo: "INVENTARIO INTERNO",                  lista: internos,  tipo: "internos" },
-    { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
-  ];
-
-  const FILAS_POR_BLOQUE = 18;
-  const bloquesSecciones = [];
-
-  seccionesDef.forEach(sec => {
-    if(!sec.lista.length){
-      const html = `<div class="acta-seccion">
-        <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-        <table class="acta-tabla">
-          <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-          <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody>
-        </table>
-      </div>`;
-      bloquesSecciones.push({
-        tipo: "seccion",
-        nombre: sec.nombre,
-        html,
-        altura: medirHTML(html),
-        esInicioDeSeccion: true
-      });
-      return;
-    }
-
-    for(let i = 0; i < sec.lista.length; i += FILAS_POR_BLOQUE){
-      const trozo = sec.lista.slice(i, i + FILAS_POR_BLOQUE);
-      const esPrimerTrozo = i === 0;
-
-      let filasHTML = "";
-      trozo.forEach((b, j) => {
-        filasHTML += generarFilaTabla(b, i + j, sec.tipo);
-      });
-
-      /* ═══ CAMBIO V5.1 ═══
-         Si es el primer trozo → lleva título romano.
-         Si es continuación → SOLO tabla, SIN título.
-      */
-      let html;
-      if(esPrimerTrozo){
-        html = `<div class="acta-seccion">
-          <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-          <table class="acta-tabla">
-            <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-            <tbody>${filasHTML}</tbody>
-          </table>
-        </div>`;
-      } else {
-        /* Continuación: solo la tabla, sin título */
-        html = `<table class="acta-tabla acta-tabla-continuacion">
-          <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-          <tbody>${filasHTML}</tbody>
-        </table>`;
-      }
-
-      bloquesSecciones.push({
-        tipo: "seccion",
-        nombre: sec.nombre,
-        html,
-        altura: medirHTML(html),
-        esInicioDeSeccion: esPrimerTrozo
-      });
-    }
-  });
-
   /* --- Firmas --- */
   const firmasHTML = generarBloqueFirmas({
     nombreSaliente, cargoSaliente, nombreEntrante, cargoEntrante,
@@ -2585,15 +2508,7 @@ function generarHTMLActa(r, oficina, datos){
   });
   const firmasAltura = medirHTML(firmasHTML);
 
-  /* ============================================================
-     [S18.3] EMPAQUETADOR GREEDY
-     ------------------------------------------------------------
-     CAMBIO V5.1:
-       - Se rastrea si la última hoja tiene AL MENOS 1 bloque de
-         tabla. Si sí → sin encabezado de continuación.
-       - Si las firmas van solas → encabezado de continuación con
-         ordinal correcto.
-     ============================================================ */
+  /* --- Resumen --- */
   const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
 
   function generarEncabezadoContinuacion(numHoja){
@@ -2604,20 +2519,88 @@ function generarHTMLActa(r, oficina, datos){
     }
     return h;
   }
+  const encabezadoAltura = medirHTML(generarEncabezadoContinuacion(2));
 
+  /* ============================================================
+     [S18.2] CONSTRUCCIÓN DE SECCIONES CON ALTURA POR FILA
+     ------------------------------------------------------------
+     Para cada sección se calcula:
+       - alturaTituloSeccion: altura del título romano
+       - alturaThead: altura del thead
+       - alturasFilas[]: altura de cada fila individual
+     ============================================================ */
+  const seccionesDef = [
+    { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
+    { nombre: "FUNGIBLES", num: "II.- ",  titulo: "INVENTARIO DE ACTIVOS FUNGIBLES",     lista: fungibles, tipo: "fungibles" },
+    { nombre: "INTERNOS",  num: "III.- ", titulo: "INVENTARIO INTERNO",                  lista: internos,  tipo: "internos" },
+    { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
+  ];
+
+  /* Se construye una estructura de "secciones" con alturas por fila */
+  const secciones = seccionesDef.map(sec => {
+    const tituloHTML = `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
+    const alturaTitulo = medirHTML(tituloHTML);
+
+    const theadHTML = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead></table>`;
+    const alturaThead = medirHTML(theadHTML);
+
+    /* Si la lista está vacía, generar una sola fila "NO CUENTA" */
+    if(!sec.lista.length){
+      const filaVaciaHTML = `<table class="acta-tabla"><tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table>`;
+      const alturaFilaVacia = medirHTML(filaVaciaHTML);
+      return {
+        ...sec,
+        alturaTitulo,
+        alturaThead,
+        filas: [{ html: `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`, altura: alturaFilaVacia }],
+        vacia: true
+      };
+    }
+
+    /* Medir cada fila individualmente */
+    const filas = sec.lista.map((b, i) => {
+      const filaHTML = `<table class="acta-tabla"><tbody>${generarFilaTabla(b, i, sec.tipo)}</tbody></table>`;
+      const altura = medirHTML(filaHTML);
+      return {
+        html: generarFilaTabla(b, i, sec.tipo),
+        altura: altura
+      };
+    });
+
+    return {
+      ...sec,
+      alturaTitulo,
+      alturaThead,
+      filas,
+      vacia: false
+    };
+  });
+
+  /* ============================================================
+     [S18.3] EMPAQUETADOR — LLENADO EXACTO POR FILA
+     ============================================================ */
   let htmlFinal = "";
   let alturaAcumulada = 0;
   let hojaActual = 1;
+  let hojaActualTieneTabla = false;
 
   /* Colocar header en hoja 1 */
   htmlFinal += headerHTML;
   alturaAcumulada += headerAltura;
 
-  /* Marca si la hoja ACTUAL tiene algún bloque de contenido (tabla) */
-  let hojaActualTieneTabla = false;
+  /* Cierra la tabla abierta (si hay) antes de un page-break o al final */
+  let tablaAbierta = false;
 
-  /* Inserta page-break SIN encabezado de continuación */
+  function cerrarTablaSiAbierta(){
+    if(tablaAbierta){
+      htmlFinal += `</tbody></table></div>`;
+      tablaAbierta = false;
+    }
+  }
+
+  /* Inserta page-break SIN encabezado */
   function nuevaHojaSinEncabezado(){
+    cerrarTablaSiAbierta();
     htmlFinal += `<div class="saltar-pagina"></div>`;
     hojaActual++;
     alturaAcumulada = 0;
@@ -2626,47 +2609,83 @@ function generarHTMLActa(r, oficina, datos){
 
   /* Inserta page-break CON encabezado de continuación */
   function nuevaHojaConEncabezado(){
+    cerrarTablaSiAbierta();
     htmlFinal += `<div class="saltar-pagina"></div>`;
     hojaActual++;
     const enc = generarEncabezadoContinuacion(hojaActual);
     htmlFinal += enc;
-    const encAltura = medirHTML(enc);
-    alturaAcumulada = encAltura;
+    alturaAcumulada = encabezadoAltura;
     hojaActualTieneTabla = false;
   }
 
-  /* Recorrer bloques de sección */
-  for(let i = 0; i < bloquesSecciones.length; i++){
-    const b = bloquesSecciones[i];
-    const espacioRestante = ALTURA_UTIL_HOJA - alturaAcumulada;
+  /* Recorrer secciones */
+  for(let s = 0; s < secciones.length; s++){
+    const sec = secciones[s];
 
-    if(b.altura <= espacioRestante){
-      /* Cabe → colocar */
-      htmlFinal += b.html;
-      alturaAcumulada += b.altura;
-      hojaActualTieneTabla = true;
-    } else {
-      /* No cabe → nueva hoja SIN encabezado (la tabla simplemente continúa) */
+    /* ¿Cabe el título + thead + al menos 1 fila? */
+    const primeraFilaAltura = sec.filas.length > 0 ? sec.filas[0].altura : 0;
+    const espacioNecesarioInicio = sec.alturaTitulo + sec.alturaThead + primeraFilaAltura;
+    const espacioRestanteInicial = ALTURA_UTIL_HOJA - alturaAcumulada;
+
+    /* Si no cabe ni siquiera el inicio, nueva hoja SIN encabezado */
+    if(espacioNecesarioInicio > espacioRestanteInicial){
       nuevaHojaSinEncabezado();
-      htmlFinal += b.html;
-      alturaAcumulada += b.altura;
-      hojaActualTieneTabla = true;
     }
+
+    /* Abrir sección: título + inicio de tabla */
+    htmlFinal += `<div class="acta-seccion">`;
+    htmlFinal += `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
+    htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
+    tablaAbierta = true;
+    alturaAcumulada += sec.alturaTitulo + sec.alturaThead;
+    hojaActualTieneTabla = true;
+
+    /* Colocar filas una por una */
+    for(let f = 0; f < sec.filas.length; f++){
+      const fila = sec.filas[f];
+      const espacioRestante = ALTURA_UTIL_HOJA - alturaAcumulada;
+
+      if(fila.altura <= espacioRestante){
+        /* Cabe → colocar */
+        htmlFinal += fila.html;
+        alturaAcumulada += fila.altura;
+      } else {
+        /* No cabe → cerrar tabla, nueva hoja SIN encabezado,
+           reabrir tabla con thead (para que la continuación sea legible) */
+        cerrarTablaSiAbierta();
+        htmlFinal += `<div class="saltar-pagina"></div>`;
+        hojaActual++;
+        alturaAcumulada = 0;
+        hojaActualTieneTabla = false;
+
+        /* Reabrir tabla en la nueva hoja: solo thead, sin título romano */
+        htmlFinal += `<div class="acta-seccion">`;
+        htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
+        tablaAbierta = true;
+        alturaAcumulada += sec.alturaThead;
+        hojaActualTieneTabla = true;
+
+        /* Colocar la fila */
+        htmlFinal += fila.html;
+        alturaAcumulada += fila.altura;
+      }
+    }
+
+    /* Cerrar tabla de esta sección */
+    cerrarTablaSiAbierta();
   }
 
   /* ============================================================
      [S18.4] DECISIÓN DE LAS FIRMAS
      ------------------------------------------------------------
      Si las firmas caben en la hoja actual → colocar directamente.
-     Si NO caben → nueva hoja CON encabezado de continuación
-     (porque la nueva hoja solo tendrá las firmas).
+     Si NO caben → nueva hoja CON encabezado de continuación.
      ============================================================ */
   const espacioParaFirmas = ALTURA_UTIL_HOJA - alturaAcumulada;
 
   if(firmasAltura <= espacioParaFirmas){
     /* Caben en la hoja actual → sin encabezado de continuación */
     htmlFinal += firmasHTML;
-    /* hojaActualTieneTabla sigue true, pero ya no importa */
   } else {
     /* No caben → nueva hoja con encabezado de continuación
        (porque la nueva hoja va a tener SOLO las firmas) */
@@ -2676,7 +2695,6 @@ function generarHTMLActa(r, oficina, datos){
 
   return htmlFinal;
 }
-
 /* ============================================================
    [S19] HELPERS DE TABLA DEL ACTA
    ============================================================ */
