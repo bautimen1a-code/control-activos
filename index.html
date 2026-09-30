@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control DIV-10 · V5.0</title>
+<title>Control DIV-10 · V5.1</title>
 <style>
 /* ============================================================
    [01] VARIABLES Y TEMA
@@ -14,39 +14,28 @@
   --bg-elevado:#111a26;
   --bg-hover:#182333;
   --bg-glass:rgba(11,17,25,.72);
-
   --texto:#d8e4f0;
   --texto-suave:#6b7c92;
   --texto-muy-suave:#3d4a5c;
-
   --borde:rgba(0,229,255,.18);
   --borde-fuerte:rgba(0,229,255,.45);
-
   --cian:#00e5ff;
   --cian-brillante:#7cf5ff;
   --cian-glow:rgba(0,229,255,.55);
-
   --magenta:#ff2bd6;
   --magenta-glow:rgba(255,43,214,.5);
-
   --verde:#00ff9d;
   --verde-glow:rgba(0,255,157,.5);
-
   --ambar:#ffb800;
   --ambar-glow:rgba(255,184,0,.5);
-
   --rojo:#ff3860;
   --rojo-glow:rgba(255,56,96,.5);
-
   --vino:#ff2bd6;
-
   --mono:"JetBrains Mono","Fira Code","Consolas",monospace;
   --sans:"Inter","Segoe UI",Roboto,system-ui,sans-serif;
-
   --sombra-panel:0 0 40px rgba(0,229,255,.06), 0 20px 60px rgba(0,0,0,.7);
   --sombra-glow:0 0 25px var(--cian-glow);
 }
-
 body.light{
   --bg:#eef2f8;
   --bg-panel:#ffffff;
@@ -66,23 +55,17 @@ body.light{
   --ambar:#cc8800;
   --rojo:#d40048;
 }
-
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
-  font-family:var(--sans);
-  background:var(--bg);
-  color:var(--texto);
-  font-size:14px;
-  min-height:100vh;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-  position:relative;
+  font-family:var(--sans);background:var(--bg);color:var(--texto);
+  font-size:14px;min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;position:relative;
   transition:background .4s ease,color .4s ease;
 }
 
 /* ============================================================
-   [02] FONDO ANIMADO — HUD SCI-FI
+   [02] FONDO ANIMADO HUD
    ============================================================ */
 .bg-layer{
   position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
@@ -92,8 +75,7 @@ body{
     var(--bg);
 }
 .bg-layer::before{
-  content:"";
-  position:absolute;inset:0;
+  content:"";position:absolute;inset:0;
   background-image:
     linear-gradient(rgba(0,229,255,.04) 1px,transparent 1px),
     linear-gradient(90deg,rgba(0,229,255,.04) 1px,transparent 1px);
@@ -103,11 +85,8 @@ body{
   -webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
 }
 @keyframes gridMove{from{transform:translate(0,0);}to{transform:translate(40px,40px);}}
-
-/* Partículas de datos */
 .bg-layer::after{
-  content:"";
-  position:absolute;inset:0;
+  content:"";position:absolute;inset:0;
   background-image:
     radial-gradient(2px 2px at 15% 25%,var(--cian) 50%,transparent),
     radial-gradient(2px 2px at 85% 45%,var(--magenta) 50%,transparent),
@@ -118,14 +97,11 @@ body{
   animation:pulseParticles 6s ease-in-out infinite;
 }
 @keyframes pulseParticles{0%,100%{opacity:.35;}50%{opacity:.75;}}
-
-/* Scanline global */
 .scanline{
   position:fixed;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--cian),var(--magenta),var(--cian),transparent);
   box-shadow:0 0 20px var(--cian-glow);
-  opacity:.55;
-  z-index:1;pointer-events:none;
+  opacity:.55;z-index:1;pointer-events:none;
   animation:scanline 6s linear infinite;
 }
 @keyframes scanline{from{top:-2px;}to{top:100vh;}}
@@ -147,47 +123,39 @@ body{
 .app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
 
 /* ============================================================
-   [05] HEADER — HUD SUPERIOR
+   [05] HEADER HUD
    ============================================================ */
 .header{
   position:sticky;top:0;z-index:50;
   background:var(--bg-glass);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid var(--borde);
-  padding:14px 22px;
-  overflow:hidden;
+  padding:14px 22px;overflow:hidden;
   transition:background .4s ease;
 }
 .header::after{
-  content:"";
-  position:absolute;bottom:0;left:0;height:1px;width:100%;
+  content:"";position:absolute;bottom:0;left:0;height:1px;width:100%;
   background:linear-gradient(90deg,transparent,var(--cian),var(--magenta),var(--cian),transparent);
   background-size:200% 100%;
   animation:borderFlow 3s linear infinite;
   box-shadow:0 0 12px var(--cian-glow);
 }
 @keyframes borderFlow{from{background-position:200% 0;}to{background-position:-200% 0;}}
-
-/* Esquinas HUD del header */
 .header::before{
-  content:"";
-  position:absolute;top:0;left:0;right:0;bottom:0;
+  content:"";position:absolute;top:0;left:0;right:0;bottom:0;
   pointer-events:none;
   background:
     linear-gradient(135deg,var(--cian) 0 12px,transparent 12px) top left/20px 20px no-repeat,
     linear-gradient(-135deg,var(--cian) 0 12px,transparent 12px) top right/20px 20px no-repeat;
   opacity:.5;
 }
-
 .header-content{
   max-width:1280px;margin:0 auto;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
 }
 .header-logo{display:flex;align-items:center;gap:14px;}
 .header-logo-icon{
-  width:44px;height:44px;
-  position:relative;
+  width:44px;height:44px;position:relative;
   display:flex;align-items:center;justify-content:center;
   font-size:22px;color:var(--cian);
   background:linear-gradient(135deg,rgba(0,229,255,.1),rgba(255,43,214,.06));
@@ -195,8 +163,7 @@ body{
   animation:pulseGlow 3s ease-in-out infinite;
 }
 .header-logo-icon::before{
-  content:"";
-  position:absolute;inset:2px;
+  content:"";position:absolute;inset:2px;
   background:var(--bg-panel);
   clip-path:polygon(20% 0,100% 0,100% 80%,80% 100%,0 100%,0 20%);
   z-index:-1;
@@ -205,10 +172,8 @@ body{
   0%,100%{filter:drop-shadow(0 0 6px var(--cian-glow));}
   50%{filter:drop-shadow(0 0 18px var(--cian-glow));}
 }
-
 .header-text h1{
-  font-family:var(--mono);
-  font-size:15px;font-weight:800;
+  font-family:var(--mono);font-size:15px;font-weight:800;
   letter-spacing:3px;text-transform:uppercase;
   background:linear-gradient(90deg,var(--cian),var(--magenta),var(--cian));
   background-size:200% auto;
@@ -218,16 +183,12 @@ body{
 }
 @keyframes gradientShift{to{background-position:200% center;}}
 .header-text .subtitle{
-  font-family:var(--mono);
-  font-size:9px;letter-spacing:4px;
-  color:var(--texto-suave);
-  margin-top:2px;
-  text-transform:uppercase;
+  font-family:var(--mono);font-size:9px;letter-spacing:4px;
+  color:var(--texto-suave);margin-top:2px;text-transform:uppercase;
 }
-
 .header-actions{display:flex;align-items:center;gap:10px;}
 
-/* Botones icono HUD */
+/* Botones icono */
 .btn-icon{
   width:42px;height:42px;
   background:var(--bg-elevado);
@@ -238,11 +199,10 @@ body{
   transition:all .3s cubic-bezier(.34,1.56,.64,1);
   flex-shrink:0;
   clip-path:polygon(25% 0,100% 0,100% 75%,75% 100%,0 100%,0 25%);
-  position:relative;
+  position:relative;overflow:hidden;
 }
 .btn-icon:hover{
-  background:var(--cian);
-  color:var(--bg);
+  background:var(--cian);color:var(--bg);
   border-color:var(--cian-brillante);
   box-shadow:0 0 25px var(--cian-glow);
   transform:scale(1.05);
@@ -256,21 +216,31 @@ body{
 .btn-icon.spinning{animation:spin 1s linear infinite;}
 @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
 
-/* Status HUD */
+/* ═══ NUEVO: Efecto "presión" en botones ═══ */
+.btn-icon:active,
+.btn-volver:active,
+.btn-nav:active,
+.btn-imprimir:active,
+.btn-confirmar:active,
+.btn-cancelar:active,
+.btn-preview:active,
+.home-btn:active{
+  transform:scale(.95) !important;
+  transition:transform .08s ease !important;
+}
+
 .header-status{
   display:flex;align-items:center;gap:8px;
   padding:8px 14px;
   background:rgba(0,229,255,.06);
   border:1px solid var(--borde);
   font-size:10px;font-family:var(--mono);
-  color:var(--cian-brillante);
-  letter-spacing:1.5px;
+  color:var(--cian-brillante);letter-spacing:1.5px;
   clip-path:polygon(8% 0,100% 0,100% 100%,0 100%,0 30%);
 }
 .status-dot{
   width:8px;height:8px;background:var(--verde);
-  box-shadow:0 0 10px var(--verde-glow);
-  border-radius:50%;
+  box-shadow:0 0 10px var(--verde-glow);border-radius:50%;
   animation:blink 1.6s ease-in-out infinite;
 }
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
@@ -278,50 +248,32 @@ body{
 /* ============================================================
    [06] MAIN
    ============================================================ */
-.main{
-  flex:1;
-  padding:24px 22px;
-  max-width:1280px;margin:0 auto;width:100%;
-}
+.main{flex:1;padding:24px 22px;max-width:1280px;margin:0 auto;width:100%;}
 
 /* ============================================================
-   [07] HOME — PANEL DE MÓDULOS
+   [07] HOME
    ============================================================ */
-.home{
-  display:flex;flex-direction:column;gap:16px;padding-top:8px;
-  animation:fadeIn .5s ease both;
-}
+.home{display:flex;flex-direction:column;gap:16px;padding-top:8px;animation:fadeIn .5s ease both;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-
-.home-buttons{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:14px;
-}
+.home-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
 .home-btn{
   position:relative;
   background:var(--bg-panel);
   border:1px solid var(--borde);
-  padding:26px 16px;
-  cursor:pointer;
+  padding:26px 16px;cursor:pointer;
   transition:all .35s cubic-bezier(.34,1.56,.64,1);
-  overflow:hidden;
-  text-align:center;
+  overflow:hidden;text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:12px;
   clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);
   color:var(--texto);
 }
 .home-btn::before{
-  content:"";
-  position:absolute;inset:0;
+  content:"";position:absolute;inset:0;
   background:linear-gradient(135deg,var(--color,var(--cian)) 0%,transparent 60%);
-  opacity:0;
-  transition:opacity .35s ease;
-  pointer-events:none;
+  opacity:0;transition:opacity .35s ease;pointer-events:none;
 }
 .home-btn::after{
-  content:"";
-  position:absolute;top:0;left:0;right:0;height:2px;
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:var(--color,var(--cian));
   transform:scaleX(0);transform-origin:left;
   transition:transform .4s ease;
@@ -334,19 +286,13 @@ body{
 }
 .home-btn:hover::before{opacity:.08;}
 .home-btn:hover::after{transform:scaleX(1);}
-
 .home-btn[data-color="verde"]{--color:var(--verde);}
 .home-btn[data-color="azul"]{--color:var(--cian);}
 .home-btn[data-color="marron"]{--color:var(--ambar);}
 .home-btn[data-color="vino"]{--color:var(--magenta);}
 .home-btn[data-color="buscar"]{--color:var(--cian);}
-
 .home-btn-icon{font-size:34px;color:var(--color,var(--cian));filter:drop-shadow(0 0 8px var(--color,var(--cian)));}
-.home-btn-label{
-  font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--texto-suave);font-weight:800;
-  font-family:var(--mono);
-}
+.home-btn-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--texto-suave);font-weight:800;font-family:var(--mono);}
 .home-btn-count{
   font-size:28px;font-weight:800;
   color:var(--color,var(--cian));
@@ -360,31 +306,22 @@ body{
   flex-direction:row;justify-content:center;gap:20px;
 }
 .home-btn.buscar .home-btn-icon{font-size:30px;}
-.home-btn.buscar .home-btn-label{
-  font-size:14px;letter-spacing:6px;
-  color:var(--cian-brillante);
-}
+.home-btn.buscar .home-btn-label{font-size:14px;letter-spacing:6px;color:var(--cian-brillante);}
 
 /* ============================================================
    [08] MODO BÚSQUEDA
    ============================================================ */
-.modo-busqueda{
-  animation:fadeIn .35s ease both;
-  display:flex;flex-direction:column;gap:16px;min-height:60vh;
-}
+.modo-busqueda{animation:fadeIn .35s ease both;display:flex;flex-direction:column;gap:16px;min-height:60vh;}
 .modo-busqueda-top{display:flex;gap:12px;align-items:center;width:100%;min-width:0;}
-
 .btn-volver{
   display:inline-flex;align-items:center;gap:8px;
-  background:var(--bg-elevado);
-  color:var(--cian);
+  background:var(--bg-elevado);color:var(--cian);
   border:1px solid var(--borde);
-  padding:12px 16px;
-  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  padding:12px 16px;font-size:11px;letter-spacing:2px;text-transform:uppercase;
   cursor:pointer;font-weight:800;font-family:var(--mono);
-  flex-shrink:0;white-space:nowrap;
-  transition:all .3s ease;
+  flex-shrink:0;white-space:nowrap;transition:all .3s ease;
   clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 30%);
+  position:relative;overflow:hidden;
 }
 .btn-volver:hover{
   background:var(--cian);color:var(--bg);
@@ -392,14 +329,12 @@ body{
   transform:translateX(-4px);
   box-shadow:0 0 20px var(--cian-glow);
 }
-
 .search-wrapper{flex:1;min-width:0;position:relative;}
 .search-box{
   display:flex;align-items:center;
   background:var(--bg-panel);
   border:1px solid var(--borde);
-  padding:4px 14px;
-  width:100%;min-width:0;
+  padding:4px 14px;width:100%;min-width:0;
   transition:all .3s ease;
   clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
 }
@@ -411,8 +346,7 @@ body{
 .search-input{
   flex:1;min-width:0;background:transparent;border:none;outline:none;
   padding:14px 0;font-size:15px;color:var(--texto);
-  font-family:var(--mono);font-weight:500;letter-spacing:.5px;
-  width:100%;
+  font-family:var(--mono);font-weight:500;letter-spacing:.5px;width:100%;
 }
 .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
 .btn-clear{
@@ -429,7 +363,7 @@ body{
 }
 
 /* ============================================================
-   [09] LISTAS Y TARJETAS
+   [09] LISTAS
    ============================================================ */
 .list-title{
   display:flex;justify-content:space-between;align-items:center;
@@ -441,40 +375,32 @@ body{
   animation:fadeIn .4s ease both;
 }
 .list-count{
-  background:var(--bg-panel);
-  border:1px solid var(--borde);
-  color:var(--cian);
-  padding:4px 14px;
+  background:var(--bg-panel);border:1px solid var(--borde);
+  color:var(--cian);padding:4px 14px;
   font-family:var(--mono);font-weight:800;
   clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 40%);
 }
-
 .resp-card{
   position:relative;
   background:var(--bg-panel);
   border:1px solid var(--borde);
-  padding:20px 22px;
-  margin-bottom:12px;
-  cursor:pointer;
+  padding:20px 22px;margin-bottom:12px;cursor:pointer;
   transition:all .35s cubic-bezier(.34,1.56,.64,1);
   overflow:hidden;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
   clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);
 }
 .resp-card::before{
-  content:"";
-  position:absolute;left:0;top:0;bottom:0;width:3px;
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
   background:linear-gradient(180deg,var(--cian),var(--magenta));
   transform:scaleY(0);transform-origin:top;
   transition:transform .4s ease;
 }
 .resp-card::after{
-  content:"";
-  position:absolute;top:0;right:0;
+  content:"";position:absolute;top:0;right:0;
   width:60px;height:60px;
   background:radial-gradient(circle at top right,var(--cian-glow),transparent 70%);
-  opacity:0;transition:opacity .4s ease;
-  pointer-events:none;
+  opacity:0;transition:opacity .4s ease;pointer-events:none;
 }
 .resp-card:hover{
   transform:translateX(8px);
@@ -484,37 +410,26 @@ body{
 }
 .resp-card:hover::before{transform:scaleY(1);}
 .resp-card:hover::after{opacity:1;}
-
 .resp-card-info{flex:1;min-width:0;}
 .resp-card-name{
   font-size:15px;font-weight:700;color:var(--texto);
-  letter-spacing:.3px;margin-bottom:8px;
-  transition:color .3s ease;
+  letter-spacing:.3px;margin-bottom:8px;transition:color .3s ease;
 }
 .resp-card:hover .resp-card-name{color:var(--cian-brillante);}
-.resp-card-meta{
-  display:flex;flex-wrap:wrap;gap:12px;
-  font-size:11px;color:var(--texto-suave);
-  font-family:var(--mono);
-}
+.resp-card-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--texto-suave);font-family:var(--mono);}
 .resp-card-arrow{
   font-size:28px;color:var(--texto-muy-suave);
   transition:all .4s ease;flex-shrink:0;
 }
 .resp-card:hover .resp-card-arrow{
-  color:var(--cian);
-  transform:translateX(8px);
+  color:var(--cian);transform:translateX(8px);
   filter:drop-shadow(0 0 8px var(--cian-glow));
 }
-
-/* Tarjeta de bien */
 .bien-card{
   position:relative;
   background:var(--bg-panel);
   border:1px solid var(--borde);
-  padding:18px 20px;
-  margin-bottom:12px;
-  cursor:pointer;
+  padding:18px 20px;margin-bottom:12px;cursor:pointer;
   transition:all .35s ease;
   display:flex;gap:16px;align-items:flex-start;
   clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
@@ -541,19 +456,11 @@ body{
   font-weight:700;letter-spacing:1.5px;margin-bottom:5px;text-transform:uppercase;
   text-shadow:0 0 8px var(--cian-glow);
 }
-.bien-card-desc{
-  font-size:13px;font-weight:600;color:var(--texto);
-  line-height:1.35;margin-bottom:8px;
-}
-.bien-card-meta{
-  display:flex;flex-wrap:wrap;gap:8px;
-  font-size:10px;font-family:var(--mono);color:var(--texto-suave);
-}
+.bien-card-desc{font-size:13px;font-weight:600;color:var(--texto);line-height:1.35;margin-bottom:8px;}
+.bien-card-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:10px;font-family:var(--mono);color:var(--texto-suave);}
 .bien-card-tipo{
-  padding:3px 10px;
-  font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
-  background:var(--bg-elevado);
-  border:1px solid var(--borde);
+  padding:3px 10px;font-size:9px;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;background:var(--bg-elevado);border:1px solid var(--borde);
 }
 .bien-card-tipo.fijos{color:var(--verde);border-color:var(--verde-glow);}
 .bien-card-tipo.fungibles{color:var(--cian);border-color:var(--cian-glow);}
@@ -566,15 +473,12 @@ body{
 .modal-overlay{
   position:fixed;inset:0;
   background:rgba(0,4,8,.85);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  z-index:100;
-  display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  z-index:100;display:none;align-items:center;justify-content:center;
   padding:20px;overflow-y:auto;
 }
 body.light .modal-overlay{background:rgba(10,20,30,.5);}
 .modal-overlay.visible{display:flex;}
-
 .modal{
   background:var(--bg-panel);
   border:1px solid var(--cian);
@@ -586,17 +490,17 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
     0 40px 100px rgba(0,0,0,.8);
   clip-path:polygon(24px 0,100% 0,100% calc(100% - 24px),calc(100% - 24px) 100%,0 100%,0 24px);
   position:relative;
+  animation:modalIn .35s cubic-bezier(.34,1.56,.64,1);
 }
+@keyframes modalIn{from{opacity:0;transform:scale(.94) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
 .modal::before{
-  content:"";
-  position:absolute;top:0;left:0;right:0;height:2px;
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,transparent,var(--cian),var(--magenta),var(--cian),transparent);
   background-size:200% 100%;
   animation:borderFlow 3s linear infinite;
 }
 .modal-form{max-width:720px;}
 .modal-vista{max-width:960px;}
-
 .modal-header{
   padding:20px 24px;
   border-bottom:1px solid var(--borde);
@@ -609,10 +513,8 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
   flex:1;min-width:0;word-break:break-word;
 }
 .modal-close{
-  width:36px;height:36px;
-  background:transparent;
-  border:1px solid var(--borde);
-  color:var(--texto-suave);
+  width:36px;height:36px;background:transparent;
+  border:1px solid var(--borde);color:var(--texto-suave);
   cursor:pointer;font-size:18px;
   display:flex;align-items:center;justify-content:center;
   transition:all .3s ease;flex-shrink:0;
@@ -630,15 +532,13 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
    ============================================================ */
 .btn-nav{
   display:inline-flex;align-items:center;gap:8px;
-  background:var(--bg-elevado);
-  color:var(--cian);
+  background:var(--bg-elevado);color:var(--cian);
   border:1px solid var(--borde);
-  padding:10px 18px;
-  font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;font-weight:700;
-  transition:all .3s ease;margin-bottom:18px;
+  padding:10px 18px;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;font-weight:700;transition:all .3s ease;margin-bottom:18px;
   font-family:var(--mono);
   clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 30%);
+  position:relative;overflow:hidden;
 }
 .btn-nav:hover{
   background:var(--cian);color:var(--bg);
@@ -646,24 +546,20 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
   transform:translateX(-4px);
   box-shadow:0 0 20px var(--cian-glow);
 }
-
 .btn-imprimir{
   background:linear-gradient(135deg,var(--verde),#00c878);
   color:#001a10;border:none;
-  padding:12px 22px;
-  font-size:11px;font-weight:800;letter-spacing:2px;
-  cursor:pointer;
-  display:inline-flex;align-items:center;gap:8px;
-  transition:all .25s ease;
-  font-family:var(--mono);text-transform:uppercase;
+  padding:12px 22px;font-size:11px;font-weight:800;letter-spacing:2px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  transition:all .25s ease;font-family:var(--mono);text-transform:uppercase;
   margin-bottom:18px;
   clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  position:relative;overflow:hidden;
 }
 .btn-imprimir:hover{
   transform:translateY(-2px);
   box-shadow:0 8px 24px var(--verde-glow);
 }
-
 .modal-titulo-seccion{
   text-align:center;padding:10px 0 18px;
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
@@ -676,34 +572,25 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
    ============================================================ */
 .oficina-card{
   display:flex;justify-content:space-between;align-items:center;gap:12px;
-  background:var(--bg-elevado);
-  border:1px solid var(--borde);
+  background:var(--bg-elevado);border:1px solid var(--borde);
   border-left:3px solid var(--cian);
-  padding:16px 18px;margin-bottom:12px;
-  cursor:pointer;transition:all .3s ease;
+  padding:16px 18px;margin-bottom:12px;cursor:pointer;
+  transition:all .3s ease;
   clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
+  position:relative;overflow:hidden;
 }
 .oficina-card:hover{
-  border-color:var(--cian);
-  border-left-color:var(--magenta);
+  border-color:var(--cian);border-left-color:var(--magenta);
   background:var(--bg-hover);
   box-shadow:var(--sombra-panel),0 0 25px rgba(0,229,255,.15);
   transform:translateX(6px);
 }
 .oficina-card-info{flex:1;min-width:0;}
-.oficina-card-nombre{
-  font-size:13px;font-weight:700;color:var(--texto);
-  letter-spacing:.3px;margin-bottom:5px;
-}
-.oficina-card-id{
-  font-size:10px;font-family:var(--mono);color:var(--cian);
-  letter-spacing:1.5px;
-}
+.oficina-card-nombre{font-size:13px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:5px;}
+.oficina-card-id{font-size:10px;font-family:var(--mono);color:var(--cian);letter-spacing:1.5px;}
 .oficina-card-count{
-  background:rgba(0,229,255,.1);
-  border:1px solid var(--cian);
-  color:var(--cian-brillante);
-  padding:8px 16px;
+  background:rgba(0,229,255,.1);border:1px solid var(--cian);
+  color:var(--cian-brillante);padding:8px 16px;
   font-size:14px;font-weight:800;font-family:var(--mono);
   flex-shrink:0;
   clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 30%);
@@ -714,16 +601,14 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
    [13] FORMULARIO
    ============================================================ */
 .form-persona{
-  background:var(--bg-elevado);
-  border:1px solid var(--borde);
+  background:var(--bg-elevado);border:1px solid var(--borde);
   border-left:3px solid var(--magenta);
   padding:14px 16px;margin-bottom:14px;
   clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);
 }
 .form-persona-titulo{
   font-size:10px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--magenta);
-  font-weight:800;margin-bottom:10px;
+  color:var(--magenta);font-weight:800;margin-bottom:10px;
   display:flex;justify-content:space-between;align-items:center;
   font-family:var(--mono);
 }
@@ -734,11 +619,7 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
   font-size:11px;font-weight:800;
   box-shadow:0 0 12px var(--magenta-glow);
 }
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr 2fr 1.2fr 1.2fr;
-  gap:10px;margin-bottom:10px;
-}
+.form-grid{display:grid;grid-template-columns:1fr 2fr 1.2fr 1.2fr;gap:10px;margin-bottom:10px;}
 .form-grid .form-group{margin-bottom:0;}
 .form-group label{
   display:block;font-size:9px;letter-spacing:1.8px;
@@ -747,10 +628,8 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
 }
 .form-group input{
   width:100%;padding:10px 12px;
-  background:var(--bg-panel);
-  border:1px solid var(--borde);
-  color:var(--texto);
-  font-family:var(--mono);font-size:13px;
+  background:var(--bg-panel);border:1px solid var(--borde);
+  color:var(--texto);font-family:var(--mono);font-size:13px;
   outline:none;transition:all .2s ease;
   clip-path:polygon(6px 0,100% 0,100% calc(100% - 6px),calc(100% - 6px) 100%,0 100%,0 6px);
 }
@@ -760,38 +639,30 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
 }
 .form-group input::placeholder{color:var(--texto-muy-suave);}
 .form-persona .form-grid{grid-template-columns:1fr 1.5fr 1fr 1fr;}
-
 .form-actions{
   display:flex;gap:12px;justify-content:flex-end;
-  margin-top:22px;padding-top:18px;
-  border-top:1px solid var(--borde);
+  margin-top:22px;padding-top:18px;border-top:1px solid var(--borde);
 }
 .btn-cancelar{
   background:transparent;color:var(--texto-suave);
   border:1px solid var(--borde);
-  padding:11px 20px;font-size:11px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;font-family:var(--mono);
+  padding:11px 20px;font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;font-family:var(--mono);
   transition:all .2s ease;
   clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 30%);
+  position:relative;overflow:hidden;
 }
-.btn-cancelar:hover{
-  background:var(--bg-elevado);color:var(--texto);
-  border-color:var(--texto-suave);
-}
+.btn-cancelar:hover{background:var(--bg-elevado);color:var(--texto);border-color:var(--texto-suave);}
 .btn-confirmar{
   background:linear-gradient(135deg,var(--cian),#00a8cc);
   color:var(--bg);border:none;
-  padding:11px 24px;font-size:11px;font-weight:800;
-  letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;font-family:var(--mono);
+  padding:11px 24px;font-size:11px;font-weight:800;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;font-family:var(--mono);
   transition:all .25s ease;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  position:relative;overflow:hidden;
 }
-.btn-confirmar:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px var(--cian-glow);
-}
+.btn-confirmar:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--cian-glow);}
 
 @media (max-width:600px){
   .form-grid, .form-persona .form-grid{grid-template-columns:1fr 1fr;}
@@ -802,10 +673,8 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
    [14] TABLAS EN APP
    ============================================================ */
 .tabla-section{
-  margin-bottom:22px;
-  background:var(--bg-elevado);
-  border:1px solid var(--borde);
-  overflow:hidden;
+  margin-bottom:22px;background:var(--bg-elevado);
+  border:1px solid var(--borde);overflow:hidden;
   clip-path:polygon(16px 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%,0 16px);
 }
 .tabla-header{
@@ -829,30 +698,22 @@ body.light .modal-overlay{background:rgba(10,20,30,.5);}
 .tabla-header[data-color="marron"]{--color:var(--ambar);}
 .tabla-header[data-color="vino"]{--color:var(--magenta);}
 .tabla-header-count{
-  font-family:var(--mono);font-size:12px;
-  color:var(--cian);font-weight:800;
-  background:rgba(0,229,255,.08);
-  padding:3px 12px;
+  font-family:var(--mono);font-size:12px;color:var(--cian);font-weight:800;
+  background:rgba(0,229,255,.08);padding:3px 12px;
   border:1px solid rgba(0,229,255,.3);
   clip-path:polygon(6px 0,100% 0,100% 100%,0 100%,0 40%);
 }
 .tabla-scroll{overflow-x:auto;}
-table{
-  width:100%;border-collapse:collapse;
-  font-size:11px;font-family:Arial,sans-serif;min-width:400px;
-}
+table{width:100%;border-collapse:collapse;font-size:11px;font-family:Arial,sans-serif;min-width:400px;}
 thead th{
-  background:rgba(0,0,0,.25);
-  color:var(--texto-suave);text-align:left;
+  background:rgba(0,0,0,.25);color:var(--texto-suave);text-align:left;
   padding:11px 12px;font-size:10px;letter-spacing:1.5px;
   text-transform:uppercase;font-weight:800;
-  border-bottom:1px solid var(--borde);
-  font-family:var(--mono);
+  border-bottom:1px solid var(--borde);font-family:var(--mono);
 }
 body.light thead th{background:rgba(0,100,140,.05);}
 tbody td{
-  padding:11px 12px;
-  border-bottom:1px solid rgba(0,229,255,.06);
+  padding:11px 12px;border-bottom:1px solid rgba(0,229,255,.06);
   color:var(--texto);vertical-align:top;
   word-break:break-word;font-family:Arial,sans-serif;font-size:11px;
 }
@@ -863,7 +724,7 @@ body.light tbody tr:nth-child(even){background:rgba(0,100,140,.02);}
 tbody tr:hover{background:rgba(0,229,255,.06);}
 
 /* ============================================================
-   [15] BADGES DE ESTADO
+   [15] BADGES
    ============================================================ */
 .estado-badge{
   display:inline-block;padding:4px 12px;
@@ -881,28 +742,20 @@ tbody tr:hover{background:rgba(0,229,255,.06);}
 }
 
 /* ============================================================
-   [16] ENCABEZADO DE OFICINA
+   [16] ENCABEZADO OFICINA
    ============================================================ */
 .oficina-encabezado{
   background:linear-gradient(135deg,rgba(0,229,255,.08),rgba(255,43,214,.05));
-  border:1px solid var(--borde);
-  border-left:3px solid var(--cian);
+  border:1px solid var(--borde);border-left:3px solid var(--cian);
   padding:16px 18px;margin-bottom:20px;
   display:flex;justify-content:space-between;align-items:center;gap:12px;
   clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
 }
-.oficina-encabezado-nombre{
-  font-size:14px;font-weight:800;color:var(--texto);margin-bottom:5px;
-}
-.oficina-encabezado-sub{
-  font-size:10px;font-family:var(--mono);
-  color:var(--cian-brillante);letter-spacing:1.5px;text-transform:uppercase;
-}
+.oficina-encabezado-nombre{font-size:14px;font-weight:800;color:var(--texto);margin-bottom:5px;}
+.oficina-encabezado-sub{font-size:10px;font-family:var(--mono);color:var(--cian-brillante);letter-spacing:1.5px;text-transform:uppercase;}
 .oficina-encabezado-count{
-  background:rgba(0,229,255,.15);
-  border:1px solid var(--cian);
-  color:var(--cian-brillante);
-  padding:8px 16px;
+  background:rgba(0,229,255,.15);border:1px solid var(--cian);
+  color:var(--cian-brillante);padding:8px 16px;
   font-size:14px;font-weight:800;font-family:var(--mono);
   flex-shrink:0;
   clip-path:polygon(8px 0,100% 0,100% 100%,0 100%,0 30%);
@@ -913,8 +766,7 @@ tbody tr:hover{background:rgba(0,229,255,.06);}
    [17] DETALLE DEL BIEN
    ============================================================ */
 .bien-detalle{
-  background:var(--bg-elevado);
-  border:1px solid var(--borde);
+  background:var(--bg-elevado);border:1px solid var(--borde);
   overflow:hidden;
   clip-path:polygon(20px 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%,0 20px);
 }
@@ -925,8 +777,7 @@ tbody tr:hover{background:rgba(0,229,255,.06);}
   display:flex;gap:18px;align-items:flex-start;
 }
 .bien-detalle-foto{
-  width:88px;height:88px;
-  background:var(--bg);
+  width:88px;height:88px;background:var(--bg);
   border:2px solid var(--cian);
   display:flex;align-items:center;justify-content:center;
   font-size:32px;color:var(--cian);
@@ -945,10 +796,7 @@ tbody tr:hover{background:rgba(0,229,255,.06);}
   letter-spacing:2px;font-weight:800;text-transform:uppercase;
   margin-bottom:8px;text-shadow:0 0 8px var(--cian-glow);
 }
-.bien-detalle-nombre{
-  font-size:15px;font-weight:700;color:var(--texto);
-  line-height:1.35;margin-bottom:10px;
-}
+.bien-detalle-nombre{font-size:15px;font-weight:700;color:var(--texto);line-height:1.35;margin-bottom:10px;}
 .bien-detalle-tipo-badge{
   display:inline-block;padding:4px 12px;
   font-size:9px;font-weight:800;letter-spacing:1.8px;
@@ -962,42 +810,31 @@ tbody tr:hover{background:rgba(0,229,255,.06);}
 .bien-detalle-campos{padding:0;}
 .bien-detalle-campo{
   display:flex;gap:16px;align-items:flex-start;
-  padding:14px 22px;
-  border-bottom:1px solid rgba(0,229,255,.06);
+  padding:14px 22px;border-bottom:1px solid rgba(0,229,255,.06);
 }
 .bien-detalle-campo:last-child{border-bottom:none;}
 .bien-detalle-campo:nth-child(even){background:rgba(0,229,255,.02);}
 body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 .bien-detalle-label{
-  flex:0 0 38%;
-  font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
-  font-weight:800;color:var(--texto-suave);
+  flex:0 0 38%;font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:800;color:var(--texto-suave);
   padding-top:2px;font-family:var(--mono);
 }
-.bien-detalle-valor{
-  flex:1;font-size:12px;color:var(--texto);
-  line-height:1.4;word-break:break-word;
-}
+.bien-detalle-valor{flex:1;font-size:12px;color:var(--texto);line-height:1.4;word-break:break-word;}
 .bien-detalle-valor.vacio{color:var(--texto-muy-suave);font-style:italic;}
 .bien-detalle-valor.pendiente{color:var(--rojo);font-weight:800;text-transform:uppercase;}
 
 /* ============================================================
-   [18] ESTADOS VACÍOS / LOADING
+   [18] EMPTY / LOADING
    ============================================================ */
-.empty-state{
-  text-align:center;padding:70px 20px;
-  color:var(--texto-suave);
-  animation:fadeIn .6s ease both;
-}
+.empty-state{text-align:center;padding:70px 20px;color:var(--texto-suave);animation:fadeIn .6s ease both;}
 .empty-state-icon{
-  font-size:70px;margin-bottom:18px;opacity:.35;
-  color:var(--cian);
+  font-size:70px;margin-bottom:18px;opacity:.35;color:var(--cian);
   filter:drop-shadow(0 0 20px var(--cian-glow));
 }
 .empty-state-title{
   font-size:13px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--texto);margin-bottom:10px;font-weight:700;
-  font-family:var(--mono);
+  color:var(--texto);margin-bottom:10px;font-weight:700;font-family:var(--mono);
 }
 .empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
 .loading,.error{
@@ -1012,8 +849,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
    [19] FOOTER
    ============================================================ */
 .footer{
-  text-align:center;padding:26px 22px;
-  border-top:1px solid var(--borde);
+  text-align:center;padding:26px 22px;border-top:1px solid var(--borde);
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
   color:var(--texto-muy-suave);font-family:var(--mono);font-weight:600;
   margin-top:auto;
@@ -1024,10 +860,8 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
    [20] LIGHTBOX / TOAST
    ============================================================ */
 .lightbox{
-  position:fixed;inset:0;
-  background:rgba(0,4,8,.96);
-  backdrop-filter:blur(14px);
-  z-index:200;
+  position:fixed;inset:0;background:rgba(0,4,8,.96);
+  backdrop-filter:blur(14px);z-index:200;
   display:none;align-items:center;justify-content:center;
   padding:30px;cursor:zoom-out;
 }
@@ -1036,23 +870,20 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   max-width:100%;max-height:100%;
   box-shadow:0 0 80px rgba(0,229,255,.4);
   border:1px solid var(--cian);
+  animation:lightboxIn .3s ease;
 }
-
+@keyframes lightboxIn{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
 .toast{
   position:fixed;top:90px;left:50%;
   transform:translateX(-50%) translateY(-20px);
-  background:var(--bg-panel);
-  color:var(--texto);
-  border:1px solid var(--cian);
-  padding:14px 24px;
-  z-index:300;
-  font-size:12px;letter-spacing:1.5px;font-weight:700;
+  background:var(--bg-panel);color:var(--texto);
+  border:1px solid var(--cian);padding:14px 24px;
+  z-index:300;font-size:12px;letter-spacing:1.5px;font-weight:700;
   font-family:var(--mono);
   box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 40px var(--cian-glow);
   opacity:0;pointer-events:none;
   transition:all .35s cubic-bezier(.34,1.56,.64,1);
-  display:flex;align-items:center;gap:12px;
-  max-width:90vw;
+  display:flex;align-items:center;gap:12px;max-width:90vw;
   clip-path:polygon(14px 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%,0 14px);
 }
 .toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
@@ -1062,7 +893,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 .toast-icon{font-size:16px;}
 
 /* ============================================================
-   [21] PREVIEW DEL ACTA — CONTENEDOR
+   [21] VISTA PREVIA DEL ACTA
    ============================================================ */
 .preview-acta-wrap{
   background:#fff;color:#000;
@@ -1073,59 +904,45 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   max-height:65vh;overflow-y:auto;
 }
 .preview-acta-wrap, .preview-acta-wrap *{color:#000;}
-
 .preview-actions{
-  padding:16px 22px;
-  border-top:1px solid var(--borde);
+  padding:16px 22px;border-top:1px solid var(--borde);
   display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;
   background:var(--bg-panel);
 }
 .btn-preview{
-  background:var(--bg-elevado);
-  color:var(--texto);
+  background:var(--bg-elevado);color:var(--texto);
   border:1px solid var(--borde);
-  padding:11px 18px;
-  font-size:11px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;
-  font-family:var(--mono);
+  padding:11px 18px;font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;font-family:var(--mono);
   transition:all .2s ease;
   display:inline-flex;align-items:center;gap:8px;
   clip-path:polygon(8px 0,100% 0,100% calc(100% - 8px),calc(100% - 8px) 100%,0 100%,0 8px);
+  position:relative;overflow:hidden;
 }
 .btn-preview:hover{background:var(--bg-hover);}
 .btn-preview.primary{
   background:linear-gradient(135deg,var(--cian),#00a8cc);
   color:var(--bg);border-color:transparent;
 }
-.btn-preview.primary:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px var(--cian-glow);
-}
+.btn-preview.primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--cian-glow);}
 .btn-preview.green{
   background:linear-gradient(135deg,var(--verde),#00c878);
   color:#001a10;border-color:transparent;
 }
-.btn-preview.green:hover{
-  transform:translateY(-2px);
-  box-shadow:0 8px 20px var(--verde-glow);
-}
-
-/* ═══ MARCADOR DE PÁGINA EN VISTA PREVIA ═══ */
+.btn-preview.green:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--verde-glow);}
 .preview-acta-wrap .page-break-indicator{
   display:block;height:26px;
   background:repeating-linear-gradient(90deg,#d0d0d0 0px,#d0d0d0 8px,transparent 8px,transparent 16px);
-  margin:12px -40px;
-  position:relative;text-align:center;
+  margin:12px -40px;position:relative;text-align:center;
   font-size:9pt;color:#666;letter-spacing:1px;line-height:26px;
 }
 .preview-acta-wrap .page-break-indicator::before{
   content:"▲ PÁGINA SIGUIENTE ▲";
-  background:#fff;padding:0 12px;
-  font-weight:bold;font-size:8pt;
+  background:#fff;padding:0 12px;font-weight:bold;font-size:8pt;
 }
 
 /* ============================================================
-   [22] CONTENEDOR DE MEDICIÓN DEL ACTA
+   [22] CONTENEDOR DE MEDICIÓN
    ============================================================ */
 .acta-medicion{
   position:absolute;left:-99999px;top:0;
@@ -1136,7 +953,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 }
 
 /* ============================================================
-   [23] ACTA — ESTILOS COMPARTIDOS (medición + preview + print)
+   [23] ACTA — ESTILOS COMPARTIDOS
    ============================================================ */
 .acta-medicion .acta-membrete,
 .preview-acta-wrap .acta-membrete,
@@ -1193,45 +1010,30 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   text-align:center;padding:8pt 4pt;
   font-style:italic;text-transform:uppercase;
 }
-
 .acta-medicion .acta-bloque-firmas,
 .preview-acta-wrap .acta-bloque-firmas,
 .acta-print .acta-bloque-firmas{margin-top:24pt;}
-
 .acta-medicion .acta-fecha-firmas,
 .preview-acta-wrap .acta-fecha-firmas,
 .acta-print .acta-fecha-firmas{
   font-family:Arial,sans-serif;font-size:12pt;
   text-align:right;margin:0 0 20pt 0;line-height:1.0;
 }
-
 .acta-medicion .acta-firmas,
 .preview-acta-wrap .acta-firmas,
 .acta-print .acta-firmas{
   font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;
 }
-.acta-firmas-fila{
-  display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;
-}
+.acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
 .acta-firma-bloque-lado{flex:1;text-align:center;}
 .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
 .acta-firma-rol{
   font-weight:bold;text-transform:uppercase;
   margin-bottom:32pt;font-size:12pt;text-align:center;line-height:1.0;
 }
-.acta-firma-nombre{
-  font-weight:normal;text-transform:none;
-  font-size:12pt;margin-top:4pt;line-height:1.2;
-}
-.acta-firma-cargo{
-  font-weight:bold;text-transform:uppercase;
-  font-size:12pt;margin-top:2pt;line-height:1.0;
-}
-.acta-vobo{
-  font-weight:bold;margin-bottom:32pt;
-  text-align:center;font-size:12pt;line-height:1.0;
-}
-
+.acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;line-height:1.2;}
+.acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;line-height:1.0;}
+.acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
 .acta-medicion .acta-continuacion,
 .preview-acta-wrap .acta-continuacion,
 .acta-print .acta-continuacion{
@@ -1253,23 +1055,14 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
    [24] IMPRESIÓN
    ============================================================ */
 .acta-print{display:none;}
-
 @media print{
   .bg-layer,.app,.modal-overlay,.no-print,.toast,.lightbox,.acta-medicion{display:none !important;}
   body{background:#fff !important;color:#000 !important;}
   .acta-print{display:block !important;}
   .acta-print, .acta-print *{color:#000 !important;}
-
   @page{size:letter portrait;margin:2cm 2cm 2cm 3cm;}
-
   .acta-print{font-family:Arial, Helvetica, sans-serif;font-size:11pt;line-height:1.0;}
-
-  .saltar-pagina{
-    page-break-before:always;
-    break-before:page;
-    display:block;height:0;
-  }
-
+  .saltar-pagina{page-break-before:always;break-before:page;display:block;height:0;}
   .acta-bloque-firmas{break-inside:avoid;page-break-inside:avoid;}
   .acta-firmas-fila{break-inside:avoid;page-break-inside:avoid;}
   .acta-firma-bloque-lado{break-inside:avoid;page-break-inside:avoid;}
@@ -1277,7 +1070,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 }
 
 /* ============================================================
-   [25] RESPONSIVE MÓVIL
+   [25] RESPONSIVE
    ============================================================ */
 @media (max-width:600px){
   .header-text h1{font-size:12px;letter-spacing:1.5px;}
@@ -1294,8 +1087,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   .search-input{font-size:14px;padding:12px 0;}
   .search-box{padding:4px 10px;}
   .search-icon{font-size:16px;margin-right:8px;}
-
-  /* Vista previa responsive */
   .preview-acta-wrap{padding:12px 8px;font-size:8pt;overflow-x:auto;-webkit-overflow-scrolling:touch;}
   .preview-acta-wrap .acta-membrete{font-size:7pt;}
   .preview-acta-wrap .acta-titulo{font-size:11pt;margin-bottom:6pt;}
@@ -1313,10 +1104,55 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   .preview-acta-wrap .acta-continuacion,
   .preview-acta-wrap .acta-continuacion-resumen{font-size:6pt;margin:8pt 0 4pt 0;}
   .preview-acta-wrap .page-break-indicator{margin:8px -8px;}
-
   .modal-vista{max-width:100%;}
   .preview-actions{flex-direction:column;padding:12px;}
   .btn-preview{width:100%;justify-content:center;font-size:11px;padding:10px 14px;}
+}
+
+/* ============================================================
+   [26] EFECTOS DE CLICK (RIPPLE + SHAKE + FLASH)
+   ============================================================ */
+/* Ripple universal inyectado por JS */
+.click-ripple{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+  transform:scale(0);
+  animation:rippleAnim .7s cubic-bezier(.34,1.56,.64,1);
+  z-index:1;
+}
+.click-ripple.cian{background:radial-gradient(circle,rgba(0,229,255,.7),rgba(0,229,255,0) 70%);}
+.click-ripple.magenta{background:radial-gradient(circle,rgba(255,43,214,.6),rgba(255,43,214,0) 70%);}
+@keyframes rippleAnim{
+  0%{transform:scale(0);opacity:1;}
+  100%{transform:scale(4);opacity:0;}
+}
+/* Flash momentáneo del borde */
+.click-flash{
+  animation:clickFlash .5s ease-out;
+}
+@keyframes clickFlash{
+  0%{box-shadow:0 0 0 0 var(--cian-glow),0 0 0 0 var(--magenta-glow);}
+  50%{box-shadow:0 0 25px 4px var(--cian-glow),0 0 40px 8px rgba(255,43,214,.3);}
+  100%{box-shadow:0 0 0 0 transparent,0 0 0 0 transparent;}
+}
+/* Micro shake para tarjetas */
+.click-shake{
+  animation:clickShake .35s ease-out;
+}
+@keyframes clickShake{
+  0%,100%{transform:translateX(0);}
+  25%{transform:translateX(-3px);}
+  75%{transform:translateX(3px);}
+}
+/* Pulse para botones de acción */
+.click-pulse{
+  animation:clickPulse .4s ease-out;
+}
+@keyframes clickPulse{
+  0%{transform:scale(1);}
+  50%{transform:scale(.96);}
+  100%{transform:scale(1);}
 }
 </style>
 </head>
@@ -1332,7 +1168,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
         <div class="header-logo-icon">◈</div>
         <div class="header-text">
           <h1>Control DIV-10</h1>
-          <div class="subtitle">Inventory Management System · V5.0</div>
+          <div class="subtitle">Inventory Management System · V5.1</div>
         </div>
       </div>
       <div class="header-actions">
@@ -1348,10 +1184,9 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ SYSTEM ONLINE · CONTROL DIV-10 · V5.0 ◈</footer>
+  <footer class="footer">◈ SYSTEM ONLINE · CONTROL DIV-10 · V5.1 ◈</footer>
 </div>
 
-<!-- MODAL PRINCIPAL -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
   <div class="modal">
     <div class="modal-header">
@@ -1362,7 +1197,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   </div>
 </div>
 
-<!-- MODAL ENTRANTE -->
 <div class="modal-overlay" id="modalEntrante" onclick="if(event.target===this)cerrarModalEntrante()">
   <div class="modal modal-form">
     <div class="modal-header">
@@ -1370,7 +1204,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
       <button class="modal-close" onclick="cerrarModalEntrante()">×</button>
     </div>
     <div class="modal-body">
-
       <div class="form-persona">
         <div class="form-persona-titulo"><span><span class="num">1</span> RESPONSABLE ENTRANTE</span></div>
         <div class="form-grid">
@@ -1431,7 +1264,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   </div>
 </div>
 
-<!-- MODAL VISTA PREVIA -->
 <div class="modal-overlay" id="modalVistaPrevia" onclick="if(event.target===this)cerrarModalVistaPrevia()">
   <div class="modal modal-vista">
     <div class="modal-header">
@@ -1585,7 +1417,72 @@ function detectarTipoBusqueda(texto){
 }
 
 /* ============================================================
-   [S05] ARTÍCULO DEFINIDO (DEL / DE LA)
+   [S04.1] EFECTOS DE CLICK — RIPPLE + SHAKE + FLASH
+   ============================================================ */
+function aplicarEfectoClick(el, x, y){
+  if(!el) return;
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height) * 1.4;
+
+  /* Coordenadas relativas al elemento */
+  const clickX = (x !== undefined ? x : rect.left + rect.width / 2) - rect.left;
+  const clickY = (y !== undefined ? y : rect.top + rect.height / 2) - rect.top;
+
+  /* Asegurar posición relativa */
+  const posOriginal = getComputedStyle(el).position;
+  if(posOriginal === "static") el.style.position = "relative";
+  if(getComputedStyle(el).overflow === "visible") el.style.overflow = "hidden";
+
+  /* Ripple cian */
+  const r1 = document.createElement("span");
+  r1.className = "click-ripple cian";
+  r1.style.width = size + "px";
+  r1.style.height = size + "px";
+  r1.style.left = (clickX - size / 2) + "px";
+  r1.style.top = (clickY - size / 2) + "px";
+  el.appendChild(r1);
+
+  /* Ripple magenta retardado */
+  setTimeout(() => {
+    const r2 = document.createElement("span");
+    r2.className = "click-ripple magenta";
+    r2.style.width = size * 0.7 + "px";
+    r2.style.height = size * 0.7 + "px";
+    r2.style.left = (clickX - size * 0.35) + "px";
+    r2.style.top = (clickY - size * 0.35) + "px";
+    el.appendChild(r2);
+    setTimeout(() => r2.remove(), 700);
+  }, 80);
+
+  /* Flash del borde */
+  el.classList.remove("click-flash");
+  void el.offsetWidth;
+  el.classList.add("click-flash");
+  setTimeout(() => el.classList.remove("click-flash"), 500);
+
+  /* Micro shake (solo tarjetas) */
+  if(el.classList.contains("resp-card") ||
+     el.classList.contains("bien-card") ||
+     el.classList.contains("oficina-card")){
+    el.classList.add("click-shake");
+    setTimeout(() => el.classList.remove("click-shake"), 350);
+  }
+
+  setTimeout(() => r1.remove(), 700);
+}
+
+/* Delegación global: cualquier click en elementos interactivos dispara el efecto */
+document.addEventListener("click", (e) => {
+  const target = e.target.closest(
+    ".home-btn, .resp-card, .bien-card, .oficina-card, .btn-icon, .btn-volver, " +
+    ".btn-nav, .btn-imprimir, .btn-confirmar, .btn-cancelar, .btn-preview, " +
+    ".btn-clear, .modal-close, .btn-clear"
+  );
+  if(target) aplicarEfectoClick(target, e.clientX, e.clientY);
+}, true);
+
+/* ============================================================
+   [S05] ARTÍCULO DEFINIDO
    ============================================================ */
 const PALABRAS_DEL = [
   "CONSULTORIO","COMANDO","MURO","GABINETE","TINGLADO","PATIO","JARDIN","JARDÍN",
@@ -1599,11 +1496,9 @@ const PALABRAS_DE_LA = [
   "BIBLIOTECA","VIVIENDA","AVENIDA","PLAZA","SALA","SECCION","SECCIÓN","SUBSECCION","SUBSECCIÓN",
   "COMPANIA","COMPAÑÍA","BANDA","UNIDAD","CASA","ESCUELA","CANCHA"
 ];
-
 function obtenerArticuloArticulo(nombreOficina){
   if(!nombreOficina) return "DEL";
-  const limpio = nombreOficina.trim().toUpperCase()
-    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const limpio = nombreOficina.trim().toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
   if(/^DE LA\s/.test(limpio) || /^DEL\s/.test(limpio)) return "";
   if(/^DE\s/.test(limpio)) return "";
   const primera = limpio.split(/\s+/)[0];
@@ -1618,7 +1513,6 @@ function obtenerArticuloArticulo(nombreOficina){
   }
   return "DEL";
 }
-
 function oficinaConArticulo(nombreOficina){
   if(!nombreOficina) return "";
   const art = obtenerArticuloArticulo(nombreOficina);
@@ -1627,7 +1521,7 @@ function oficinaConArticulo(nombreOficina){
 }
 
 /* ============================================================
-   [S06] ABREVIACIÓN Y CONSTRUCCIÓN DE NOMBRES
+   [S06] NOMBRES
    ============================================================ */
 function abreviarNombresDePila(nombres){
   if(!nombres) return "";
@@ -1639,7 +1533,6 @@ function abreviarNombresDePila(nombres){
     return n.charAt(0).toUpperCase() + ".";
   }).join(" ");
 }
-
 function construirNombreFirmante(grado, nombres, apPat, apMat){
   const gradoLimpio = (grado || "").trim();
   const nombresAbr = abreviarNombresDePila(nombres || "");
@@ -1649,13 +1542,10 @@ function construirNombreFirmante(grado, nombres, apPat, apMat){
 }
 
 /* ============================================================
-   [S07] ORDINALES DE HOJA
+   [S07] ORDINALES
    ============================================================ */
 function ordinalHoja(n){
-  const mapa = {
-    1: "1RA.", 2: "2DA.", 3: "3RA.", 4: "4TA.", 5: "5TA.",
-    6: "6TA.", 7: "7MA.", 8: "8VA.", 9: "9NA.", 10: "10MA."
-  };
+  const mapa = {1:"1RA.",2:"2DA.",3:"3RA.",4:"4TA.",5:"5TA.",6:"6TA.",7:"7MA.",8:"8VA.",9:"9NA.",10:"10MA."};
   if(mapa[n]) return mapa[n];
   return n + "VA.";
 }
@@ -1676,7 +1566,7 @@ function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPresta
 }
 
 /* ============================================================
-   [S09] PARSEO CSV
+   [S09] PARSER CSV
    ============================================================ */
 function parseCSV(text){
   const rows = [];
@@ -1718,11 +1608,10 @@ function csvAObjetos(texto){
 }
 
 /* ============================================================
-   [S10] CARGA Y CACHÉ DESDE GOOGLE SHEETS
+   [S10] CARGA DESDE NUBE
    ============================================================ */
 async function cargarDesdeNube(forzar = false){
   const cont = document.getElementById("contenido");
-
   if(!forzar){
     const cache = localStorage.getItem(CACHE_KEY);
     if(cache){
@@ -1737,10 +1626,8 @@ async function cargarDesdeNube(forzar = false){
       }catch(e){ console.warn("Caché corrupto"); }
     }
   }
-
   cont.innerHTML = `<div class="loading">☁ SINCRONIZANDO CON LA NUBE...</div>`;
   document.getElementById("statusText").textContent = "SYNC";
-
   try{
     const hojas = [
       { key: "fijos",     nombre: "BD_FIJOS" },
@@ -1749,14 +1636,12 @@ async function cargarDesdeNube(forzar = false){
       { key: "prestados", nombre: "BD_PRESTADOS" },
       { key: "resp",      nombre: "RESP" }
     ];
-
     const resultados = await Promise.all(
       hojas.map(h => fetch(`${API_URL_NUBE}?sheet=${h.nombre}`)
         .then(r => r.text())
         .then(texto => ({ key: h.key, nombre: h.nombre, texto }))
       )
     );
-
     const nuevo = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
     resultados.forEach(({ key, nombre, texto }) => {
       if(texto.trim().startsWith("<") || texto.trim().startsWith("{")){
@@ -1766,26 +1651,21 @@ async function cargarDesdeNube(forzar = false){
       }
       nuevo[key] = csvAObjetos(texto);
     });
-
     nuevo.fijos = nuevo.fijos.filter(o => obtenerIdAsig(o));
     nuevo.fungibles = nuevo.fungibles.filter(o => obtenerIdAsig(o));
     nuevo.internos = nuevo.internos.filter(o => obtenerIdAsig(o));
     nuevo.prestados = nuevo.prestados.filter(o => obtenerIdAsig(o) || getVal(o, "DESCRIPCION DEL ACTIVO"));
     nuevo.resp = nuevo.resp.filter(o => getVal(o, "ID") && getNombreCompletoResp(o));
-
     if(forzar){
       const cambios = contarCambios(DATA, nuevo);
       if(cambios === 0) mostrarToast("Datos al día", "info", "ℹ");
       else mostrarToast(`Datos actualizados — ${cambios} cambio(s)`, "success", "✔");
     }
-
     localStorage.setItem(CACHE_KEY, JSON.stringify(nuevo));
     localStorage.setItem(CACHE_HOJA_KEY, Date.now().toString());
-
     aplicarDatos(nuevo);
     document.getElementById("statusText").textContent = "ONLINE";
     mostrarHome();
-
   }catch(err){
     console.error(err);
     cont.innerHTML = `<div class="error">⚠ NO SE PUDIERON CARGAR LOS DATOS<br><br><small>${esc(err.message)}</small></div>`;
@@ -1793,7 +1673,6 @@ async function cargarDesdeNube(forzar = false){
     mostrarToast("Error al cargar datos", "error", "⚠");
   }
 }
-
 function aplicarDatos(obj){
   DATA.fijos = obj.fijos || [];
   DATA.fungibles = obj.fungibles || [];
@@ -1801,7 +1680,6 @@ function aplicarDatos(obj){
   DATA.prestados = obj.prestados || [];
   DATA.resp = obj.resp || [];
 }
-
 function contarCambios(antes, despues){
   let cambios = 0;
   ["fijos","fungibles","internos","prestados","resp"].forEach(k => {
@@ -1809,7 +1687,6 @@ function contarCambios(antes, despues){
   });
   return cambios;
 }
-
 function recargarDesdeNube(){
   const btn = document.getElementById("btnReload");
   btn.classList.add("spinning");
@@ -1818,7 +1695,7 @@ function recargarDesdeNube(){
 }
 
 /* ============================================================
-   [S11] HELPERS DE RESPONSABLES
+   [S11] HELPERS RESPONSABLES
    ============================================================ */
 function getNombreCompletoResp(resp){
   if(!resp) return "";
@@ -1863,12 +1740,11 @@ function contarBienesPorAsignacion(id){
 }
 
 /* ============================================================
-   [S12] NAVEGACIÓN CON HISTORY API
+   [S12] NAVEGACIÓN
    ============================================================ */
 function pushEstado(nombreEstado){
   try{ history.pushState({ pantalla: nombreEstado }, ""); }catch(e){}
 }
-
 window.addEventListener("popstate", (e) => {
   if(document.getElementById("modalVistaPrevia").classList.contains("visible")){
     cerrarModalVistaPrevia();
@@ -1907,7 +1783,7 @@ window.addEventListener("popstate", (e) => {
 });
 
 /* ============================================================
-   [S13] PANTALLA HOME
+   [S13] HOME
    ============================================================ */
 function mostrarHome(){
   estado.pantalla = "home";
@@ -1917,7 +1793,6 @@ function mostrarHome(){
   estado.bienActual = null;
   estado.vistaGeneralActual = null;
   estado.oficinaFiltroActual = null;
-
   const cont = document.getElementById("contenido");
   cont.innerHTML = `
     <div class="home">
@@ -1952,7 +1827,6 @@ function mostrarHome(){
   actualizarContadores();
   document.getElementById("statusText").textContent = "ONLINE";
 }
-
 function actualizarContadores(){
   const c = {
     fijos: DATA.fijos.length,
@@ -1967,15 +1841,13 @@ function actualizarContadores(){
 }
 
 /* ============================================================
-   [S14] MODO BÚSQUEDA
+   [S14] BÚSQUEDA
    ============================================================ */
 function irBusqueda(ev, btn){
-  if(ev && btn) ripple(ev, btn);
   estado.pantalla = "busqueda";
   pushEstado("busqueda");
   mostrarModoBusqueda();
 }
-
 function mostrarModoBusqueda(){
   const cont = document.getElementById("contenido");
   cont.innerHTML = `
@@ -1997,7 +1869,6 @@ function mostrarModoBusqueda(){
   input.focus();
   initBusquedaLive();
 }
-
 function volverDeBusqueda(){
   const input = document.getElementById("buscador");
   if(input) input.value = "";
@@ -2005,7 +1876,6 @@ function volverDeBusqueda(){
   mostrarHome();
   pushEstado("home");
 }
-
 function initBusquedaLive(){
   const input = document.getElementById("buscador");
   if(!input) return;
@@ -2028,7 +1898,6 @@ function initBusquedaLive(){
     if(e.key === "Enter"){ e.preventDefault(); ejecutarBusqueda(e.target.value.trim()); }
   });
 }
-
 function limpiarBusqueda(){
   const input = document.getElementById("buscador");
   if(!input) return;
@@ -2038,7 +1907,6 @@ function limpiarBusqueda(){
   if(btnClear) btnClear.classList.remove("visible");
   document.getElementById("resultados-busqueda").innerHTML = "";
 }
-
 function ejecutarBusqueda(texto){
   const val = (texto || document.getElementById("buscador").value || "").trim();
   const res = document.getElementById("resultados-busqueda");
@@ -2047,7 +1915,6 @@ function ejecutarBusqueda(texto){
   if(tipo === "nombre") renderResultadosResponsables(val, res);
   else renderResultadosBienes(val, tipo, res);
 }
-
 function buscarResponsables(termino){
   const t = norm(termino);
   if(t.length < 1) return [];
@@ -2074,7 +1941,6 @@ function buscarResponsables(termino){
   lista.sort((a,b) => a.nombre.localeCompare(b.nombre));
   return lista;
 }
-
 function todosLosBienes(){
   return [
     ...DATA.fijos.map(b => ({...b, __tipo: "FIJOS"})),
@@ -2083,7 +1949,6 @@ function todosLosBienes(){
     ...DATA.prestados.map(b => ({...b, __tipo: "PRESTADOS"}))
   ];
 }
-
 function buscarBienesPorCodigo(termino){
   const t = norm(termino);
   return todosLosBienes().filter(b => norm(getVal(b, "CODIGO")).includes(t));
@@ -2092,7 +1957,6 @@ function buscarBienesPorIdAsig(idAsig){
   const t = norm(idAsig);
   return todosLosBienes().filter(b => norm(obtenerIdAsig(b)) === t);
 }
-
 function renderResultadosResponsables(filtro, cont){
   const lista = buscarResponsables(filtro);
   if(!lista.length){
@@ -2118,7 +1982,6 @@ function renderResultadosResponsables(filtro, cont){
   cont.innerHTML = html;
   window.__listaResponsablesActual = lista;
 }
-
 function renderResultadosBienes(filtro, tipoBusqueda, cont){
   const bienes = tipoBusqueda === "id" ? buscarBienesPorIdAsig(filtro) : buscarBienesPorCodigo(filtro);
   if(!bienes.length){
@@ -2151,23 +2014,20 @@ function renderResultadosBienes(filtro, tipoBusqueda, cont){
 }
 
 /* ============================================================
-   [S15] VISTAS GENERALES POR TIPO
+   [S15] VISTAS GENERALES
    ============================================================ */
-function irVistaGeneral(tipo, ev, btn){
-  if(ev && btn) ripple(ev, btn);
+function irVistaGeneral(tipo){
   estado.pantalla = "vistaGeneral";
   estado.vistaGeneralActual = tipo;
   estado.oficinaFiltroActual = null;
   pushEstado("vistaGeneral");
   renderVistaGeneral(tipo);
 }
-
 function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
   const cont = document.getElementById("contenido");
   const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
   const listaCompleta = DATA[tipo] || [];
   const titulo = titulos[tipo] || tipo.toUpperCase();
-
   if(!oficinaFiltro){
     let html = `<button class="btn-volver" onclick="volverDeVistaGeneral()">← Volver</button>
       <div class="list-title"><span>◈ ${titulo} — Total</span><span class="list-count">${listaCompleta.length}</span></div>`;
@@ -2197,7 +2057,6 @@ function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
     cont.innerHTML = html;
     return;
   }
-
   const listaFiltrada = listaCompleta.filter(b => getOficinaResponsablePorId(obtenerIdAsig(b)) === oficinaFiltro);
   let html = `<button class="btn-volver" onclick="renderVistaGeneral('${tipo}')">← Volver</button>
     <div class="oficina-encabezado">
@@ -2215,7 +2074,6 @@ function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
   html += tablaGeneral(tipo, listaFiltrada);
   cont.innerHTML = html;
 }
-
 function volverDeVistaGeneral(){
   estado.pantalla = "home";
   estado.vistaGeneralActual = null;
@@ -2223,12 +2081,10 @@ function volverDeVistaGeneral(){
   mostrarHome();
   pushEstado("home");
 }
-
 function filtrarPorOficina(oficina){
   estado.oficinaFiltroActual = oficina;
   renderVistaGeneral(estado.vistaGeneralActual, oficina, "");
 }
-
 function tablaGeneral(tipo, lista){
   const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
   const colorMap = { fijos: "verde", fungibles: "azul", internos: "marron", prestados: "vino" };
@@ -2268,7 +2124,7 @@ function tablaGeneral(tipo, lista){
 }
 
 /* ============================================================
-   [S16] MODAL PRINCIPAL (RESPONSABLE / OFICINAS / TABLAS / DETALLE)
+   [S16] MODAL PRINCIPAL
    ============================================================ */
 function abrirModalResponsable(idx){
   const lista = window.__listaResponsablesActual || [];
@@ -2287,7 +2143,6 @@ function abrirModalResponsable(idx){
   document.getElementById("modal").classList.add("visible");
   pushEstado("modal");
 }
-
 function abrirOficinaModal(idAsig){
   const r = estado.responsableActual;
   if(!r) return;
@@ -2297,13 +2152,11 @@ function abrirOficinaModal(idAsig){
   estado.oficinaActual = oficina;
   document.getElementById("modal-body").innerHTML = renderModalBody();
 }
-
 function volverAOficinasModal(){
   estado.modalVista = "oficinas";
   estado.oficinaActual = null;
   document.getElementById("modal-body").innerHTML = renderModalBody();
 }
-
 function abrirDetalleBienDirecto(bien){
   estado.modalVista = "detalleBien";
   estado.bienActual = bien;
@@ -2312,7 +2165,6 @@ function abrirDetalleBienDirecto(bien){
   document.getElementById("modal").classList.add("visible");
   pushEstado("modal");
 }
-
 function abrirDetalleBienDirectoPorCodigo(codigo, tipo){
   let bien = null;
   if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
@@ -2323,7 +2175,6 @@ function abrirDetalleBienDirectoPorCodigo(codigo, tipo){
   bien.__tipo = tipo;
   abrirDetalleBienDirecto(bien);
 }
-
 function abrirDetalleBienDesdeModal(codigo, tipo){
   let bien = null;
   if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
@@ -2337,14 +2188,12 @@ function abrirDetalleBienDesdeModal(codigo, tipo){
   document.getElementById("modal-titulo").textContent = "Detalle del Bien";
   document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
 }
-
 function volverATablasDesdeDetalleBien(){
   estado.modalVista = "tablas";
   estado.bienActual = null;
   document.getElementById("modal-titulo").textContent = estado.responsableActual ? estado.responsableActual.nombre : "Bienes";
   document.getElementById("modal-body").innerHTML = renderModalBody();
 }
-
 function cerrarModal(){
   document.getElementById("modal").classList.remove("visible");
   estado.modalVista = "oficinas";
@@ -2352,14 +2201,12 @@ function cerrarModal(){
   estado.oficinaActual = null;
   estado.bienActual = null;
 }
-
 function renderModalBody(){
   if(estado.modalVista === "oficinas") return renderModalOficinas();
   if(estado.modalVista === "tablas") return renderModalTablas();
   if(estado.modalVista === "detalleBien") return renderDetalleBien(estado.bienActual);
   return "";
 }
-
 function renderModalOficinas(){
   const r = estado.responsableActual;
   if(!r) return "";
@@ -2377,7 +2224,6 @@ function renderModalOficinas(){
   });
   return html;
 }
-
 function renderModalTablas(){
   const of = estado.oficinaActual;
   const r = estado.responsableActual;
@@ -2388,9 +2234,7 @@ function renderModalTablas(){
   const prestados = DATA.prestados.filter(b => obtenerIdAsig(b) === of.id);
   const total = fijos.length + fungibles.length + internos.length + prestados.length;
   const btnVolver = r.asignaciones.length > 1 ? `<button class="btn-nav" onclick="volverAOficinasModal()">← Oficinas</button>` : "";
-
   const btnImprimir = `<button class="btn-imprimir" onclick="abrirModalEntrante('${escAttr(of.id)}')">🖨 Imprimir Acta</button>`;
-
   let html = `${btnVolver}
     <div class="oficina-encabezado">
       <div>
@@ -2400,14 +2244,12 @@ function renderModalTablas(){
       <div class="oficina-encabezado-count">${total}</div>
     </div>
     ${btnImprimir}`;
-
   html += tablaModal("FIJOS", fijos, "verde");
   html += tablaModal("FUNGIBLES", fungibles, "azul");
   html += tablaModal("INTERNOS", internos, "marron");
   if(prestados.length) html += tablaModal("PRESTADOS", prestados, "vino");
   return html;
 }
-
 function tablaModal(titulo, lista, color){
   if(!lista.length){
     return `<div class="tabla-section"><div class="tabla-header" data-color="${color}"><div class="tabla-header-titulo"><span class="dot"></span>${titulo}</div><div class="tabla-header-count">0</div></div><div class="empty-state" style="padding:30px 20px;"><div class="empty-state-sub">NO CUENTA ${titulo}</div></div></div>`;
@@ -2441,7 +2283,6 @@ function tablaModal(titulo, lista, color){
   html += `</tbody></table></div></div>`;
   return html;
 }
-
 function renderDetalleBien(bien){
   if(!bien) return "";
   const tipo = bien.__tipo || "FIJOS";
@@ -2513,17 +2354,15 @@ function renderDetalleBien(bien){
 }
 
 /* ============================================================
-   [S17] MÓDULO DE ACTA — FLUJO DEL FORMULARIO
+   [S17] FLUJO DEL ACTA
    ============================================================ */
 function abrirModalEntrante(idAsignacion){
   const r = estado.responsableActual;
   if(!r) return;
   const oficina = r.asignaciones.find(o => o.id === idAsignacion);
   if(!oficina) return;
-
   actaEnProceso.responsable = r;
   actaEnProceso.oficina = oficina;
-
   cerrarModal();
   ["ent_grado","ent_nombres","ent_appat","ent_apmat","ent_cargo"].forEach(id => {
     const el = document.getElementById(id);
@@ -2532,11 +2371,9 @@ function abrirModalEntrante(idAsignacion){
   document.getElementById("modalEntrante").classList.add("visible");
   pushEstado("modalActa");
 }
-
 function cerrarModalEntrante(){
   document.getElementById("modalEntrante").classList.remove("visible");
 }
-
 function generarVistaPrevia(){
   const datos = {
     entrante: {
@@ -2575,34 +2412,28 @@ function generarVistaPrevia(){
   document.getElementById("modalVistaPrevia").classList.add("visible");
   pushEstado("modalVistaPrevia");
 }
-
 function cerrarModalVistaPrevia(){
   document.getElementById("modalVistaPrevia").classList.remove("visible");
 }
-
 function guardarPDF(){
   document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
   mostrarToast("Elija 'Guardar como PDF' en el diálogo", "info", "💾");
   setTimeout(() => window.print(), 400);
 }
-
 function imprimirActaDirecta(){
   document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
   setTimeout(() => window.print(), 300);
 }
 
 /* ============================================================
-   [S18] GENERAR HTML DEL ACTA — EMPAQUETADOR GREEDY
+   [S18] GENERAR HTML DEL ACTA — EMPAQUETADOR GREEDY v3
    ------------------------------------------------------------
-   Este bloque es el corazón del layout del acta.
-   Estrategia:
-     1. Se construyen bloques atómicos pequeños (header, secciones
-        divididas en trozos de FILAS_POR_BLOQUE filas, firmas).
-     2. Cada bloque se mide en .acta-medicion.
-     3. Se empaquetan greedy: si un bloque cabe en la hoja actual,
-        se coloca; si no, se inserta page-break + encabezado de
-        continuación con ordinal correcto.
-     4. Las firmas se colocan al final si caben; si no, nueva hoja.
+   CAMBIOS V5.1:
+     - Encabezado de continuación SOLO si firmas van solas.
+     - Si la última hoja contiene al menos 1 fila de tabla,
+       NO lleva encabezado de continuación.
+     - Cortes de tabla NO llevan subtítulo "(CONTINUACIÓN)".
+     - El subtítulo romano solo aparece la primera vez.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -2617,7 +2448,7 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* --- Saliente --- */
+  /* Saliente */
   const salienteGrado = r.grado || "";
   const salienteNombres = r.nombres || "";
   const salienteApPat = r.apPat || "";
@@ -2627,17 +2458,17 @@ function generarHTMLActa(r, oficina, datos){
   if(!nombreSaliente || nombreSaliente.trim() === "") nombreSaliente = "___________________________________";
   const cargoSaliente = (r.cargo || "").toUpperCase();
 
-  /* --- Entrante --- */
+  /* Entrante */
   const nombreEntrante = construirNombreFirmante(datos.entrante.grado, datos.entrante.nombres, datos.entrante.appat, datos.entrante.apmat);
   const cargoEntrante = (datos.entrante.cargo || "").toUpperCase() || "RESPONSABLE ENTRANTE";
 
-  /* --- Supervisores --- */
+  /* Supervisores */
   const nombreSup1 = construirNombreFirmante(datos.sup1.grado, datos.sup1.nombres, datos.sup1.appat, datos.sup1.apmat);
   const cargoSup1 = (datos.sup1.cargo || "").toUpperCase();
   const nombreSup2 = construirNombreFirmante(datos.sup2.grado, datos.sup2.nombres, datos.sup2.appat, datos.sup2.apmat);
   const cargoSup2 = (datos.sup2.cargo || "").toUpperCase();
 
-  /* --- Vo.Bo. --- */
+  /* Vo.Bo. */
   const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
   const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
 
@@ -2648,14 +2479,13 @@ function generarHTMLActa(r, oficina, datos){
      [S18.1] MEDICIÓN DE BLOQUES
      ============================================================ */
   const contMed = document.getElementById("actaMedicion");
-
   function medirHTML(html){
     contMed.innerHTML = html;
     void contMed.offsetHeight;
     return contMed.scrollHeight;
   }
 
-  /* --- Header (membrete + título) --- */
+  /* --- Header --- */
   const headerHTML = `
     <div class="acta-membrete">
       <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
@@ -2670,7 +2500,13 @@ function generarHTMLActa(r, oficina, datos){
   const headerAltura = medirHTML(headerHTML);
 
   /* ============================================================
-     [S18.2] CONSTRUCCIÓN DE BLOQUES ATÓMICOS POR SECCIÓN
+     [S18.2] BLOQUES ATÓMICOS
+     ------------------------------------------------------------
+     CAMBIO V5.1:
+       Cada trozo de sección es un bloque INDEPENDIENTE que NO
+       repite el título romano. Solo el PRIMER trozo de cada
+       sección lleva el título; los trozos siguientes van "pelados"
+       (solo la tabla con su thead).
      ============================================================ */
   const seccionesDef = [
     { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
@@ -2679,7 +2515,6 @@ function generarHTMLActa(r, oficina, datos){
     { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
   ];
 
-  /* Tamaño de trozo por bloque (se ajusta dinámicamente abajo) */
   const FILAS_POR_BLOQUE = 18;
   const bloquesSecciones = [];
 
@@ -2696,7 +2531,8 @@ function generarHTMLActa(r, oficina, datos){
         tipo: "seccion",
         nombre: sec.nombre,
         html,
-        altura: medirHTML(html)
+        altura: medirHTML(html),
+        esInicioDeSeccion: true
       });
       return;
     }
@@ -2704,33 +2540,39 @@ function generarHTMLActa(r, oficina, datos){
     for(let i = 0; i < sec.lista.length; i += FILAS_POR_BLOQUE){
       const trozo = sec.lista.slice(i, i + FILAS_POR_BLOQUE);
       const esPrimerTrozo = i === 0;
-      const numTrozo = Math.floor(i / FILAS_POR_BLOQUE) + 1;
-
-      let tituloSeccion;
-      if(esPrimerTrozo){
-        tituloSeccion = `${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.`;
-      } else {
-        tituloSeccion = `${sec.num}<span class="subrayado">${esc(sec.titulo)}</span> (CONTINUACIÓN).`;
-      }
 
       let filasHTML = "";
       trozo.forEach((b, j) => {
         filasHTML += generarFilaTabla(b, i + j, sec.tipo);
       });
 
-      const html = `<div class="acta-seccion">
-        <div class="acta-seccion-titulo">${tituloSeccion}</div>
-        <table class="acta-tabla">
+      /* ═══ CAMBIO V5.1 ═══
+         Si es el primer trozo → lleva título romano.
+         Si es continuación → SOLO tabla, SIN título.
+      */
+      let html;
+      if(esPrimerTrozo){
+        html = `<div class="acta-seccion">
+          <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
+          <table class="acta-tabla">
+            <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
+            <tbody>${filasHTML}</tbody>
+          </table>
+        </div>`;
+      } else {
+        /* Continuación: solo la tabla, sin título */
+        html = `<table class="acta-tabla acta-tabla-continuacion">
           <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
           <tbody>${filasHTML}</tbody>
-        </table>
-      </div>`;
+        </table>`;
+      }
 
       bloquesSecciones.push({
         tipo: "seccion",
         nombre: sec.nombre,
         html,
-        altura: medirHTML(html)
+        altura: medirHTML(html),
+        esInicioDeSeccion: esPrimerTrozo
       });
     }
   });
@@ -2743,7 +2585,15 @@ function generarHTMLActa(r, oficina, datos){
   });
   const firmasAltura = medirHTML(firmasHTML);
 
-  /* --- Encabezado de continuación (para medir su altura) --- */
+  /* ============================================================
+     [S18.3] EMPAQUETADOR GREEDY
+     ------------------------------------------------------------
+     CAMBIO V5.1:
+       - Se rastrea si la última hoja tiene AL MENOS 1 bloque de
+         tabla. Si sí → sin encabezado de continuación.
+       - Si las firmas van solas → encabezado de continuación con
+         ordinal correcto.
+     ============================================================ */
   const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
 
   function generarEncabezadoContinuacion(numHoja){
@@ -2754,11 +2604,7 @@ function generarHTMLActa(r, oficina, datos){
     }
     return h;
   }
-  const encabezadoAltura = medirHTML(generarEncabezadoContinuacion(2));
 
-  /* ============================================================
-     [S18.3] EMPAQUETADOR GREEDY
-     ============================================================ */
   let htmlFinal = "";
   let alturaAcumulada = 0;
   let hojaActual = 1;
@@ -2767,13 +2613,26 @@ function generarHTMLActa(r, oficina, datos){
   htmlFinal += headerHTML;
   alturaAcumulada += headerAltura;
 
-  /* Inserta page-break + encabezado de continuación */
-  function nuevaHoja(){
+  /* Marca si la hoja ACTUAL tiene algún bloque de contenido (tabla) */
+  let hojaActualTieneTabla = false;
+
+  /* Inserta page-break SIN encabezado de continuación */
+  function nuevaHojaSinEncabezado(){
+    htmlFinal += `<div class="saltar-pagina"></div>`;
+    hojaActual++;
+    alturaAcumulada = 0;
+    hojaActualTieneTabla = false;
+  }
+
+  /* Inserta page-break CON encabezado de continuación */
+  function nuevaHojaConEncabezado(){
     htmlFinal += `<div class="saltar-pagina"></div>`;
     hojaActual++;
     const enc = generarEncabezadoContinuacion(hojaActual);
     htmlFinal += enc;
-    alturaAcumulada = encabezadoAltura;
+    const encAltura = medirHTML(enc);
+    alturaAcumulada = encAltura;
+    hojaActualTieneTabla = false;
   }
 
   /* Recorrer bloques de sección */
@@ -2785,20 +2644,33 @@ function generarHTMLActa(r, oficina, datos){
       /* Cabe → colocar */
       htmlFinal += b.html;
       alturaAcumulada += b.altura;
+      hojaActualTieneTabla = true;
     } else {
-      /* No cabe → nueva hoja y colocar */
-      nuevaHoja();
+      /* No cabe → nueva hoja SIN encabezado (la tabla simplemente continúa) */
+      nuevaHojaSinEncabezado();
       htmlFinal += b.html;
       alturaAcumulada += b.altura;
+      hojaActualTieneTabla = true;
     }
   }
 
-  /* Firmas: intentar colocarlas en la hoja actual si caben */
+  /* ============================================================
+     [S18.4] DECISIÓN DE LAS FIRMAS
+     ------------------------------------------------------------
+     Si las firmas caben en la hoja actual → colocar directamente.
+     Si NO caben → nueva hoja CON encabezado de continuación
+     (porque la nueva hoja solo tendrá las firmas).
+     ============================================================ */
   const espacioParaFirmas = ALTURA_UTIL_HOJA - alturaAcumulada;
+
   if(firmasAltura <= espacioParaFirmas){
+    /* Caben en la hoja actual → sin encabezado de continuación */
     htmlFinal += firmasHTML;
+    /* hojaActualTieneTabla sigue true, pero ya no importa */
   } else {
-    nuevaHoja();
+    /* No caben → nueva hoja con encabezado de continuación
+       (porque la nueva hoja va a tener SOLO las firmas) */
+    nuevaHojaConEncabezado();
     htmlFinal += firmasHTML;
   }
 
@@ -2814,7 +2686,6 @@ function columnasDeTipo(tipo){
   }
   return `<th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
 }
-
 function generarFilaTabla(b, i, tipo){
   const codigo = getVal(b, "CODIGO");
   const cant = getVal(b, "CANTIDAD");
@@ -2844,7 +2715,6 @@ function generarBloqueFirmas(d){
       </div>
     </div>
   `;
-
   if(d.nombreSup1 && d.nombreSup2){
     bloqueFirmasHTML += `
       <div class="acta-firmas-fila">
@@ -2870,7 +2740,6 @@ function generarBloqueFirmas(d){
         <div class="acta-firma-cargo">${esc(d.cargoSup2)}</div>
       </div>`;
   }
-
   bloqueFirmasHTML += `
     <div class="acta-firma-bloque">
       <div class="acta-vobo">Vo. Bo.</div>
@@ -2878,7 +2747,6 @@ function generarBloqueFirmas(d){
       <div class="acta-firma-cargo">${esc(d.cargoVobo)}</div>
     </div>
   `;
-
   return `<div class="acta-bloque-firmas">
     <div class="acta-fecha-firmas">${esc(d.fechaLarga)}</div>
     <div class="acta-firmas">${bloqueFirmasHTML}</div>
@@ -2894,41 +2762,16 @@ function mesCapitalizado(m){
 }
 
 /* ============================================================
-   [S22] LIGHTBOX / EFECTO RIPPLE
+   [S22] LIGHTBOX
    ============================================================ */
 function abrirLightbox(url){
   document.getElementById("lightbox-img").src = url;
   document.getElementById("lightbox").classList.add("visible");
 }
 function cerrarLightbox(){ document.getElementById("lightbox").classList.remove("visible"); }
-function ripple(e, btn){
-  const rect = btn.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height);
-  const x = e.clientX - rect.left - size / 2;
-  const y = e.clientY - rect.top - size / 2;
-  const span = document.createElement("span");
-  span.style.position = "absolute";
-  span.style.borderRadius = "50%";
-  span.style.background = "var(--cian)";
-  span.style.opacity = "0.5";
-  span.style.pointerEvents = "none";
-  span.style.width = size + "px";
-  span.style.height = size + "px";
-  span.style.left = x + "px";
-  span.style.top = y + "px";
-  span.style.transform = "scale(0)";
-  span.style.animation = "rippleAnim .6s ease-out";
-  btn.style.position = "relative";
-  btn.style.overflow = "hidden";
-  btn.appendChild(span);
-  setTimeout(() => span.remove(), 600);
-}
-const styleRipple = document.createElement("style");
-styleRipple.innerHTML = "@keyframes rippleAnim{to{transform:scale(4);opacity:0;}}";
-document.head.appendChild(styleRipple);
 
 /* ============================================================
-   [S23] ATAJOS DE TECLADO
+   [S23] ATAJOS
    ============================================================ */
 document.addEventListener("keydown", e => {
   if((e.ctrlKey || e.metaKey) && e.key === "k"){
