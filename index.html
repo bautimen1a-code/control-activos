@@ -3,1061 +3,1218 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control DIV-10 · V8.0</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<title>Sistema de Control DIV-10 V5.0 · Orbital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   [01] VARIABLES Y TEMA
-   ============================================================ */
-:root{
-  --bg:#1a2620;
-  --bg-panel:#22302a;
-  --bg-elevado:#2a3a32;
-  --bg-hover:#33453c;
-  --bg-card:#25322c;
-  --bg-terminal:#141c18;
+  :root{
+    --bg:#04060d;
+    --bg-panel:rgba(14,20,36,.72);
+    --bg-elevado:rgba(20,28,48,.85);
+    --bg-hover:rgba(30,42,72,.9);
+    --texto:#eaf2ff;
+    --texto-suave:#8899b8;
+    --texto-muy-suave:#4d5b7a;
 
-  --texto:#eef4ec;
-  --texto-suave:#a8b8ac;
-  --texto-muy-suave:#70857a;
+    --borde:rgba(80,220,255,.22);
+    --borde-fuerte:rgba(80,220,255,.55);
 
-  --borde:rgba(168,184,172,.18);
-  --borde-fuerte:rgba(168,184,172,.4);
+    --sombra-panel:0 12px 40px rgba(0,0,0,.6);
 
-  --ambar:#e8a93a;
-  --ambar-brillante:#ffc55c;
-  --ambar-glow:rgba(232,169,58,.4);
+    --cian:#22d3ee;
+    --cian-brillante:#67e8f9;
+    --cian-glow:rgba(34,211,238,.55);
 
-  --verde:#7cb342;
-  --verde-brillante:#a8d86e;
-  --verde-glow:rgba(124,179,66,.4);
+    --magenta:#e879f9;
+    --magenta-brillante:#f0abfc;
+    --magenta-glow:rgba(232,121,249,.5);
 
-  --rojo:#d64545;
-  --rojo-brillante:#ff6666;
-  --rojo-glow:rgba(214,69,69,.4);
+    --violeta:#a78bfa;
+    --violeta-glow:rgba(167,139,250,.5);
 
-  --azul:#4a9eff;
-  --azul-glow:rgba(74,158,255,.4);
+    --verde:#34d399;
+    --verde-glow:rgba(52,211,153,.5);
 
-  --gris-metal:#384a40;
-  --gris-metal-claro:#4a5e50;
+    --rojo:#fb7185;
+    --rojo-glow:rgba(251,113,133,.5);
 
-  --mono:"JetBrains Mono","Fira Code","Consolas",monospace;
-  --sans:"Inter","Segoe UI",Roboto,system-ui,sans-serif;
+    --ambar:#fbbf24;
+    --naranja:#fb923c;
 
-  --sombra-panel:0 8px 24px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.2);
-  --sombra-elevado:0 12px 36px rgba(0,0,0,.45);
-}
-body.light{
-  --bg:#e8ede8;
-  --bg-panel:#ffffff;
-  --bg-elevado:#f4f7f4;
-  --bg-hover:#e8efe8;
-  --bg-card:#fafcfa;
-  --bg-terminal:#1a1a1a;
-  --texto:#1a2418;
-  --texto-suave:#5a6b58;
-  --texto-muy-suave:#8fa39a;
-  --borde:rgba(26,36,24,.15);
-  --borde-fuerte:rgba(26,36,24,.35);
-  --ambar:#b8801a;
-  --ambar-brillante:#d99c2e;
-  --verde:#4a7a22;
-  --verde-brillante:#6ba832;
-  --rojo:#b83030;
-  --rojo-brillante:#d64545;
-  --azul:#1e6fd9;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:var(--sans);
-  background:var(--bg);
-  color:var(--texto);
-  font-size:14px;
-  min-height:100vh;
-  overflow-x:hidden;
-  -webkit-font-smoothing:antialiased;
-  position:relative;
-  transition:background .4s ease,color .4s ease;
-}
+    --mono:"JetBrains Mono","Consolas",monospace;
+    --sans:"Inter","Segoe UI",Roboto,sans-serif;
+    --display:"Orbitron","Inter",sans-serif;
 
-/* ============================================================
-   [02] FONDO
-   ============================================================ */
-.bg-layer{
-  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(232,169,58,.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 100%, rgba(124,179,66,.05) 0%, transparent 50%),
-    var(--bg);
-}
-.bg-layer::before{
-  content:"";position:absolute;inset:0;
-  background-image:
-    linear-gradient(45deg, rgba(255,255,255,.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.02) 75%),
-    linear-gradient(45deg, rgba(255,255,255,.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.02) 75%);
-  background-size:6px 6px;background-position:0 0, 3px 3px;opacity:.5;
-}
-body.light .bg-layer::before{
-  background-image:
-    linear-gradient(45deg, rgba(0,0,0,.02) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.02) 75%),
-    linear-gradient(45deg, rgba(0,0,0,.02) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.02) 75%);
-}
-.bg-layer::after{
-  content:"";position:absolute;top:50%;left:50%;
-  width:200vmax;height:200vmax;transform:translate(-50%,-50%);
-  background:
-    repeating-conic-gradient(from 0deg at 50% 50%,
-      transparent 0deg, rgba(124,179,66,.03) 1deg, transparent 2deg, transparent 90deg,
-      transparent 90deg, rgba(232,169,58,.03) 91deg, transparent 92deg, transparent 180deg);
-  opacity:.6;animation:radarSpin 60s linear infinite;pointer-events:none;
-}
-@keyframes radarSpin{from{transform:translate(-50%,-50%) rotate(0);}to{transform:translate(-50%,-50%) rotate(360deg);}}
+    --radio:14px;
+    --radio-sm:10px;
+  }
 
-.scanline{
-  position:fixed;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--ambar),var(--verde),transparent);
-  box-shadow:0 0 8px var(--ambar-glow);
-  opacity:.4;z-index:1;pointer-events:none;
-  animation:scanline 8s linear infinite;
-}
-@keyframes scanline{from{top:-1px;}to{top:100vh;}}
+  body.light{
+    --bg:#eef4fb;
+    --bg-panel:rgba(255,255,255,.85);
+    --bg-elevado:rgba(245,250,255,.95);
+    --bg-hover:rgba(230,240,255,1);
+    --texto:#0b1a33;
+    --texto-suave:#4b5d80;
+    --texto-muy-suave:#8899b8;
+    --borde:rgba(20,80,180,.18);
+    --borde-fuerte:rgba(20,80,180,.4);
+    --sombra-panel:0 8px 30px rgba(20,40,90,.12);
+  }
 
-/* ============================================================
-   [03] SCROLLBAR
-   ============================================================ */
-::-webkit-scrollbar{width:10px;height:10px;}
-::-webkit-scrollbar-track{background:var(--bg-terminal);}
-::-webkit-scrollbar-thumb{
-  background:linear-gradient(180deg,var(--gris-metal),var(--gris-metal-claro));
-  border:2px solid var(--bg-terminal);border-radius:2px;
-}
-::-webkit-scrollbar-thumb:hover{background:var(--verde);}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);
+    background:var(--bg);
+    color:var(--texto);
+    font-size:14px;
+    min-height:100vh;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    transition:background .4s ease,color .4s ease;
+  }
 
-/* ============================================================
-   [04] APP LAYOUT
-   ============================================================ */
-.app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
+  /* FONDO ESTELAR */
+  .starfield{
+    position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+    background:
+      radial-gradient(ellipse at 15% 10%, rgba(34,211,238,.10) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 90%, rgba(232,121,249,.10) 0%, transparent 45%),
+      radial-gradient(ellipse at 50% 50%, rgba(167,139,250,.05) 0%, transparent 60%);
+  }
+  body.light .starfield{
+    background:
+      radial-gradient(ellipse at 15% 10%, rgba(34,211,238,.12) 0%, transparent 45%),
+      radial-gradient(ellipse at 85% 90%, rgba(232,121,249,.12) 0%, transparent 45%);
+  }
+  .starfield::before{
+    content:"";position:absolute;inset:0;
+    background-image:
+      radial-gradient(1px 1px at 20px 30px, #fff, transparent),
+      radial-gradient(1px 1px at 120px 90px, rgba(255,255,255,.7), transparent),
+      radial-gradient(1.5px 1.5px at 300px 180px, #67e8f9, transparent),
+      radial-gradient(1px 1px at 450px 60px, rgba(255,255,255,.6), transparent),
+      radial-gradient(1px 1px at 600px 220px, #f0abfc, transparent),
+      radial-gradient(1.5px 1.5px at 750px 120px, #fff, transparent);
+    background-size:800px 300px;
+    background-repeat:repeat;
+    opacity:.7;
+    animation:starDrift 120s linear infinite;
+  }
+  body.light .starfield::before{opacity:.35;}
+  @keyframes starDrift{
+    from{transform:translate3d(0,0,0);}
+    to{transform:translate3d(-800px,-300px,0);}
+  }
+  .starfield::after{
+    content:"";position:absolute;inset:-20%;
+    background-image:
+      linear-gradient(rgba(34,211,238,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,121,249,.04) 1px, transparent 1px);
+    background-size:60px 60px;
+    transform:perspective(600px) rotateX(60deg) translateY(30%);
+    transform-origin:center bottom;
+    animation:gridPulse 12s ease-in-out infinite;
+    mask-image:linear-gradient(180deg, transparent 0%, black 40%, black 60%, transparent 100%);
+  }
+  body.light .starfield::after{
+    background-image:
+      linear-gradient(rgba(34,211,238,.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(232,121,249,.08) 1px, transparent 1px);
+  }
+  @keyframes gridPulse{
+    0%,100%{opacity:.6;}
+    50%{opacity:1;}
+  }
 
-/* ============================================================
-   [05] HEADER
-   ============================================================ */
-.header{
-  position:sticky;top:0;z-index:50;
-  background:linear-gradient(180deg, var(--bg-panel) 0%, rgba(26,38,32,.95) 100%);
-  border-bottom:2px solid var(--borde-fuerte);
-  padding:0;overflow:hidden;transition:background .4s ease;
-  box-shadow:0 2px 0 rgba(0,0,0,.2), 0 4px 20px rgba(0,0,0,.3);
-}
-body.light .header{background:linear-gradient(180deg, #ffffff 0%, #f0f4f0 100%);}
-.header::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--rojo) 0%, var(--ambar) 30%, var(--verde) 70%, var(--rojo) 100%);
-  opacity:.75;
-}
-.header-content{
-  max-width:1400px;margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  padding:12px 22px;
-}
-.header-logo{display:flex;align-items:center;gap:14px;}
-.header-logo-icon{
-  width:46px;height:46px;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;font-weight:900;color:var(--bg-terminal);
-  background:linear-gradient(135deg, var(--ambar), #c68a1a);
-  border:2px solid var(--gris-metal-claro);border-radius:6px;
-  box-shadow:
-    0 0 0 1px rgba(0,0,0,.4),
-    inset 0 1px 0 rgba(255,255,255,.3),
-    inset 0 -2px 4px rgba(0,0,0,.3),
-    0 4px 12px rgba(0,0,0,.4);
-  transform:rotate(-3deg);transition:transform .3s ease;
-}
-.header-logo-icon:hover{transform:rotate(0deg) scale(1.05);}
-.header-text h1{
-  font-size:16px;font-weight:900;letter-spacing:2px;
-  text-transform:uppercase;color:var(--texto);line-height:1.1;
-}
-.header-text h1 .highlight{color:var(--ambar);text-shadow:0 0 12px var(--ambar-glow);}
-.header-text .subtitle{
-  font-family:var(--mono);font-size:9px;letter-spacing:3px;
-  color:var(--texto-suave);text-transform:uppercase;margin-top:3px;
-  display:flex;align-items:center;gap:8px;
-}
-.header-text .subtitle::before{
-  content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
-  background:var(--verde);box-shadow:0 0 8px var(--verde);
-  animation:blink 2s ease-in-out infinite;
-}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-.header-actions{display:flex;align-items:center;gap:10px;}
-.btn-icon{
-  width:44px;height:44px;
-  background:linear-gradient(180deg, var(--gris-metal-claro) 0%, var(--gris-metal) 100%);
-  border:1px solid var(--borde-fuerte);border-radius:6px;
-  color:var(--texto);font-size:18px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .15s ease;flex-shrink:0;position:relative;overflow:hidden;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    inset 0 -2px 4px rgba(0,0,0,.3),
-    0 2px 4px rgba(0,0,0,.25);
-}
-.btn-icon::before{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(180deg, transparent 50%, rgba(0,0,0,.15) 100%);
-  pointer-events:none;
-}
-.btn-icon:hover{
-  background:linear-gradient(180deg, var(--ambar) 0%, #c68a1a 100%);
-  color:var(--bg-terminal);transform:translateY(-1px);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.4),
-    inset 0 -2px 4px rgba(0,0,0,.3),
-    0 4px 12px var(--ambar-glow);
-}
-.btn-icon:active{
-  transform:translateY(1px);
-  box-shadow:inset 0 2px 6px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
-}
-.btn-icon.spinning{animation:spin 1s linear infinite;}
-@keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
-.header-status{
-  display:flex;align-items:center;gap:8px;padding:8px 14px;
-  background:var(--bg-terminal);border:1px solid var(--borde-fuerte);
-  border-radius:4px;font-size:10px;font-family:var(--mono);
-  color:var(--verde-brillante);letter-spacing:2px;
-  position:relative;overflow:hidden;
-}
-.header-status::before{
-  content:"";position:absolute;top:0;left:0;bottom:0;width:3px;
-  background:var(--verde);box-shadow:0 0 8px var(--verde);
-}
-.status-dot{
-  width:8px;height:8px;background:var(--verde);border-radius:50%;
-  box-shadow:0 0 8px var(--verde);animation:blink 1.6s ease-in-out infinite;
-}
+  .scanline{
+    position:fixed;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--cian),transparent);
+    opacity:.4;z-index:1;pointer-events:none;
+    animation:scanline 9s linear infinite;
+    box-shadow:0 0 20px var(--cian-glow);
+  }
+  body.light .scanline{opacity:.25;}
+  @keyframes scanline{from{top:0;}to{top:100vh;}}
 
-/* ============================================================
-   [06] MAIN
-   ============================================================ */
-.main{flex:1;padding:24px 22px;max-width:1400px;margin:0 auto;width:100%;}
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-track{background:var(--bg-elevado);}
+  ::-webkit-scrollbar-thumb{
+    background:linear-gradient(180deg,var(--cian),var(--violeta));
+    border-radius:5px;border:2px solid var(--bg-elevado);
+  }
+  ::-webkit-scrollbar-thumb:hover{background:var(--cian-brillante);}
 
-/* ============================================================
-   [07] HOME
-   ============================================================ */
-.home{display:flex;flex-direction:column;gap:20px;padding-top:8px;animation:fadeIn .5s ease both;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-.home-title{
-  font-size:11px;letter-spacing:6px;color:var(--texto-suave);
-  text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--borde);
-  display:flex;align-items:center;gap:12px;
-}
-.home-title::before,.home-title::after{
-  content:"";flex:1;height:1px;
-  background:linear-gradient(90deg,transparent,var(--borde-fuerte),transparent);
-}
-.home-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-.home-btn{
-  position:relative;background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
-  border:1px solid var(--borde);border-radius:8px;padding:24px 16px;
-  cursor:pointer;transition:all .2s ease;overflow:hidden;text-align:center;
-  display:flex;flex-direction:column;align-items:center;gap:12px;
-  color:var(--texto);box-shadow:var(--sombra-panel);
-}
-.home-btn::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:var(--color,var(--ambar));
-  transform:scaleX(0);transform-origin:left;
-  transition:transform .3s ease;
-  box-shadow:0 0 8px var(--color,var(--ambar));
-}
-.home-btn:hover{
-  transform:translateY(-3px);border-color:var(--color,var(--ambar));
-  box-shadow:var(--sombra-elevado), 0 0 30px var(--color-glow, var(--ambar-glow));
-}
-.home-btn:hover::before{transform:scaleX(1);}
-.home-btn:active{transform:translateY(0);}
-.home-btn[data-color="verde"]{--color:var(--verde);--color-glow:var(--verde-glow);}
-.home-btn[data-color="azul"]{--color:var(--azul);--color-glow:var(--azul-glow);}
-.home-btn[data-color="marron"]{--color:var(--ambar);--color-glow:var(--ambar-glow);}
-.home-btn[data-color="vino"]{--color:var(--rojo);--color-glow:var(--rojo-glow);}
-.home-btn[data-color="buscar"]{--color:var(--ambar);--color-glow:var(--ambar-glow);}
-.home-btn-icon{
-  font-size:32px;color:var(--color,var(--ambar));
-  filter:drop-shadow(0 0 8px var(--color,var(--ambar)));
-  transition:transform .3s ease;
-}
-.home-btn:hover .home-btn-icon{transform:scale(1.15);}
-.home-btn-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;}
-.home-btn-count{
-  font-size:30px;font-weight:900;color:var(--color,var(--ambar));
-  line-height:1;text-shadow:0 0 16px var(--color-glow, var(--ambar-glow));
-}
-.home-btn.buscar{
-  grid-column:span 4;padding:22px;
-  background:linear-gradient(180deg, var(--bg-terminal) 0%, var(--bg-panel) 100%);
-  flex-direction:row;justify-content:center;gap:16px;border-color:var(--ambar);
-}
-.home-btn.buscar .home-btn-icon{font-size:26px;}
-.home-btn.buscar .home-btn-label{font-size:13px;letter-spacing:6px;color:var(--ambar-brillante);}
+  .app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
 
-/* ============================================================
-   [08] BÚSQUEDA
-   ============================================================ */
-.modo-busqueda{animation:fadeIn .35s ease both;display:flex;flex-direction:column;gap:16px;min-height:60vh;}
-.modo-busqueda-top{display:flex;gap:12px;align-items:center;width:100%;min-width:0;}
-.btn-volver{
-  display:inline-flex;align-items:center;gap:8px;
-  background:linear-gradient(180deg, var(--gris-metal-claro) 0%, var(--gris-metal) 100%);
-  color:var(--texto);border:1px solid var(--borde-fuerte);border-radius:6px;
-  padding:12px 18px;font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;font-weight:700;flex-shrink:0;white-space:nowrap;
-  transition:all .15s ease;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 2px 4px rgba(0,0,0,.25);
-}
-.btn-volver:hover{
-  background:linear-gradient(180deg, var(--ambar) 0%, #c68a1a 100%);
-  color:var(--bg-terminal);transform:translateY(-1px);
-  box-shadow:0 4px 12px var(--ambar-glow);
-}
-.btn-volver:active{transform:translateY(1px);}
-.search-wrapper{flex:1;min-width:0;position:relative;}
-.search-box{
-  display:flex;align-items:center;background:var(--bg-terminal);
-  border:1px solid var(--borde-fuerte);border-radius:6px;padding:4px 14px;
-  width:100%;transition:all .2s ease;box-shadow:inset 0 2px 6px rgba(0,0,0,.3);
-}
-.search-box:focus-within{
-  border-color:var(--ambar);
-  box-shadow:inset 0 2px 6px rgba(0,0,0,.3), 0 0 20px var(--ambar-glow);
-}
-.search-icon{color:var(--ambar);font-size:18px;margin-right:12px;flex-shrink:0;filter:drop-shadow(0 0 6px var(--ambar-glow));}
-.search-input{
-  flex:1;min-width:0;background:transparent;border:none;outline:none;
-  padding:14px 0;font-size:14px;color:var(--texto);
-  font-family:var(--mono);font-weight:500;letter-spacing:.5px;width:100%;
-}
-.search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
-.btn-clear{
-  background:transparent;border:none;color:var(--texto-muy-suave);
-  font-size:16px;cursor:pointer;width:32px;height:32px;border-radius:50%;
-  display:none;align-items:center;justify-content:center;
-  transition:all .2s ease;flex-shrink:0;padding:0;margin-left:8px;font-weight:800;
-}
-.btn-clear.visible{display:flex;}
-.btn-clear:hover{
-  background:var(--rojo);color:#fff;transform:rotate(90deg) scale(1.1);
-  box-shadow:0 0 12px var(--rojo-glow);
-}
+  /* HEADER ORBITAL */
+  .header{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(180deg,rgba(6,10,20,.88),rgba(4,6,13,.72));
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--borde);
+    padding:14px 22px;
+    overflow:hidden;
+    transition:background .4s ease;
+  }
+  body.light .header{
+    background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(238,244,251,.78));
+  }
+  .header::after{
+    content:"";position:absolute;bottom:0;left:0;height:1px;width:100%;
+    background:linear-gradient(90deg,transparent,var(--cian),var(--magenta),var(--violeta),transparent);
+    background-size:200% 100%;
+    animation:borderFlow 4s linear infinite;
+    box-shadow:0 0 12px var(--cian-glow);
+  }
+  @keyframes borderFlow{from{background-position:200% 0;}to{background-position:-200% 0;}}
 
-/* ============================================================
-   [09] LISTAS Y TARJETAS
-   ============================================================ */
-.list-title{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 0;margin-bottom:14px;border-bottom:2px solid var(--borde-fuerte);
-  font-size:11px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;
-}
-.list-count{
-  background:var(--bg-terminal);border:1px solid var(--ambar);
-  color:var(--ambar);padding:4px 14px;border-radius:4px;
-  font-family:var(--mono);font-weight:800;
-  box-shadow:inset 0 0 8px rgba(232,169,58,.15);
-}
-.resp-card{
-  position:relative;background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
-  border:1px solid var(--borde);border-left:4px solid var(--ambar);
-  border-radius:8px;padding:18px 22px;margin-bottom:12px;cursor:pointer;
-  transition:all .2s ease;overflow:hidden;
-  display:flex;align-items:center;justify-content:space-between;gap:16px;
-  box-shadow:var(--sombra-panel);
-}
-.resp-card::before{
-  content:"";position:absolute;top:0;right:0;width:80px;height:100%;
-  background:linear-gradient(90deg, transparent, rgba(232,169,58,.04));
-  pointer-events:none;
-}
-.resp-card:hover{
-  transform:translateX(6px);border-color:var(--ambar);
-  border-left-color:var(--verde);
-  box-shadow:var(--sombra-elevado), 0 0 24px var(--ambar-glow);
-}
-.resp-card:active{transform:translateX(3px);}
-.resp-card-info{flex:1;min-width:0;position:relative;z-index:1;}
-.resp-card-name{font-size:15px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:8px;transition:color .2s ease;}
-.resp-card:hover .resp-card-name{color:var(--ambar-brillante);}
-.resp-card-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--texto-suave);font-family:var(--mono);}
-.resp-card-arrow{font-size:28px;color:var(--texto-muy-suave);transition:all .3s ease;flex-shrink:0;}
-.resp-card:hover .resp-card-arrow{color:var(--ambar);transform:translateX(8px);}
-.bien-card{
-  position:relative;background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
-  border:1px solid var(--borde);border-left:4px solid var(--verde);
-  border-radius:8px;padding:16px 20px;margin-bottom:12px;cursor:pointer;
-  transition:all .2s ease;display:flex;gap:16px;align-items:flex-start;
-  box-shadow:var(--sombra-panel);
-}
-.bien-card:hover{
-  transform:translateX(6px);border-color:var(--verde);border-left-color:var(--ambar);
-  box-shadow:var(--sombra-elevado), 0 0 24px var(--verde-glow);
-}
-.bien-card-thumb{
-  width:64px;height:64px;background:var(--bg-terminal);
-  border:1px solid var(--borde-fuerte);border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:var(--texto-muy-suave);flex-shrink:0;overflow:hidden;
-}
-.bien-card-thumb img{width:100%;height:100%;object-fit:cover;}
-.bien-card-info{flex:1;min-width:0;}
-.bien-card-code{font-family:var(--mono);font-size:11px;color:var(--ambar);font-weight:700;letter-spacing:1.5px;margin-bottom:5px;text-transform:uppercase;}
-.bien-card-desc{font-size:13px;font-weight:600;color:var(--texto);line-height:1.4;margin-bottom:8px;}
-.bien-card-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:10px;font-family:var(--mono);color:var(--texto-suave);}
-.bien-card-tipo{
-  padding:3px 10px;font-size:9px;font-weight:800;letter-spacing:1.5px;
-  text-transform:uppercase;border-radius:3px;background:var(--bg-terminal);
-  border:1px solid var(--borde);
-}
-.bien-card-tipo.fijos{color:var(--verde);border-color:var(--verde);}
-.bien-card-tipo.fungibles{color:var(--azul);border-color:var(--azul);}
-.bien-card-tipo.internos{color:var(--ambar);border-color:var(--ambar);}
-.bien-card-tipo.prestados{color:var(--rojo);border-color:var(--rojo);}
+  .header-content{
+    max-width:1280px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;gap:18px;
+  }
 
-/* ============================================================
-   [10] MODALES
-   ============================================================ */
-.modal-overlay{
-  position:fixed;inset:0;background:rgba(10,16,12,.85);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  z-index:100;display:none;align-items:center;justify-content:center;
-  padding:20px;overflow-y:auto;
-}
-body.light .modal-overlay{background:rgba(20,30,20,.4);}
-.modal-overlay.visible{display:flex;}
-.modal{
-  background:var(--bg-panel);border:2px solid var(--borde-fuerte);border-radius:12px;
-  max-width:780px;width:100%;max-height:92vh;overflow:hidden;
-  display:flex;flex-direction:column;
-  box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4);
-  position:relative;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
-}
-@keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
-.modal::before{
-  content:"";position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg, var(--ambar) 0%, var(--verde) 50%, var(--ambar) 100%);
-  z-index:1;
-}
-.modal-form{max-width:740px;}
-.modal-vista{max-width:980px;}
-.modal-header{
-  padding:18px 24px;border-bottom:2px solid var(--borde);
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  background:linear-gradient(180deg, var(--bg-elevado), var(--bg-panel));
-}
-.modal-header h2{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--texto);font-weight:700;flex:1;min-width:0;word-break:break-word;}
-.modal-close{
-  width:34px;height:34px;background:var(--gris-metal);
-  border:1px solid var(--borde-fuerte);border-radius:6px;
-  color:var(--texto-suave);cursor:pointer;font-size:18px;
-  display:flex;align-items:center;justify-content:center;
-  transition:all .2s ease;flex-shrink:0;
-}
-.modal-close:hover{
-  background:var(--rojo);border-color:var(--rojo-brillante);color:white;
-  transform:rotate(90deg);box-shadow:0 0 16px var(--rojo-glow);
-}
-.modal-body{padding:22px 24px;overflow-y:auto;flex:1;min-height:200px;}
+  .header-logo{display:flex;align-items:center;gap:14px;}
 
-/* ============================================================
-   [11] BOTONES ACCIÓN
-   ============================================================ */
-.btn-nav{
-  display:inline-flex;align-items:center;gap:8px;
-  background:linear-gradient(180deg, var(--gris-metal-claro), var(--gris-metal));
-  color:var(--texto);border:1px solid var(--borde-fuerte);border-radius:6px;
-  padding:10px 18px;font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;font-weight:700;transition:all .15s ease;margin-bottom:16px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.25);
-}
-.btn-nav:hover{
-  background:linear-gradient(180deg, var(--ambar), #c68a1a);
-  color:var(--bg-terminal);transform:translateY(-1px);
-  box-shadow:0 4px 12px var(--ambar-glow);
-}
-.btn-nav:active{transform:translateY(1px);}
-.btn-imprimir{
-  background:linear-gradient(180deg, var(--verde-brillante), var(--verde));
-  color:var(--bg-terminal);border:none;border-radius:6px;
-  padding:12px 22px;font-size:11px;font-weight:800;letter-spacing:2px;
-  cursor:pointer;display:inline-flex;align-items:center;gap:8px;
-  transition:all .15s ease;text-transform:uppercase;margin-bottom:16px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.25);
-}
-.btn-imprimir:hover{
-  transform:translateY(-2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px var(--verde-glow);
-}
-.btn-imprimir:active{transform:translateY(0);}
-.modal-titulo-seccion{
-  text-align:center;padding:10px 0 18px;font-size:10px;
-  letter-spacing:3px;text-transform:uppercase;color:var(--texto-suave);
-  font-weight:700;border-bottom:1px solid var(--borde);margin-bottom:18px;
-}
+  .orbital-hud{
+    position:relative;width:52px;height:52px;flex-shrink:0;
+  }
+  .orbital-hud .ring{
+    position:absolute;inset:0;border:1.5px solid var(--cian);
+    border-radius:50%;
+    border-top-color:transparent;border-left-color:var(--magenta);
+    animation:orbitSpin 4s linear infinite;
+    box-shadow:0 0 18px var(--cian-glow),inset 0 0 12px rgba(34,211,238,.25);
+  }
+  .orbital-hud .ring:nth-child(2){
+    inset:8px;border-color:var(--violeta);
+    border-bottom-color:transparent;border-right-color:transparent;
+    animation:orbitSpin 3s linear infinite reverse;
+    box-shadow:0 0 12px var(--violeta-glow);
+  }
+  .orbital-hud .core{
+    position:absolute;inset:18px;
+    background:radial-gradient(circle,var(--cian-brillante),var(--violeta));
+    border-radius:50%;
+    box-shadow:0 0 20px var(--cian-glow),0 0 30px var(--violeta-glow);
+    animation:pulseCore 2s ease-in-out infinite;
+  }
+  @keyframes orbitSpin{to{transform:rotate(360deg);}}
+  @keyframes pulseCore{0%,100%{opacity:.85;transform:scale(1);}50%{opacity:1;transform:scale(1.1);}}
 
-/* ============================================================
-   [12] OFICINAS
-   ============================================================ */
-.oficina-card{
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  background:linear-gradient(180deg, var(--bg-card), var(--bg-panel));
-  border:1px solid var(--borde);border-left:4px solid var(--azul);
-  border-radius:6px;padding:16px 18px;margin-bottom:12px;
-  cursor:pointer;transition:all .2s ease;
-}
-.oficina-card:hover{
-  border-color:var(--azul);border-left-color:var(--ambar);
-  background:var(--bg-hover);box-shadow:var(--sombra-panel), 0 0 20px var(--azul-glow);
-  transform:translateX(4px);
-}
-.oficina-card-info{flex:1;min-width:0;}
-.oficina-card-nombre{font-size:13px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:5px;}
-.oficina-card-id{font-family:var(--mono);font-size:10px;color:var(--azul);letter-spacing:1.5px;}
-.oficina-card-count{
-  background:var(--bg-terminal);border:1px solid var(--azul);
-  color:var(--azul);border-radius:4px;padding:8px 16px;
-  font-size:14px;font-weight:800;flex-shrink:0;
-  box-shadow:inset 0 0 8px rgba(74,158,255,.15);
-}
+  .header-text h1{
+    font-family:var(--display);
+    font-size:15px;font-weight:900;letter-spacing:3px;text-transform:uppercase;
+    background:linear-gradient(90deg,var(--cian-brillante),var(--magenta-brillante),var(--violeta));
+    background-size:200% 100%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+    animation:hueShift 6s linear infinite;
+  }
+  .header-text .subtitle{
+    font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+    color:var(--texto-suave);text-transform:uppercase;margin-top:2px;
+  }
+  @keyframes hueShift{from{background-position:0% 50%;}to{background-position:200% 50%;}}
 
-/* ============================================================
-   [13] FORMULARIO
-   ============================================================ */
-.form-persona{
-  background:var(--bg-elevado);border:1px solid var(--borde);
-  border-left:4px solid var(--ambar);border-radius:6px;
-  padding:14px 16px;margin-bottom:14px;
-}
-.form-persona-titulo{
-  font-size:10px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--ambar);font-weight:800;margin-bottom:12px;
-  display:flex;justify-content:space-between;align-items:center;
-}
-.form-persona-titulo .num{
-  background:var(--ambar);color:var(--bg-terminal);
-  width:22px;height:22px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:900;box-shadow:0 0 12px var(--ambar-glow);
-}
-.form-grid{display:grid;grid-template-columns:1fr 2fr 1.2fr 1.2fr;gap:10px;margin-bottom:10px;}
-.form-grid .form-group{margin-bottom:0;}
-.form-group label{
-  display:block;font-family:var(--mono);font-size:9px;
-  letter-spacing:1.8px;text-transform:uppercase;
-  color:var(--texto-suave);font-weight:700;margin-bottom:6px;
-}
-.form-group input{
-  width:100%;padding:10px 12px;background:var(--bg-terminal);
-  border:1px solid var(--borde-fuerte);border-radius:4px;
-  color:var(--texto);font-family:var(--mono);font-size:13px;
-  outline:none;transition:all .2s ease;
-  box-shadow:inset 0 2px 4px rgba(0,0,0,.25);
-}
-.form-group input:focus{
-  border-color:var(--ambar);
-  box-shadow:inset 0 2px 4px rgba(0,0,0,.25), 0 0 0 3px var(--ambar-glow);
-}
-.form-group input::placeholder{color:var(--texto-muy-suave);}
-.form-persona .form-grid{grid-template-columns:1fr 1.5fr 1fr 1fr;}
-.form-actions{
-  display:flex;gap:12px;justify-content:flex-end;
-  margin-top:22px;padding-top:18px;border-top:1px solid var(--borde);
-}
-.btn-cancelar{
-  background:transparent;color:var(--texto-suave);
-  border:1px solid var(--borde-fuerte);border-radius:6px;
-  padding:11px 20px;font-size:11px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;transition:all .2s ease;
-}
-.btn-cancelar:hover{background:var(--gris-metal);color:var(--texto);border-color:var(--texto-suave);}
-.btn-confirmar{
-  background:linear-gradient(180deg, var(--ambar-brillante), var(--ambar));
-  color:var(--bg-terminal);border:none;border-radius:6px;
-  padding:11px 24px;font-size:11px;font-weight:900;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;transition:all .15s ease;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.25);
-}
-.btn-confirmar:hover{
-  transform:translateY(-2px);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px var(--ambar-glow);
-}
-.btn-confirmar:active{transform:translateY(0);}
-@media (max-width:600px){
-  .form-grid, .form-persona .form-grid{grid-template-columns:1fr 1fr;}
-  .form-grid .form-group.ancho-completo{grid-column:1 / -1;}
-}
+  .header-actions{display:flex;align-items:center;gap:10px;}
 
-/* ============================================================
-   [14] TABLAS EN APP
-   ============================================================ */
-.tabla-section{
-  margin-bottom:22px;background:var(--bg-panel);
-  border:1px solid var(--borde);border-radius:8px;
-  overflow:hidden;box-shadow:var(--sombra-panel);
-}
-.tabla-header{
-  padding:12px 18px;background:linear-gradient(180deg, var(--bg-elevado), var(--bg-panel));
-  border-bottom:2px solid var(--borde);
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-}
-.tabla-header-titulo{
-  display:flex;align-items:center;gap:10px;font-size:11px;
-  letter-spacing:2px;text-transform:uppercase;color:var(--texto);font-weight:700;
-}
-.tabla-header-titulo .dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--color,var(--ambar));box-shadow:0 0 10px var(--color,var(--ambar));
-}
-.tabla-header[data-color="verde"]{--color:var(--verde);}
-.tabla-header[data-color="azul"]{--color:var(--azul);}
-.tabla-header[data-color="marron"]{--color:var(--ambar);}
-.tabla-header[data-color="vino"]{--color:var(--rojo);}
-.tabla-header-count{
-  font-family:var(--mono);font-size:12px;color:var(--ambar);font-weight:800;
-  background:var(--bg-terminal);border:1px solid var(--ambar);
-  border-radius:4px;padding:3px 12px;
-}
-.tabla-scroll{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;font-size:11px;font-family:Arial,sans-serif;min-width:400px;}
-thead th{
-  background:var(--bg-terminal);color:var(--texto-suave);text-align:left;
-  padding:11px 12px;font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;font-weight:700;border-bottom:2px solid var(--borde-fuerte);
-}
-tbody td{
-  padding:11px 12px;border-bottom:1px solid var(--borde);
-  color:var(--texto);vertical-align:top;word-break:break-word;
-  font-family:Arial,sans-serif;font-size:11px;
-}
-tbody tr{cursor:pointer;transition:all .15s ease;}
-tbody tr:nth-child(even){background:rgba(255,255,255,.02);}
-body.light tbody tr:nth-child(even){background:rgba(0,0,0,.015);}
-tbody tr:hover{background:var(--bg-hover);}
-tbody tr:active{background:var(--gris-metal);}
+  .btn-icon{
+    width:42px;height:42px;
+    background:var(--bg-elevado);
+    border:1px solid var(--borde);
+    border-radius:var(--radio-sm);
+    font-size:18px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .3s cubic-bezier(.34,1.56,.64,1);
+    flex-shrink:0;color:var(--texto);
+    position:relative;overflow:hidden;
+  }
+  .btn-icon.cyan{color:var(--cian);}
+  .btn-icon.magenta{color:var(--magenta);}
+  .btn-icon.cyan:hover{
+    background:var(--cian);color:var(--bg);
+    border-color:var(--cian-brillante);
+    box-shadow:0 0 25px var(--cian-glow);
+    transform:translateY(-2px) scale(1.05);
+  }
+  .btn-icon.magenta:hover{
+    background:var(--magenta);color:var(--bg);
+    border-color:var(--magenta-brillante);
+    box-shadow:0 0 25px var(--magenta-glow);
+    transform:rotate(180deg) scale(1.05);
+  }
+  .btn-icon.spinning{animation:spin 1s linear infinite;}
+  @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
 
-/* ============================================================
-   [15] BADGES
-   ============================================================ */
-.estado-badge{
-  display:inline-block;padding:4px 12px;font-family:var(--mono);
-  font-size:10px;font-weight:800;letter-spacing:1.2px;
-  text-transform:uppercase;border-radius:3px;border:1px solid;
-}
-.estado-regular{color:var(--ambar);border-color:var(--ambar);background:rgba(232,169,58,.08);}
-.estado-malo{color:var(--rojo);border-color:var(--rojo);background:rgba(214,69,69,.08);}
-.estado-bueno{color:var(--verde);border-color:var(--verde);background:rgba(124,179,66,.08);}
-.estado-pendiente{
-  color:var(--rojo);border-color:var(--rojo);background:rgba(214,69,69,.15);
-  animation:blink 1.5s ease-in-out infinite;
-}
+  .header-status{
+    display:flex;align-items:center;gap:8px;
+    padding:7px 14px;
+    background:rgba(34,211,238,.08);
+    border:1px solid rgba(34,211,238,.35);
+    border-radius:20px;
+    font-size:10px;font-family:var(--mono);
+    color:var(--cian-brillante);letter-spacing:1.5px;
+    text-transform:uppercase;font-weight:700;
+  }
+  .status-dot{
+    width:7px;height:7px;
+    background:var(--verde);
+    border-radius:50%;
+    box-shadow:0 0 10px var(--verde);
+    animation:blink 2s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.35;}}
 
-/* ============================================================
-   [16] ENCABEZADO OFICINA
-   ============================================================ */
-.oficina-encabezado{
-  background:linear-gradient(135deg, var(--bg-elevado), var(--bg-panel));
-  border:1px solid var(--borde);border-left:4px solid var(--ambar);
-  border-radius:6px;padding:16px 18px;margin-bottom:20px;
-  display:flex;justify-content:space-between;align-items:center;gap:12px;
-  box-shadow:var(--sombra-panel);
-}
-.oficina-encabezado-nombre{font-size:14px;font-weight:800;color:var(--texto);margin-bottom:5px;}
-.oficina-encabezado-sub{font-family:var(--mono);font-size:10px;color:var(--ambar-brillante);letter-spacing:1.5px;text-transform:uppercase;}
-.oficina-encabezado-count{
-  background:var(--bg-terminal);border:1px solid var(--ambar);
-  color:var(--ambar);border-radius:4px;padding:8px 16px;
-  font-size:14px;font-weight:800;flex-shrink:0;
-  box-shadow:inset 0 0 8px rgba(232,169,58,.15);
-}
+  .main{flex:1;padding:24px 22px;max-width:1280px;margin:0 auto;width:100%;}
 
-/* ============================================================
-   [17] DETALLE BIEN
-   ============================================================ */
-.bien-detalle{
-  background:var(--bg-panel);border:1px solid var(--borde);
-  border-radius:10px;overflow:hidden;box-shadow:var(--sombra-panel);
-}
-.bien-detalle-header{
-  padding:22px;background:linear-gradient(135deg, var(--bg-elevado), var(--bg-panel));
-  border-bottom:3px solid var(--ambar);display:flex;gap:18px;align-items:flex-start;
-}
-.bien-detalle-foto{
-  width:92px;height:92px;background:var(--bg-terminal);
-  border:2px solid var(--ambar);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:34px;color:var(--ambar);flex-shrink:0;overflow:hidden;cursor:pointer;
-  transition:all .3s ease;box-shadow:0 0 20px var(--ambar-glow);
-}
-.bien-detalle-foto:hover{box-shadow:0 0 30px var(--ambar-glow);transform:scale(1.03);}
-.bien-detalle-foto img{width:100%;height:100%;object-fit:cover;}
-.bien-detalle-codigo{font-family:var(--mono);font-size:11px;color:var(--ambar);letter-spacing:2px;font-weight:800;text-transform:uppercase;margin-bottom:8px;}
-.bien-detalle-nombre{font-size:15px;font-weight:700;color:var(--texto);line-height:1.35;margin-bottom:10px;}
-.bien-detalle-tipo-badge{
-  display:inline-block;padding:4px 12px;font-size:9px;font-weight:800;
-  letter-spacing:1.8px;text-transform:uppercase;border-radius:3px;
-}
-.bien-detalle-tipo-badge.fijos{color:var(--verde);background:rgba(124,179,66,.1);border:1px solid var(--verde);}
-.bien-detalle-tipo-badge.fungibles{color:var(--azul);background:rgba(74,158,255,.1);border:1px solid var(--azul);}
-.bien-detalle-tipo-badge.internos{color:var(--ambar);background:rgba(232,169,58,.1);border:1px solid var(--ambar);}
-.bien-detalle-tipo-badge.prestados{color:var(--rojo);background:rgba(214,69,69,.1);border:1px solid var(--rojo);}
-.bien-detalle-campos{padding:0;}
-.bien-detalle-campo{
-  display:flex;gap:16px;align-items:flex-start;padding:14px 22px;
-  border-bottom:1px solid var(--borde);
-}
-.bien-detalle-campo:last-child{border-bottom:none;}
-.bien-detalle-campo:nth-child(even){background:rgba(255,255,255,.02);}
-body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
-.bien-detalle-label{
-  flex:0 0 38%;font-family:var(--mono);font-size:10px;
-  letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
-  color:var(--texto-suave);padding-top:2px;
-}
-.bien-detalle-valor{flex:1;font-size:12px;color:var(--texto);line-height:1.4;word-break:break-word;}
-.bien-detalle-valor.vacio{color:var(--texto-muy-suave);font-style:italic;}
-.bien-detalle-valor.pendiente{color:var(--rojo);font-weight:800;text-transform:uppercase;}
+  /* HOME */
+  .home{display:flex;flex-direction:column;gap:16px;padding-top:18px;animation:fadeIn .5s ease both;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-/* ============================================================
-   [18] EMPTY / LOADING
-   ============================================================ */
-.empty-state{text-align:center;padding:70px 20px;color:var(--texto-suave);animation:fadeIn .6s ease both;}
-.empty-state-icon{
-  font-size:70px;margin-bottom:18px;opacity:.3;color:var(--ambar);
-  filter:drop-shadow(0 0 16px var(--ambar-glow));
-}
-.empty-state-title{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--texto);margin-bottom:10px;font-weight:700;}
-.empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
-.loading,.error{text-align:center;padding:40px;font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:700;}
-.loading{color:var(--ambar);}
-.error{color:var(--rojo);}
+  .home-hero{
+    text-align:center;padding:14px 0 8px;
+  }
+  .home-hero-title{
+    font-family:var(--display);
+    font-size:22px;font-weight:900;letter-spacing:5px;text-transform:uppercase;
+    background:linear-gradient(90deg,var(--cian-brillante),var(--violeta),var(--magenta-brillante));
+    background-size:200% 100%;
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;
+    animation:hueShift 8s linear infinite;
+    margin-bottom:6px;
+  }
+  .home-hero-sub{
+    font-family:var(--mono);font-size:10px;letter-spacing:3px;
+    color:var(--texto-suave);text-transform:uppercase;
+  }
 
-/* ============================================================
-   [19] FOOTER
-   ============================================================ */
-.footer{
-  text-align:center;padding:24px 22px;border-top:2px solid var(--borde);
-  font-size:9px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--texto-muy-suave);font-weight:700;margin-top:auto;
-  background:linear-gradient(0deg, var(--bg-terminal), transparent);
-  position:relative;
-}
-.footer::before{
-  content:"";position:absolute;top:0;left:50%;
-  transform:translateX(-50%);width:80px;height:2px;
-  background:var(--ambar);box-shadow:0 0 12px var(--ambar-glow);
-}
+  .home-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
 
-/* ============================================================
-   [20] LIGHTBOX / TOAST
-   ============================================================ */
-.lightbox{
-  position:fixed;inset:0;background:rgba(0,0,0,.96);
-  backdrop-filter:blur(10px);z-index:200;
-  display:none;align-items:center;justify-content:center;
-  padding:30px;cursor:zoom-out;
-}
-.lightbox.visible{display:flex;}
-.lightbox img{
-  max-width:100%;max-height:100%;border-radius:6px;
-  box-shadow:0 0 60px var(--ambar-glow);border:2px solid var(--ambar);
-  animation:lightboxIn .3s ease;
-}
-@keyframes lightboxIn{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
-.toast{
-  position:fixed;top:90px;left:50%;
-  transform:translateX(-50%) translateY(-20px);
-  background:var(--bg-panel);color:var(--texto);
-  border:2px solid var(--ambar);border-radius:8px;
-  padding:14px 24px;z-index:300;font-family:var(--mono);
-  font-size:12px;letter-spacing:1.5px;font-weight:700;
-  box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--ambar-glow);
-  opacity:0;pointer-events:none;
-  transition:all .35s cubic-bezier(.34,1.56,.64,1);
-  display:flex;align-items:center;gap:12px;max-width:90vw;
-}
-.toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.success{border-color:var(--verde);box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--verde-glow);}
-.toast.error{border-color:var(--rojo);box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--rojo-glow);}
-.toast.info{border-color:var(--azul);}
-.toast-icon{font-size:16px;}
+  .home-btn{
+    position:relative;
+    background:var(--bg-panel);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    padding:24px 16px;
+    cursor:pointer;
+    transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    overflow:hidden;text-align:center;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    color:var(--texto);
+  }
+  .home-btn::before{
+    content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+    background:conic-gradient(from 0deg,transparent 0deg,var(--color,var(--cian)) 40deg,transparent 80deg);
+    opacity:0;transition:opacity .4s ease;
+    animation:conicSpin 4s linear infinite;
+  }
+  .home-btn:hover::before{opacity:.15;}
+  @keyframes conicSpin{to{transform:rotate(360deg);}}
 
-/* ============================================================
-   [21] VISTA PREVIA DEL ACTA
-   ============================================================ */
-.preview-acta-wrap{
-  background:#fff;color:#000;padding:30px 40px;
-  font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
-  box-shadow:0 0 0 1px #ccc inset;max-height:65vh;overflow-y:auto;
-}
-.preview-acta-wrap, .preview-acta-wrap *{color:#000;}
-.preview-actions{
-  padding:16px 22px;border-top:2px solid var(--borde);
-  display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;
-  background:var(--bg-panel);
-}
-.btn-preview{
-  background:linear-gradient(180deg, var(--gris-metal-claro), var(--gris-metal));
-  color:var(--texto);border:1px solid var(--borde-fuerte);border-radius:6px;
-  padding:11px 18px;font-size:11px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;transition:all .15s ease;
-  display:inline-flex;align-items:center;gap:8px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.25);
-}
-.btn-preview:hover{
-  background:linear-gradient(180deg, var(--ambar), #c68a1a);
-  color:var(--bg-terminal);transform:translateY(-1px);
-  box-shadow:0 4px 12px var(--ambar-glow);
-}
-.btn-preview:active{transform:translateY(1px);}
-.btn-preview.primary{
-  background:linear-gradient(180deg, var(--ambar-brillante), var(--ambar));
-  color:var(--bg-terminal);border-color:transparent;font-weight:900;
-}
-.btn-preview.primary:hover{box-shadow:0 6px 16px var(--ambar-glow);}
-.btn-preview.green{
-  background:linear-gradient(180deg, var(--verde-brillante), var(--verde));
-  color:var(--bg-terminal);border-color:transparent;font-weight:900;
-}
-.btn-preview.green:hover{box-shadow:0 6px 16px var(--verde-glow);}
-.btn-preview:disabled{
-  opacity:.5;cursor:not-allowed;transform:none;
-}
+  .home-btn:hover{
+    transform:translateY(-6px);
+    border-color:var(--color,var(--cian));
+    box-shadow:
+      0 14px 40px rgba(0,0,0,.5),
+      0 0 30px color-mix(in srgb,var(--color,var(--cian)) 40%,transparent);
+  }
+  .home-btn[data-color="verde"]{--color:var(--verde);}
+  .home-btn[data-color="azul"]{--color:var(--cian);}
+  .home-btn[data-color="marron"]{--color:var(--naranja);}
+  .home-btn[data-color="vino"]{--color:var(--magenta);}
+  .home-btn[data-color="buscar"]{--color:var(--violeta);}
 
-/* ============================================================
-   [22] CONTENEDOR DE MEDICIÓN DEL ACTA
-   ============================================================ */
-.acta-medicion{
-  position:absolute;left:-99999px;top:0;
-  visibility:hidden;pointer-events:none;
-  width:21.59cm;padding:0;margin:0;
-  font-family:Arial, sans-serif;
-  font-size:11pt;line-height:1.0;color:#000;background:#fff;
-}
+  .home-btn-icon{
+    font-size:34px;color:var(--color,var(--cian));
+    filter:drop-shadow(0 0 10px color-mix(in srgb,var(--color,var(--cian)) 60%,transparent));
+    position:relative;z-index:1;
+  }
+  .home-btn-label{
+    font-family:var(--display);
+    font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--texto-suave);font-weight:700;
+    position:relative;z-index:1;
+  }
+  .home-btn-count{
+    font-family:var(--mono);
+    font-size:28px;font-weight:800;
+    color:var(--color,var(--cian));
+    position:relative;z-index:1;
+    text-shadow:0 0 15px color-mix(in srgb,var(--color,var(--cian)) 50%,transparent);
+  }
 
-/* ============================================================
-   [23] ACTA — ESTILOS COMPARTIDOS
-   ============================================================ */
-.acta-medicion .acta-membrete,
-.preview-acta-wrap .acta-membrete,
-.acta-render .acta-membrete{
-  font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;
-  line-height:1.0;margin:0 0 10pt 0;text-transform:uppercase;text-align:left;
-}
-.acta-membrete .linea1{padding-left:0;}
-.acta-membrete .linea2{padding-left:9pt;}
-.acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
+  .home-btn.buscar{
+    grid-column:span 4;
+    padding:22px;
+    background:linear-gradient(135deg,rgba(167,139,250,.10),rgba(34,211,238,.05));
+    flex-direction:row;justify-content:center;gap:16px;
+  }
+  .home-btn.buscar .home-btn-icon{font-size:28px;}
+  .home-btn.buscar .home-btn-label{
+    font-size:13px;letter-spacing:4px;color:var(--violeta);
+  }
 
-.acta-medicion .acta-titulo,
-.preview-acta-wrap .acta-titulo,
-.acta-render .acta-titulo{
-  font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;
-  text-align:center;text-transform:uppercase;
-  margin:0 0 10pt 0;line-height:1.1;
-}
-.acta-titulo .titulo-linea1{display:block;}
-.acta-titulo .titulo-linea2{display:block;}
+  /* MODO BÚSQUEDA */
+  .modo-busqueda{animation:fadeIn .35s ease both;display:flex;flex-direction:column;gap:16px;min-height:60vh;}
 
-.acta-medicion .acta-seccion,
-.preview-acta-wrap .acta-seccion,
-.acta-render .acta-seccion{margin-top:6pt;}
+  .modo-busqueda-top{display:flex;gap:12px;align-items:center;width:100%;min-width:0;}
 
-.acta-medicion .acta-seccion-titulo,
-.preview-acta-wrap .acta-seccion-titulo,
-.acta-render .acta-seccion-titulo{
-  font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;
-  text-transform:uppercase;margin:0 0 4pt 0;line-height:1.0;
-}
-.acta-seccion-titulo .subrayado{text-decoration:underline;}
+  .btn-volver{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--bg-elevado);
+    color:var(--cian);
+    border:1px solid var(--borde);
+    padding:12px 16px;
+    font-family:var(--display);
+    font-size:11px;letter-spacing:1.8px;text-transform:uppercase;
+    cursor:pointer;border-radius:var(--radio-sm);font-weight:700;
+    flex-shrink:0;transition:all .3s ease;white-space:nowrap;
+  }
+  .btn-volver:hover{
+    background:var(--cian);color:var(--bg);
+    border-color:var(--cian-brillante);
+    transform:translateX(-4px);
+    box-shadow:0 0 22px var(--cian-glow);
+  }
 
-.acta-medicion .acta-tabla,
-.preview-acta-wrap .acta-tabla,
-.acta-render .acta-tabla{
-  width:100%;border-collapse:collapse;
-  font-family:Arial,sans-serif;font-size:9pt;
-  margin-bottom:6pt;border:1px solid #000;
-}
-.acta-tabla th{
-  border:1px solid #000;padding:2pt 4pt;
-  text-align:center;font-weight:bold;
-  text-transform:uppercase;background:#fff;
-  font-size:9pt;line-height:1.0;
-}
-.acta-tabla td{
-  border:1px solid #000;padding:3pt 4pt;
-  font-size:9pt;vertical-align:top;line-height:1.15;
-}
-.acta-tabla td.center{text-align:center;}
-.acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
-.acta-tabla td.vacia{
-  text-align:center;padding:8pt 4pt;
-  font-style:italic;text-transform:uppercase;
-}
-.acta-medicion .acta-bloque-firmas,
-.preview-acta-wrap .acta-bloque-firmas,
-.acta-render .acta-bloque-firmas{margin-top:24pt;}
-.acta-medicion .acta-fecha-firmas,
-.preview-acta-wrap .acta-fecha-firmas,
-.acta-render .acta-fecha-firmas{
-  font-family:Arial,sans-serif;font-size:12pt;
-  text-align:right;margin:0 0 20pt 0;line-height:1.0;
-}
-.acta-medicion .acta-firmas,
-.preview-acta-wrap .acta-firmas,
-.acta-render .acta-firmas{
-  font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;
-}
-.acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
-.acta-firma-bloque-lado{flex:1;text-align:center;}
-.acta-firma-bloque{text-align:center;margin-bottom:26pt;}
-.acta-firma-rol{
-  font-weight:bold;text-transform:uppercase;
-  margin-bottom:32pt;font-size:12pt;text-align:center;line-height:1.0;
-}
-.acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;line-height:1.2;}
-.acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;line-height:1.0;}
-.acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
-.acta-medicion .acta-continuacion,
-.preview-acta-wrap .acta-continuacion,
-.acta-render .acta-continuacion{
-  font-family:Arial,sans-serif;font-size:8pt;
-  font-style:italic;font-weight:normal;text-align:center;
-  text-transform:uppercase;margin:20pt 0 4pt 0;
-  padding-top:8pt;border-top:1px solid #000;line-height:1.2;
-}
-.acta-medicion .acta-continuacion-resumen,
-.preview-acta-wrap .acta-continuacion-resumen,
-.acta-render .acta-continuacion-resumen{
-  font-family:Arial,sans-serif;font-size:8pt;
-  font-style:italic;font-weight:normal;text-align:center;
-  text-transform:uppercase;margin:0 0 20pt 0;
-  padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;
-}
+  .search-wrapper{flex:1;min-width:0;position:relative;}
 
-/* Contenedor de render para jsPDF */
-.acta-render{
-  position:fixed;
-  left:-99999px;
-  top:0;
-  width:215.9mm;
-  min-height:279.4mm;
-  padding:20mm 20mm 20mm 30mm;
-  background:#fff;
-  font-family:Arial, sans-serif;
-  font-size:11pt;
-  line-height:1.0;
-  color:#000;
-  box-sizing:border-box;
-}
+  .search-box{
+    display:flex;align-items:center;
+    background:var(--bg-panel);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    padding:4px 14px;
+    width:100%;min-width:0;
+    transition:all .3s ease;
+  }
+  .search-box:focus-within{
+    border-color:var(--cian);
+    box-shadow:
+      0 0 0 3px rgba(34,211,238,.12),
+      0 0 35px rgba(34,211,238,.25);
+  }
+  .search-icon{color:var(--cian);font-size:18px;margin-right:10px;flex-shrink:0;}
+  .search-input{
+    flex:1;min-width:0;
+    background:transparent;border:none;outline:none;
+    padding:14px 0;font-size:15px;
+    color:var(--texto);font-family:var(--sans);font-weight:500;
+    letter-spacing:.4px;width:100%;
+  }
+  .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:.3px;}
 
-/* ============================================================
-   [24] RESPONSIVE
-   ============================================================ */
-@media (max-width:600px){
-  .header-text h1{font-size:13px;letter-spacing:1.5px;}
-  .header-text .subtitle{display:none;}
-  .home-buttons{grid-template-columns:repeat(2,1fr);gap:12px;}
-  .home-btn{padding:20px 12px;}
-  .home-btn-icon{font-size:26px;}
-  .home-btn-count{font-size:24px;}
-  .home-btn.buscar{grid-column:span 2;padding:18px;}
-  .bien-detalle-foto{width:64px;height:64px;font-size:26px;}
-  .bien-detalle-label{flex:0 0 45%;}
-  .header-status{display:none;}
-  .btn-volver{padding:10px 12px;font-size:10px;letter-spacing:1px;gap:4px;}
-  .search-input{font-size:14px;padding:12px 0;}
-  .search-box{padding:4px 10px;}
-  .search-icon{font-size:16px;margin-right:8px;}
-  .preview-acta-wrap{padding:12px 8px;font-size:8pt;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-  .preview-acta-wrap .acta-membrete{font-size:7pt;}
-  .preview-acta-wrap .acta-titulo{font-size:11pt;margin-bottom:6pt;}
-  .preview-acta-wrap .acta-seccion-titulo{font-size:8pt;}
-  .preview-acta-wrap .acta-tabla{font-size:7pt;min-width:320px;}
-  .preview-acta-wrap .acta-tabla th,
-  .preview-acta-wrap .acta-tabla td{padding:1pt 2pt;font-size:7pt;}
-  .preview-acta-wrap .acta-fecha-firmas{font-size:9pt;margin-bottom:10pt;}
-  .preview-acta-wrap .acta-firmas{font-size:9pt;}
-  .preview-acta-wrap .acta-firmas-fila{gap:8pt;margin-bottom:14pt;}
-  .preview-acta-wrap .acta-firma-rol{font-size:9pt;margin-bottom:18pt;}
-  .preview-acta-wrap .acta-firma-nombre,
-  .preview-acta-wrap .acta-firma-cargo{font-size:9pt;}
-  .preview-acta-wrap .acta-vobo{font-size:9pt;margin-bottom:18pt;}
-  .preview-acta-wrap .acta-continuacion,
-  .preview-acta-wrap .acta-continuacion-resumen{font-size:6pt;margin:8pt 0 4pt 0;}
-  .modal-vista{max-width:100%;}
-  .preview-actions{flex-direction:column;padding:12px;}
-  .btn-preview{width:100%;justify-content:center;font-size:11px;padding:10px 14px;}
-}
+  .btn-clear{
+    background:transparent;border:none;color:var(--texto-muy-suave);
+    font-size:16px;cursor:pointer;width:32px;height:32px;
+    border-radius:50%;display:none;align-items:center;justify-content:center;
+    transition:all .25s ease;flex-shrink:0;padding:0;margin-left:8px;font-weight:800;
+  }
+  .btn-clear.visible{display:flex;}
+  .btn-clear:hover{
+    background:var(--rojo);color:#fff;
+    transform:rotate(90deg) scale(1.1);
+    box-shadow:0 0 15px var(--rojo-glow);
+  }
 
-/* ============================================================
-   [25] EFECTOS DE CLICK
-   ============================================================ */
-.click-ripple{
-  position:absolute;border-radius:50%;pointer-events:none;
-  transform:scale(0);animation:rippleAnim .6s cubic-bezier(.34,1.56,.64,1);z-index:1;
-}
-.click-ripple.cian{background:radial-gradient(circle,rgba(232,169,58,.6),rgba(232,169,58,0) 70%);}
-.click-ripple.magenta{background:radial-gradient(circle,rgba(124,179,66,.5),rgba(124,179,66,0) 70%);}
-@keyframes rippleAnim{0%{transform:scale(0);opacity:1;}100%{transform:scale(4);opacity:0;}}
-.click-flash{animation:clickFlash .45s ease-out;}
-@keyframes clickFlash{
-  0%{box-shadow:0 0 0 0 var(--ambar-glow);}
-  50%{box-shadow:0 0 20px 4px var(--ambar-glow), 0 0 35px 8px rgba(124,179,66,.2);}
-  100%{box-shadow:0 0 0 0 transparent;}
-}
-.click-shake{animation:clickShake .3s ease-out;}
-@keyframes clickShake{
-  0%,100%{transform:translateX(0);}
-  25%{transform:translateX(-3px);}
-  75%{transform:translateX(3px);}
-}
+  /* LISTAS */
+  .list-title{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 0;margin-bottom:14px;
+    border-bottom:1px solid var(--borde);
+    font-family:var(--display);
+    font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--texto-suave);font-weight:700;
+    animation:fadeIn .4s ease both;
+  }
+  .list-title .list-count{
+    background:var(--bg-panel);
+    border:1px solid var(--borde-fuerte);
+    color:var(--cian);
+    padding:4px 14px;border-radius:12px;
+    font-family:var(--mono);font-weight:800;
+    box-shadow:0 0 12px rgba(34,211,238,.2);
+  }
 
-/* Spinner de generación de PDF */
-.pdf-overlay{
-  position:fixed;inset:0;background:rgba(10,16,12,.92);
-  z-index:500;display:none;align-items:center;justify-content:center;
-  flex-direction:column;gap:20px;color:var(--texto);
-  font-family:var(--mono);letter-spacing:2px;
-}
-.pdf-overlay.visible{display:flex;}
-.pdf-spinner{
-  width:60px;height:60px;border:3px solid var(--borde-fuerte);
-  border-top-color:var(--ambar);border-radius:50%;
-  animation:spin 1s linear infinite;
-}
-.pdf-overlay-text{font-size:12px;text-transform:uppercase;}
-.pdf-overlay-sub{font-size:10px;color:var(--texto-suave);letter-spacing:3px;}
+  .resp-card{
+    position:relative;
+    background:var(--bg-panel);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    padding:18px 22px;margin-bottom:12px;
+    cursor:pointer;transition:all .4s cubic-bezier(.34,1.56,.64,1);
+    overflow:hidden;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+  }
+  .resp-card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,var(--cian),var(--magenta));
+    transform:scaleY(0);transform-origin:top;
+    transition:transform .4s ease;
+    box-shadow:0 0 12px var(--cian-glow);
+  }
+  .resp-card:hover{
+    transform:translateX(8px);
+    border-color:var(--cian);
+    background:var(--bg-elevado);
+    box-shadow:
+      var(--sombra-panel),
+      0 0 35px rgba(34,211,238,.2);
+  }
+  .resp-card:hover::before{transform:scaleY(1);}
+
+  .resp-card-info{flex:1;min-width:0;}
+  .resp-card-name{
+    font-size:15px;font-weight:700;color:var(--texto);
+    letter-spacing:.3px;margin-bottom:6px;transition:color .3s ease;
+  }
+  .resp-card:hover .resp-card-name{color:var(--cian-brillante);}
+
+  .resp-card-meta{
+    display:flex;flex-wrap:wrap;gap:12px;
+    font-size:11px;color:var(--texto-suave);font-family:var(--mono);
+  }
+  .resp-card-arrow{
+    font-size:26px;color:var(--texto-muy-suave);
+    transition:all .4s ease;flex-shrink:0;
+  }
+  .resp-card:hover .resp-card-arrow{
+    color:var(--cian);
+    transform:translateX(8px);
+  }
+
+  .bien-card{
+    position:relative;
+    background:var(--bg-panel);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    padding:16px 18px;margin-bottom:12px;
+    cursor:pointer;transition:all .4s ease;
+    display:flex;gap:14px;align-items:flex-start;
+  }
+  .bien-card:hover{
+    transform:translateX(8px);
+    border-color:var(--magenta);
+    background:var(--bg-elevado);
+    box-shadow:
+      var(--sombra-panel),
+      0 0 35px rgba(232,121,249,.2);
+  }
+  .bien-card-thumb{
+    width:56px;height:56px;
+    background:var(--bg-elevado);
+    border:1px solid var(--borde);
+    border-radius:var(--radio-sm);
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;color:var(--texto-muy-suave);
+    flex-shrink:0;overflow:hidden;
+  }
+  .bien-card-thumb img{width:100%;height:100%;object-fit:cover;}
+  .bien-card-info{flex:1;min-width:0;}
+  .bien-card-code{
+    font-family:var(--mono);font-size:11px;
+    color:var(--cian);font-weight:700;letter-spacing:1.2px;
+    margin-bottom:4px;text-transform:uppercase;
+  }
+  .bien-card-desc{
+    font-size:13px;font-weight:600;color:var(--texto);
+    line-height:1.35;margin-bottom:6px;
+  }
+  .bien-card-meta{
+    display:flex;flex-wrap:wrap;gap:8px;
+    font-size:10px;font-family:var(--mono);color:var(--texto-suave);
+  }
+  .bien-card-tipo{
+    padding:2px 8px;border-radius:10px;
+    font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+    background:var(--bg-elevado);border:1px solid var(--borde);
+  }
+  .bien-card-tipo.fijos{color:var(--verde);border-color:rgba(52,211,153,.5);}
+  .bien-card-tipo.fungibles{color:var(--cian);border-color:rgba(34,211,238,.5);}
+  .bien-card-tipo.internos{color:var(--naranja);border-color:rgba(251,146,60,.5);}
+  .bien-card-tipo.prestados{color:var(--magenta);border-color:rgba(232,121,249,.5);}
+
+  /* MODAL */
+  .modal-overlay{
+    position:fixed;inset:0;
+    background:rgba(2,4,10,.85);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    z-index:100;display:none;align-items:center;justify-content:center;
+    padding:20px;overflow-y:auto;
+  }
+  body.light .modal-overlay{background:rgba(20,40,80,.35);}
+  .modal-overlay.visible{display:flex;}
+
+  .modal{
+    background:var(--bg-panel);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--borde-fuerte);
+    border-radius:20px;
+    max-width:760px;width:100%;max-height:90vh;
+    overflow:hidden;display:flex;flex-direction:column;
+    box-shadow:
+      0 30px 90px rgba(0,0,0,.7),
+      0 0 60px rgba(34,211,238,.15);
+    animation:modalIn .35s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes modalIn{
+    from{opacity:0;transform:scale(.94) translateY(20px);}
+    to{opacity:1;transform:scale(1) translateY(0);}
+  }
+  .modal-form{max-width:720px;}
+  .modal-vista{max-width:960px;}
+
+  .modal-header{
+    padding:20px 24px;
+    border-bottom:1px solid var(--borde);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    background:linear-gradient(180deg,rgba(34,211,238,.06),transparent);
+  }
+  .modal-header h2{
+    font-family:var(--display);
+    font-size:13px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--texto);font-weight:700;flex:1;min-width:0;word-break:break-word;
+  }
+  .modal-close{
+    width:34px;height:34px;
+    background:transparent;
+    border:1px solid var(--borde);
+    color:var(--texto-suave);border-radius:var(--radio-sm);
+    cursor:pointer;font-size:18px;
+    display:flex;align-items:center;justify-content:center;
+    transition:all .3s ease;flex-shrink:0;
+  }
+  .modal-close:hover{
+    background:var(--rojo);border-color:var(--rojo);color:white;
+    transform:rotate(90deg);
+    box-shadow:0 0 20px var(--rojo-glow);
+  }
+  .modal-body{padding:22px 24px;overflow-y:auto;flex:1;min-height:200px;}
+
+  .btn-nav{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--bg-elevado);
+    color:var(--cian);
+    border:1px solid var(--borde);
+    padding:9px 16px;
+    font-family:var(--display);
+    font-size:10px;letter-spacing:1.8px;text-transform:uppercase;
+    cursor:pointer;border-radius:var(--radio-sm);
+    font-weight:700;transition:all .3s ease;
+    margin-bottom:16px;
+  }
+  .btn-nav:hover{
+    background:var(--cian);color:var(--bg);
+    border-color:var(--cian-brillante);
+    transform:translateX(-4px);
+    box-shadow:0 0 22px var(--cian-glow);
+  }
+
+  .modal-titulo-seccion{
+    text-align:center;padding:8px 0 16px;
+    font-family:var(--mono);
+    font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--texto-suave);font-weight:700;
+    border-bottom:1px solid var(--borde);margin-bottom:16px;
+  }
+
+  .oficina-card{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    background:var(--bg-elevado);
+    border:1px solid var(--borde);
+    border-left:3px solid var(--cian);
+    padding:14px 18px;margin-bottom:10px;
+    border-radius:var(--radio-sm);cursor:pointer;
+    transition:all .3s ease;
+  }
+  .oficina-card:hover{
+    border-color:var(--cian);
+    border-left-color:var(--magenta);
+    background:var(--bg-hover);
+    box-shadow:var(--sombra-panel),0 0 28px rgba(34,211,238,.2);
+    transform:translateX(6px);
+  }
+  .oficina-card-info{flex:1;min-width:0;}
+  .oficina-card-nombre{
+    font-size:13px;font-weight:700;color:var(--texto);
+    letter-spacing:.3px;margin-bottom:4px;
+  }
+  .oficina-card-id{
+    font-family:var(--mono);font-size:10px;
+    color:var(--cian);letter-spacing:1px;
+  }
+  .oficina-card-count{
+    background:rgba(34,211,238,.12);
+    border:1px solid var(--cian);
+    color:var(--cian-brillante);
+    padding:6px 14px;border-radius:14px;
+    font-size:13px;font-weight:800;font-family:var(--mono);
+    flex-shrink:0;
+    box-shadow:0 0 15px rgba(34,211,238,.25);
+  }
+
+  .btn-imprimir{
+    background:linear-gradient(135deg,var(--verde),#10b981);
+    color:#fff;border:none;
+    padding:11px 20px;border-radius:var(--radio-sm);
+    font-family:var(--display);
+    font-size:11px;font-weight:800;letter-spacing:1.5px;
+    cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+    transition:all .25s ease;text-transform:uppercase;
+    margin-bottom:16px;
+  }
+  .btn-imprimir:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 22px rgba(52,211,153,.5);
+  }
+
+  /* FORMULARIO */
+  .form-persona{
+    background:var(--bg-elevado);
+    border:1px solid var(--borde);
+    border-radius:var(--radio-sm);
+    padding:14px 16px;margin-bottom:12px;
+    position:relative;
+  }
+  .form-persona::before{
+    content:"";position:absolute;left:0;top:8px;bottom:8px;width:2px;
+    background:linear-gradient(180deg,var(--cian),var(--magenta));
+    border-radius:2px;
+  }
+  .form-persona-titulo{
+    font-family:var(--display);
+    font-size:10px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--cian-brillante);font-weight:800;margin-bottom:10px;
+    display:flex;justify-content:space-between;align-items:center;
+    padding-left:8px;
+  }
+  .form-persona-titulo .num{
+    background:linear-gradient(135deg,var(--cian),var(--violeta));
+    color:var(--bg);
+    width:20px;height:20px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-size:10px;font-weight:800;
+    box-shadow:0 0 12px var(--cian-glow);
+    margin-right:8px;
+  }
+
+  .form-grid{
+    display:grid;grid-template-columns:1fr 2fr 1.2fr 1.2fr;
+    gap:10px;margin-bottom:10px;
+  }
+  .form-grid .form-group{margin-bottom:0;}
+  .form-group label{
+    display:block;font-family:var(--mono);
+    font-size:9px;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--texto-suave);font-weight:800;margin-bottom:5px;
+  }
+  .form-group input{
+    width:100%;padding:10px 12px;
+    background:var(--bg-panel);
+    border:1px solid var(--borde);
+    border-radius:8px;color:var(--texto);
+    font-family:var(--sans);font-size:13px;
+    outline:none;transition:all .2s ease;
+  }
+  .form-group input:focus{
+    border-color:var(--cian);
+    box-shadow:0 0 0 3px rgba(34,211,238,.15),0 0 18px rgba(34,211,238,.25);
+  }
+  .form-group input::placeholder{color:var(--texto-muy-suave);}
+
+  .form-actions{
+    display:flex;gap:10px;justify-content:flex-end;
+    margin-top:22px;padding-top:18px;
+    border-top:1px solid var(--borde);
+  }
+  .btn-cancelar{
+    background:transparent;color:var(--texto-suave);
+    border:1px solid var(--borde);
+    padding:11px 20px;border-radius:var(--radio-sm);
+    font-family:var(--display);
+    font-size:11px;font-weight:700;letter-spacing:1.2px;
+    text-transform:uppercase;cursor:pointer;
+    transition:all .25s ease;
+  }
+  .btn-cancelar:hover{
+    background:var(--bg-elevado);color:var(--texto);
+    border-color:var(--texto-suave);
+  }
+  .btn-confirmar{
+    background:linear-gradient(135deg,var(--cian),var(--violeta));
+    color:#fff;border:none;
+    padding:11px 22px;border-radius:var(--radio-sm);
+    font-family:var(--display);
+    font-size:11px;font-weight:800;letter-spacing:1.5px;
+    text-transform:uppercase;cursor:pointer;
+    transition:all .25s ease;
+    box-shadow:0 0 22px var(--cian-glow);
+  }
+  .btn-confirmar:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px var(--cian-glow),0 0 30px var(--violeta-glow);
+  }
+
+  /* TABLAS APP */
+  .tabla-section{
+    margin-bottom:22px;
+    background:var(--bg-elevado);
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    overflow:hidden;
+  }
+  .tabla-header{
+    padding:14px 18px;
+    background:linear-gradient(180deg,rgba(34,211,238,.08),transparent);
+    border-bottom:1px solid var(--borde);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  .tabla-header-titulo{
+    display:flex;align-items:center;gap:10px;
+    font-family:var(--display);
+    font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--texto);font-weight:800;
+  }
+  .tabla-header-titulo .dot{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--color,var(--cian));
+    box-shadow:0 0 10px var(--color,var(--cian));
+  }
+  .tabla-header[data-color="verde"]{--color:var(--verde);}
+  .tabla-header[data-color="azul"]{--color:var(--cian);}
+  .tabla-header[data-color="marron"]{--color:var(--naranja);}
+  .tabla-header[data-color="vino"]{--color:var(--magenta);}
+  .tabla-header-count{
+    font-family:var(--mono);font-size:12px;
+    color:var(--cian);font-weight:800;
+    background:rgba(34,211,238,.12);
+    padding:3px 12px;border-radius:10px;
+    border:1px solid rgba(34,211,238,.35);
+  }
+  .tabla-scroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:11px;font-family:Arial,sans-serif;min-width:400px;}
+  thead th{
+    background:rgba(0,0,0,.25);
+    color:var(--texto-suave);text-align:left;
+    padding:10px 14px;font-size:10px;letter-spacing:1.2px;
+    text-transform:uppercase;font-weight:800;
+    border-bottom:1px solid var(--borde);font-family:Arial,sans-serif;
+  }
+  body.light thead th{background:rgba(20,80,180,.06);}
+  tbody td{
+    padding:10px 14px;
+    border-bottom:1px solid rgba(34,211,238,.08);
+    color:var(--texto);vertical-align:top;
+    word-break:break-word;font-family:Arial,sans-serif;font-size:11px;
+  }
+  body.light tbody td{border-bottom-color:rgba(20,80,180,.08);}
+  tbody tr{cursor:pointer;transition:all .2s ease;}
+  tbody tr:nth-child(even){background:rgba(0,0,0,.18);}
+  body.light tbody tr:nth-child(even){background:rgba(20,80,180,.03);}
+  tbody tr:hover{background:rgba(34,211,238,.10);}
+
+  .estado-badge{
+    display:inline-block;padding:3px 10px;border-radius:12px;
+    font-size:10px;font-weight:800;letter-spacing:1px;
+    text-transform:uppercase;border:1px solid;
+  }
+  .estado-regular{color:var(--ambar);border-color:rgba(251,191,36,.5);background:rgba(251,191,36,.1);}
+  .estado-malo{color:var(--rojo);border-color:rgba(251,113,133,.5);background:rgba(251,113,133,.1);}
+  .estado-bueno{color:var(--verde);border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.1);}
+  .estado-pendiente{
+    color:var(--rojo);border-color:rgba(251,113,133,.6);background:rgba(251,113,133,.15);
+    animation:blink 1.5s ease-in-out infinite;
+  }
+
+  .oficina-encabezado{
+    background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(232,121,249,.08));
+    border:1px solid var(--borde);
+    border-left:3px solid var(--cian);
+    border-radius:var(--radio-sm);
+    padding:16px 18px;margin-bottom:18px;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  .oficina-encabezado-nombre{font-size:14px;font-weight:800;color:var(--texto);margin-bottom:4px;}
+  .oficina-encabezado-sub{
+    font-family:var(--mono);font-size:10px;
+    color:var(--cian-brillante);letter-spacing:1.2px;text-transform:uppercase;
+  }
+  .oficina-encabezado-count{
+    background:rgba(34,211,238,.18);
+    border:1px solid var(--cian);
+    color:var(--cian-brillante);
+    padding:7px 16px;border-radius:14px;
+    font-size:13px;font-weight:800;font-family:var(--mono);
+    flex-shrink:0;
+    box-shadow:0 0 18px rgba(34,211,238,.3);
+  }
+
+  /* DETALLE DEL BIEN */
+  .bien-detalle{
+    background:var(--bg-elevado);
+    border:1px solid var(--borde);
+    border-radius:var(--radio);
+    overflow:hidden;
+  }
+  .bien-detalle-header{
+    padding:22px;
+    background:linear-gradient(135deg,rgba(34,211,238,.12),rgba(232,121,249,.06));
+    border-bottom:2px solid var(--cian);
+    display:flex;gap:18px;align-items:flex-start;
+  }
+  .bien-detalle-foto{
+    width:84px;height:84px;
+    background:var(--bg);
+    border:2px solid var(--cian);
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:32px;color:var(--cian);
+    flex-shrink:0;overflow:hidden;cursor:pointer;
+    transition:all .3s ease;
+    box-shadow:0 0 25px rgba(34,211,238,.35);
+  }
+  .bien-detalle-foto:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 35px rgba(34,211,238,.55);
+  }
+  .bien-detalle-foto img{width:100%;height:100%;object-fit:cover;}
+  .bien-detalle-codigo{
+    font-family:var(--mono);font-size:11px;
+    color:var(--cian);letter-spacing:2.5px;font-weight:800;
+    text-transform:uppercase;margin-bottom:6px;
+  }
+  .bien-detalle-nombre{
+    font-size:15px;font-weight:700;color:var(--texto);
+    line-height:1.35;margin-bottom:8px;
+  }
+  .bien-detalle-tipo-badge{
+    display:inline-block;padding:3px 12px;border-radius:12px;
+    font-size:9px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;
+  }
+  .bien-detalle-tipo-badge.fijos{color:var(--verde);background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);}
+  .bien-detalle-tipo-badge.fungibles{color:var(--cian);background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.4);}
+  .bien-detalle-tipo-badge.internos{color:var(--naranja);background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.4);}
+  .bien-detalle-tipo-badge.prestados{color:var(--magenta);background:rgba(232,121,249,.12);border:1px solid rgba(232,121,249,.4);}
+
+  .bien-detalle-campos{padding:0;}
+  .bien-detalle-campo{
+    display:flex;gap:16px;align-items:flex-start;
+    padding:12px 22px;
+    border-bottom:1px solid rgba(34,211,238,.08);
+  }
+  .bien-detalle-campo:last-child{border-bottom:none;}
+  .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.15);}
+  body.light .bien-detalle-campo:nth-child(even){background:rgba(20,80,180,.03);}
+  .bien-detalle-label{
+    flex:0 0 38%;font-family:var(--mono);
+    font-size:10px;letter-spacing:1.2px;text-transform:uppercase;
+    font-weight:800;color:var(--texto-suave);padding-top:2px;
+  }
+  .bien-detalle-valor{flex:1;font-size:12px;color:var(--texto);line-height:1.45;word-break:break-word;}
+  .bien-detalle-valor.vacio{color:var(--texto-muy-suave);font-style:italic;}
+  .bien-detalle-valor.pendiente{
+    color:var(--rojo);font-weight:800;text-transform:uppercase;
+  }
+
+  .empty-state{
+    text-align:center;padding:60px 20px;
+    color:var(--texto-suave);animation:fadeIn .6s ease both;
+  }
+  .empty-state-icon{font-size:64px;margin-bottom:16px;opacity:.35;}
+  .empty-state-title{
+    font-family:var(--display);
+    font-size:13px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--texto);margin-bottom:8px;font-weight:700;
+  }
+  .empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
+
+  .loading,.error{
+    text-align:center;padding:32px;
+    font-family:var(--display);
+    font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:800;
+  }
+  .loading{color:var(--cian);animation:blink 1.5s ease-in-out infinite;}
+  .error{color:var(--rojo);}
+
+  .footer{
+    text-align:center;padding:26px 20px;
+    border-top:1px solid var(--borde);
+    font-family:var(--mono);
+    font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+    color:var(--texto-muy-suave);font-weight:600;margin-top:auto;
+  }
+
+  .lightbox{
+    position:fixed;inset:0;background:rgba(0,0,0,.96);
+    backdrop-filter:blur(10px);
+    z-index:200;display:none;align-items:center;justify-content:center;
+    padding:30px;cursor:zoom-out;
+  }
+  .lightbox.visible{display:flex;}
+  .lightbox img{
+    max-width:100%;max-height:100%;border-radius:12px;
+    box-shadow:0 0 80px rgba(34,211,238,.4);
+  }
+
+  .toast{
+    position:fixed;top:90px;left:50%;
+    transform:translateX(-50%) translateY(-20px);
+    background:var(--bg-panel);
+    backdrop-filter:blur(16px);
+    color:var(--texto);
+    border:1px solid var(--cian);
+    border-radius:var(--radio);
+    padding:14px 24px;z-index:300;
+    font-size:12px;letter-spacing:1px;font-weight:700;
+    box-shadow:
+      0 12px 44px rgba(0,0,0,.55),
+      0 0 32px rgba(34,211,238,.25);
+    opacity:0;pointer-events:none;
+    transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    display:flex;align-items:center;gap:10px;max-width:90vw;
+  }
+  .toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
+  .toast.success{border-color:var(--verde);box-shadow:0 12px 44px rgba(0,0,0,.55),0 0 32px var(--verde-glow);}
+  .toast.error{border-color:var(--rojo);box-shadow:0 12px 44px rgba(0,0,0,.55),0 0 32px var(--rojo-glow);}
+  .toast.info{border-color:var(--cian);}
+  .toast-icon{font-size:16px;}
+
+  /* ACTA MEDICIÓN */
+  .acta-medicion{
+    position:absolute;left:-99999px;top:0;
+    visibility:hidden;pointer-events:none;
+    width: 21.59cm;padding: 0;margin: 0;
+    font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
+    color:#000;background:#fff;
+  }
+  .acta-medicion .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 8pt 0;text-transform:uppercase;text-align:left;}
+  .acta-medicion .acta-membrete .linea1{padding-left:0;}
+  .acta-medicion .acta-membrete .linea2{padding-left:9pt;}
+  .acta-medicion .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
+  .acta-medicion .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 8pt 0;line-height:1.1;}
+  .acta-medicion .acta-titulo .titulo-linea1{display:block;}
+  .acta-medicion .acta-titulo .titulo-linea2{display:block;}
+  .acta-medicion .acta-seccion{margin-top:8pt;}
+  .acta-medicion .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 3pt 0;line-height:1.0;}
+  .acta-medicion .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:4pt;border:1px solid #000;}
+  .acta-medicion .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;}
+  .acta-medicion .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
+  .acta-medicion .acta-tabla td.center{text-align:center;}
+  .acta-medicion .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
+  .acta-medicion .acta-tabla td.vacia{text-align:center;padding:8pt 4pt;font-style:italic;text-transform:uppercase;}
+  .acta-medicion .acta-bloque-firmas{margin-top:24pt;}
+  .acta-medicion .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;}
+  .acta-medicion .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
+  .acta-medicion .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
+  .acta-medicion .acta-firma-bloque-lado{flex:1;text-align:center;}
+  .acta-medicion .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
+  .acta-medicion .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;line-height:1.0;}
+  .acta-medicion .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;line-height:1.2;}
+  .acta-medicion .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;line-height:1.0;}
+  .acta-medicion .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
+  .acta-medicion .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
+  .acta-medicion .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
+
+  /* VISTA PREVIA */
+  .preview-acta-wrap{
+    background:#fff;color:#000;padding:30px 40px;
+    font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
+    box-shadow:0 0 0 1px #ccc inset;
+    max-height:65vh;overflow-y:auto;
+  }
+  .preview-acta-wrap, .preview-acta-wrap *{color:#000;}
+  .preview-acta-wrap .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 10pt 0;text-transform:uppercase;text-align:left;}
+  .preview-acta-wrap .acta-membrete .linea1{padding-left:0;}
+  .preview-acta-wrap .acta-membrete .linea2{padding-left:9pt;}
+  .preview-acta-wrap .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
+  .preview-acta-wrap .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.1;}
+  .preview-acta-wrap .acta-titulo .titulo-linea1{display:block;}
+  .preview-acta-wrap .acta-titulo .titulo-linea2{display:block;}
+  .preview-acta-wrap .acta-seccion{margin-top:10pt;}
+  .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;color:#000;}
+  .preview-acta-wrap .acta-seccion-titulo .subrayado{text-decoration:underline;}
+  .preview-acta-wrap .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;color:#000;}
+  .preview-acta-wrap .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
+  .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
+  .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
+  .preview-acta-wrap .acta-bloque-firmas{margin-top:24pt;}
+  .preview-acta-wrap .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
+  .preview-acta-wrap .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
+  .preview-acta-wrap .acta-firma-bloque-lado{flex:1;text-align:center;}
+  .preview-acta-wrap .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
+  .preview-acta-wrap .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;color:#000;}
+  .preview-acta-wrap .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;color:#000;}
+  .preview-acta-wrap .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;color:#000;}
+  .preview-acta-wrap .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;color:#000;}
+  .preview-acta-wrap .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;color:#000;line-height:1.2;}
+  .preview-acta-wrap .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;color:#000;line-height:1.2;}
+
+  .preview-acta-wrap .page-break-indicator{
+    display:block;height:24px;
+    background:repeating-linear-gradient(90deg,#d0d0d0 0px,#d0d0d0 8px,transparent 8px,transparent 16px);
+    margin:12px -40px;position:relative;
+    text-align:center;font-size:9pt;color:#666;
+    letter-spacing:1px;line-height:24px;
+  }
+  .preview-acta-wrap .page-break-indicator::before{
+    content:"▲ PÁGINA SIGUIENTE ▲";
+    background:#fff;padding:0 12px;font-weight:bold;font-size:8pt;
+  }
+
+  .preview-actions{
+    padding:16px 22px;border-top:1px solid var(--borde);
+    display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;
+    background:var(--bg-panel);
+  }
+  .btn-preview{
+    background:var(--bg-elevado);color:var(--texto);
+    border:1px solid var(--borde);
+    padding:11px 18px;border-radius:var(--radio-sm);
+    font-family:var(--display);
+    font-size:11px;font-weight:700;letter-spacing:1.2px;
+    text-transform:uppercase;cursor:pointer;
+    transition:all .2s ease;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .btn-preview:hover{background:var(--bg-hover);border-color:var(--borde-fuerte);}
+  .btn-preview.primary{
+    background:linear-gradient(135deg,var(--cian),var(--violeta));
+    color:#fff;border-color:transparent;
+    box-shadow:0 0 22px var(--cian-glow);
+  }
+  .btn-preview.primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px var(--cian-glow);
+  }
+  .btn-preview.green{
+    background:linear-gradient(135deg,var(--verde),#10b981);
+    color:#fff;border-color:transparent;
+  }
+  .btn-preview.green:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 24px rgba(52,211,153,.5);
+  }
+
+  /* ACTA PRINT */
+  .acta-print{display:none;}
+
+  @media print{
+    .starfield,.scanline,.app,.modal-overlay,.no-print,.toast,.lightbox,.acta-medicion{display:none !important;}
+    body{background:#fff !important;color:#000 !important;}
+    .acta-print{display:block !important;}
+
+    @page{size: letter portrait; margin: 2cm 2cm 2cm 3cm;}
+
+    .acta-print, .acta-print *{color:#000 !important;}
+
+    .acta-print{font-family: Arial, Helvetica, sans-serif;font-size: 11pt;line-height: 1.0;}
+
+    .acta-membrete{font-family: Arial, sans-serif;font-size: 10pt;font-weight: bold;line-height: 1.0;margin: 0 0 8pt 0;text-transform: uppercase;text-align: left;color:#000;}
+    .acta-membrete .linea1{text-align: left;padding-left: 0;}
+    .acta-membrete .linea2{text-align: left;padding-left: 9pt;}
+    .acta-membrete .linea3{text-align: left;padding-left: 75pt;text-decoration: underline;}
+
+    .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 8pt 0;line-height: 1.1;color:#000;}
+    .acta-titulo .titulo-linea1{display: block;}
+    .acta-titulo .titulo-linea2{display: block;}
+
+    .acta-seccion{margin-top: 8pt;}
+    .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;}
+    .acta-seccion-titulo .subrayado{text-decoration: underline;}
+
+    .acta-tabla{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 9pt;margin-bottom: 4pt;border: 1px solid #000;color:#000;}
+    .acta-tabla th{border: 1px solid #000;padding: 2pt 4pt;text-align: center;font-weight: bold;text-transform: uppercase;background: #fff;font-size: 9pt;line-height: 1.0;color:#000;}
+    .acta-tabla td{border: 1px solid #000;padding: 2pt 4pt;font-size: 9pt;vertical-align: top;line-height: 1.0;color:#000;}
+    .acta-tabla td.center{text-align: center;color:#000;}
+    .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
+    .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
+
+    .acta-tabla-fragmento{page-break-inside: auto;}
+    .acta-tabla-fragmento thead{display: table-header-group;}
+
+    .saltar-pagina{
+      page-break-before: always;
+      break-before: page;
+      display: block;
+      height: 0;
+    }
+
+    .acta-bloque-firmas{break-inside: avoid;page-break-inside: avoid;}
+    .acta-fecha-firmas{font-family: Arial, sans-serif;font-size: 12pt;text-align: right;margin: 0 0 20pt 0;line-height: 1.0;color:#000;}
+
+    .acta-continuacion{font-family: Arial, sans-serif;font-size: 8pt;font-style: italic;font-weight: normal;text-align: center;text-transform: uppercase;margin: 20pt 0 4pt 0;padding-top: 8pt;border-top: 1px solid #000;line-height: 1.2;color:#000;}
+    .acta-continuacion-resumen{font-family: Arial, sans-serif;font-size: 8pt;font-style: italic;font-weight: normal;text-align: center;text-transform: uppercase;margin: 0 0 20pt 0;padding-bottom: 8pt;border-bottom: 1px solid #000;line-height: 1.2;color:#000;}
+
+    .acta-firmas{font-family: Arial, sans-serif;font-size: 12pt;line-height: 1.0;}
+    .acta-firmas-fila{display: flex;justify-content: space-between;gap: 20pt;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
+    .acta-firma-bloque-lado{flex: 1;text-align: center;break-inside: avoid;page-break-inside: avoid;}
+    .acta-firma-bloque{text-align: center;margin-bottom: 26pt;break-inside: avoid;page-break-inside: avoid;}
+    .acta-firma-rol{font-weight: bold;text-transform: uppercase;margin-bottom: 32pt;font-size: 12pt;text-align: center;line-height: 1.0;color:#000;}
+    .acta-firma-nombre{font-weight: normal;text-transform: none;font-size: 12pt;margin-top: 4pt;line-height: 1.2;color:#000;}
+    .acta-firma-cargo{font-weight: bold;text-transform: uppercase;font-size: 12pt;margin-top: 2pt;line-height: 1.0;color:#000;}
+    .acta-vobo{font-weight: bold;margin-bottom: 32pt;text-align: center;font-size: 12pt;line-height: 1.0;color:#000;}
+  }
+
+  @media (max-width:600px){
+    .header-text h1{font-size:12px;letter-spacing:1.5px;}
+    .header-text .subtitle{font-size:8px;letter-spacing:1.5px;}
+    .orbital-hud{width:42px;height:42px;}
+    .orbital-hud .core{inset:15px;}
+    .home-hero-title{font-size:16px;letter-spacing:3px;}
+    .home-buttons{grid-template-columns:repeat(2,1fr);gap:10px;}
+    .home-btn{padding:18px 10px;}
+    .home-btn-icon{font-size:26px;}
+    .home-btn-count{font-size:22px;}
+    .home-btn.buscar{grid-column:span 2;padding:18px;}
+    .bien-detalle-foto{width:60px;height:60px;font-size:24px;}
+    .bien-detalle-label{flex:0 0 45%;}
+    .header-status{display:none;}
+    .btn-volver{padding:10px 10px;font-size:10px;letter-spacing:.8px;gap:4px;}
+    .search-input{font-size:14px;padding:12px 0;}
+    .search-box{padding:4px 10px;}
+    .search-icon{font-size:16px;margin-right:8px;}
+    .preview-acta-wrap{padding:20px 20px;font-size:10pt;}
+    .preview-actions{flex-direction:column;}
+    .btn-preview{width:100%;justify-content:center;}
+    .form-grid, .form-persona .form-grid{grid-template-columns:1fr 1fr;}
+    .form-grid .form-group.ancho-completo{grid-column:1 / -1;}
+  }
 </style>
 </head>
 <body>
 
-<div class="bg-layer"></div>
+<div class="starfield"></div>
 <div class="scanline"></div>
 
 <div class="app">
   <header class="header">
     <div class="header-content">
       <div class="header-logo">
-        <div class="header-logo-icon">◈</div>
+        <div class="orbital-hud">
+          <div class="ring"></div>
+          <div class="ring"></div>
+          <div class="core"></div>
+        </div>
         <div class="header-text">
-          <h1>CONTROL <span class="highlight">DIV-10</span></h1>
-          <div class="subtitle">SISTEMA DE INVENTARIO</div>
+          <h1>Control DIV-10</h1>
+          <div class="subtitle">Orbital System v5.0</div>
         </div>
       </div>
       <div class="header-actions">
-        <button class="btn-icon" id="btnReload" onclick="recargarDesdeNube()" title="Actualizar datos">⟳</button>
-        <button class="btn-icon" id="btnTheme" onclick="toggleTheme()" title="Cambiar tema (Ctrl+T)"><span id="themeIcon">◐</span></button>
+        <button class="btn-icon cyan" id="btnReload" onclick="recargarDesdeNube()" title="Actualizar datos">⟳</button>
+        <button class="btn-icon magenta" id="btnTheme" onclick="toggleTheme()" title="Cambiar tema (Ctrl+T)"><span id="themeIcon">◐</span></button>
         <div class="header-status">
           <div class="status-dot"></div>
           <span id="statusText">CARGANDO</span>
@@ -1068,9 +1225,10 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ SISTEMA DE CONTROL DIV-10 · V8.0 ◈</footer>
+  <footer class="footer">◈ DIV-10 · Orbital System · v5.0 ◈</footer>
 </div>
 
+<!-- MODAL PRINCIPAL -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
   <div class="modal">
     <div class="modal-header">
@@ -1081,6 +1239,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   </div>
 </div>
 
+<!-- MODAL ENTRANTE -->
 <div class="modal-overlay" id="modalEntrante" onclick="if(event.target===this)cerrarModalEntrante()">
   <div class="modal modal-form">
     <div class="modal-header">
@@ -1088,6 +1247,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
       <button class="modal-close" onclick="cerrarModalEntrante()">×</button>
     </div>
     <div class="modal-body">
+
       <div class="form-persona">
         <div class="form-persona-titulo"><span><span class="num">1</span> RESPONSABLE ENTRANTE</span></div>
         <div class="form-grid">
@@ -1104,39 +1264,39 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
       <div class="form-persona">
         <div class="form-persona-titulo"><span><span class="num">2</span> SUPERVISOR 1 (opcional)</span></div>
         <div class="form-grid">
-          <div class="form-group"><label>Grado</label><input type="text" id="sup1_grado" value="Cap. DIM." autocomplete="off"></div>
-          <div class="form-group"><label>Nombres</label><input type="text" id="sup1_nombres" value="Giorka Giovanna" autocomplete="off"></div>
-          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="sup1_appat" value="Corrales" autocomplete="off"></div>
-          <div class="form-group"><label>Ap. Materno</label><input type="text" id="sup1_apmat" value="Fernández" autocomplete="off"></div>
+          <div class="form-group"><label>Grado</label><input type="text" id="sup1_grado" autocomplete="off"></div>
+          <div class="form-group"><label>Nombres</label><input type="text" id="sup1_nombres" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="sup1_appat" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Materno</label><input type="text" id="sup1_apmat" autocomplete="off"></div>
         </div>
         <div class="form-grid" style="grid-template-columns:1fr;">
-          <div class="form-group"><label>Cargo</label><input type="text" id="sup1_cargo" value="ENCARGADO DE ACTIVOS FIJOS" autocomplete="off"></div>
+          <div class="form-group"><label>Cargo</label><input type="text" id="sup1_cargo" autocomplete="off"></div>
         </div>
       </div>
 
       <div class="form-persona">
         <div class="form-persona-titulo"><span><span class="num">3</span> SUPERVISOR 2 (opcional)</span></div>
         <div class="form-grid">
-          <div class="form-group"><label>Grado</label><input type="text" id="sup2_grado" value="Cnl. DAEN." autocomplete="off"></div>
-          <div class="form-group"><label>Nombres</label><input type="text" id="sup2_nombres" value="Edgar Gregorio" autocomplete="off"></div>
-          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="sup2_appat" value="Oquendo" autocomplete="off"></div>
-          <div class="form-group"><label>Ap. Materno</label><input type="text" id="sup2_apmat" value="Orosco" autocomplete="off"></div>
+          <div class="form-group"><label>Grado</label><input type="text" id="sup2_grado" autocomplete="off"></div>
+          <div class="form-group"><label>Nombres</label><input type="text" id="sup2_nombres" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="sup2_appat" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Materno</label><input type="text" id="sup2_apmat" autocomplete="off"></div>
         </div>
         <div class="form-grid" style="grid-template-columns:1fr;">
-          <div class="form-group"><label>Cargo</label><input type="text" id="sup2_cargo" value="JEFE DE LA SECCIÓN IV - LOGÍSTICA" autocomplete="off"></div>
+          <div class="form-group"><label>Cargo</label><input type="text" id="sup2_cargo" autocomplete="off"></div>
         </div>
       </div>
 
       <div class="form-persona">
         <div class="form-persona-titulo"><span><span class="num">4</span> Vo. Bo. — COMANDANTE</span></div>
         <div class="form-grid">
-          <div class="form-group"><label>Grado</label><input type="text" id="vobo_grado" value="Cnl. DAEN." autocomplete="off"></div>
-          <div class="form-group"><label>Nombres</label><input type="text" id="vobo_nombres" value="Boris Eiver" autocomplete="off"></div>
-          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="vobo_appat" value="Gutiérrez" autocomplete="off"></div>
-          <div class="form-group"><label>Ap. Materno</label><input type="text" id="vobo_apmat" value="Nava" autocomplete="off"></div>
+          <div class="form-group"><label>Grado</label><input type="text" id="vobo_grado" autocomplete="off"></div>
+          <div class="form-group"><label>Nombres</label><input type="text" id="vobo_nombres" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Paterno</label><input type="text" id="vobo_appat" autocomplete="off"></div>
+          <div class="form-group"><label>Ap. Materno</label><input type="text" id="vobo_apmat" autocomplete="off"></div>
         </div>
         <div class="form-grid" style="grid-template-columns:1fr;">
-          <div class="form-group"><label>Cargo</label><input type="text" id="vobo_cargo" value="COMANDANTE DE LA DÉCIMA DIVISIÓN DEL EJÉRCITO" autocomplete="off"></div>
+          <div class="form-group"><label>Cargo</label><input type="text" id="vobo_cargo" autocomplete="off"></div>
         </div>
       </div>
 
@@ -1148,6 +1308,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   </div>
 </div>
 
+<!-- MODAL VISTA PREVIA -->
 <div class="modal-overlay" id="modalVistaPrevia" onclick="if(event.target===this)cerrarModalVistaPrevia()">
   <div class="modal modal-vista">
     <div class="modal-header">
@@ -1159,7 +1320,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
     </div>
     <div class="preview-actions">
       <button class="btn-preview" onclick="cerrarModalVistaPrevia()">Cerrar</button>
-      <button class="btn-preview primary" id="btnGuardarPDF" onclick="guardarPDF()">💾 Descargar PDF</button>
+      <button class="btn-preview primary" onclick="guardarPDF()">💾 Guardar PDF</button>
       <button class="btn-preview green" onclick="imprimirActaDirecta()">🖨 Imprimir</button>
     </div>
   </div>
@@ -1174,28 +1335,64 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   <span id="toastMsg">Mensaje</span>
 </div>
 
-<div class="pdf-overlay" id="pdfOverlay">
-  <div class="pdf-spinner"></div>
-  <div class="pdf-overlay-text" id="pdfOverlayText">Generando PDF...</div>
-  <div class="pdf-overlay-sub" id="pdfOverlaySub">Preparando página 1 de 1</div>
-</div>
-
+<div class="acta-print" id="actaPrint"></div>
 <div class="acta-medicion" id="actaMedicion"></div>
 
 <script>
 /* ============================================================
-   [S01] CONFIGURACIÓN GLOBAL
+   CONFIGURACIÓN
    ============================================================ */
 const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1ZZZcNDDou-pZhNuM9ISanIoArFFnsMh_A6yracR78WXZ1jv5wwFg/exec";
-const CACHE_KEY = "control_div10_data_v1";
+const CACHE_KEY = "control_div10_data_v2";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
-/* Medidas de hoja carta en píxeles a 96 DPI (para medición interna) */
-const ALTURA_UTIL_HOJA_PX = 830;  /* 279.4mm - 40mm de márgenes = 239.4mm ≈ 905px, con margen seguridad = 830px */
-const ANCHO_UTIL_HOJA_MM = 165.9; /* 215.9mm - 50mm = 165.9mm (margen izq 30 + der 20) */
-const ALTO_UTIL_HOJA_MM = 239.4;  /* 279.4mm - 40mm */
+/* Whitelist de dominios permitidos para fotos */
+const DOMINIOS_FOTO_PERMITIDOS = [
+  "drive.google.com",
+  "lh3.googleusercontent.com",
+  "docs.google.com",
+  "i.imgur.com",
+  "imgur.com",
+  "images.unsplash.com"
+];
+
+/* Altura útil calculada en runtime: 27.94cm - 4cm = 23.94cm
+   El valor en px se calcula dinámicamente según DPI real */
+let ALTURA_UTIL_HOJA = 905;
+
+function calcularAlturaUtilHoja(){
+  /* 1cm ≈ 37.7952755906px a 96dpi, pero consideramos escalado del navegador */
+  const divMedicion = document.createElement("div");
+  divMedicion.style.cssText = "position:absolute;visibility:hidden;height:10cm;width:1px;";
+  document.body.appendChild(divMedicion);
+  const px10cm = divMedicion.getBoundingClientRect().height;
+  document.body.removeChild(divMedicion);
+  const pxPorCm = px10cm / 10;
+  /* Letter 27.94cm - márgenes (2+2)cm = 23.94cm útil */
+  ALTURA_UTIL_HOJA = Math.floor(23.94 * pxPorCm);
+}
+
+/* Valores por defecto del formulario de acta */
+const DEFAULTS_ACTA = {
+  entrante: { grado:"", nombres:"", appat:"", apmat:"", cargo:"" },
+  sup1: { grado:"Cap. DIM.", nombres:"Giorka Giovanna", appat:"Corrales", apmat:"Fernández", cargo:"ENCARGADO DE ACTIVOS FIJOS" },
+  sup2: { grado:"Cnl. DAEN.", nombres:"Edgar Gregorio", appat:"Oquendo", apmat:"Orosco", cargo:"JEFE DE LA SECCIÓN IV - LOGÍSTICA" },
+  vobo: { grado:"Cnl. DAEN.", nombres:"Boris Eiver", appat:"Gutiérrez", apmat:"Nava", cargo:"COMANDANTE DE LA DÉCIMA DIVISIÓN DEL EJÉRCITO" }
+};
 
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
+
+/* Índices para búsqueda rápida */
+const IDX = {
+  fijosPorId: new Map(),
+  fungiblesPorId: new Map(),
+  internosPorId: new Map(),
+  prestadosPorId: new Map(),
+  respPorId: new Map(),
+  conteoPorId: new Map(),
+  /* Índices por código para búsqueda O(1) */
+  porCodigo: new Map()
+};
 
 let estado = {
   pantalla: "home",
@@ -1207,10 +1404,12 @@ let estado = {
   oficinaFiltroActual: null
 };
 
-let actaEnProceso = { responsable: null, oficina: null, datos: null, paginas: null };
+let actaEnProceso = { responsable: null, oficina: null, datos: null, html: null };
+
+let ignorarPopstate = false;
 
 /* ============================================================
-   [S02] TEMA
+   TEMA
    ============================================================ */
 function cargarTema(){
   const guardado = localStorage.getItem("tema");
@@ -1228,7 +1427,7 @@ function toggleTheme(){
 cargarTema();
 
 /* ============================================================
-   [S03] TOAST
+   TOAST
    ============================================================ */
 let toastTimer = null;
 function mostrarToast(msg, tipo = "info", icono = null){
@@ -1246,7 +1445,7 @@ function mostrarToast(msg, tipo = "info", icono = null){
 }
 
 /* ============================================================
-   [S04] UTILIDADES
+   UTILIDADES
    ============================================================ */
 function norm(s){
   return (s || "").toString().toUpperCase()
@@ -1290,84 +1489,64 @@ function renderEstado(val){
   else if(up.includes("BUENO") || up.includes("ÓPTIMO") || up.includes("OPTIMO")) cls = "estado-bueno";
   return `<span class="estado-badge ${cls}">${esc(v)}</span>`;
 }
+
+/* ============================================================
+   SANITIZACIÓN DE URLs
+   ============================================================ */
+function sanitizarUrlFoto(url){
+  if(!url || typeof url !== "string") return "";
+  const u = url.trim();
+  if(!u) return "";
+
+  /* ID puro de Google Drive (sin protocolo) */
+  if(!u.includes("/") && !u.startsWith("http") && u.length > 20){
+    return `https://drive.google.com/uc?export=view&id=${encodeURIComponent(u)}`;
+  }
+
+  try{
+    const parsed = new URL(u);
+    if(parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
+    const host = parsed.hostname.toLowerCase();
+    const permitido = DOMINIOS_FOTO_PERMITIDOS.some(d => host === d || host.endsWith("." + d));
+    if(!permitido) return "";
+    return parsed.href;
+  }catch(e){
+    return "";
+  }
+}
+
 function renderFotoMiniatura(url){
-  if(!url) return `<span style="font-size:22px;opacity:.4;">◈</span>`;
-  if(!url.startsWith("http") && url.length > 20) url = `https://drive.google.com/uc?export=view&id=${url}`;
-  return `<img src="${escAttr(url)}" alt="" onerror="this.parentElement.innerHTML='<span style=&quot;font-size:22px;opacity:.4;&quot;>◈</span>'">`;
+  const segura = sanitizarUrlFoto(url);
+  if(!segura) return `<span style="font-size:22px;opacity:.4;">◈</span>`;
+  return `<img src="${escAttr(segura)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span style=&quot;font-size:22px;opacity:.4;&quot;>◈</span>'">`;
 }
-function normalizarUrlFoto(url){
-  if(!url) return "";
-  if(url.startsWith("http")) return url;
-  if(url.length > 20) return `https://drive.google.com/uc?export=view&id=${url}`;
-  return "";
-}
+
+/* ============================================================
+   DETECCIÓN DE TIPO DE BÚSQUEDA (conservadora)
+   ============================================================ */
 function detectarTipoBusqueda(texto){
-  const t = texto.trim().toUpperCase();
+  const t = (texto || "").trim().toUpperCase();
   if(!t) return "vacio";
-  if(/^[A-Z0-9]{6,}$/.test(t) && /\d/.test(t) && /[A-Z]/.test(t)) return "codigo";
-  if(/^\d+[A-Z]?$/.test(t)) return "id";
+
+  /* Explícito: prefijo COD o VSIAF */
+  if(/^(COD|VSIAF)[-_\s]?/.test(t)) return "codigo";
+
+  /* ID asignación: solo dígitos, opcionalmente 1-2 letras al final (ej: 15, 23A) */
+  if(/^\d{1,4}[A-Z]{0,2}$/.test(t)) return "id";
+
+  /* Código: contiene al menos 2 dígitos Y al menos 2 letras, con guiones/espacios */
+  const tieneDigitos = (t.match(/\d/g) || []).length >= 2;
+  const tieneLetras = (t.match(/[A-Z]/g) || []).length >= 2;
+  if(tieneDigitos && tieneLetras && /[-_\s]/.test(t)) return "codigo";
+
+  /* Código alfanumérico compacto: patrón mixto tipo "AF1234" o "VSIAF001" */
+  if(/^[A-Z]{2,6}\d{2,8}[A-Z]?$/.test(t)) return "codigo";
+
   return "nombre";
 }
 
 /* ============================================================
-   [S04.1] EFECTOS DE CLICK
-   ============================================================ */
-function aplicarEfectoClick(el, x, y){
-  if(!el) return;
-  const rect = el.getBoundingClientRect();
-  const size = Math.max(rect.width, rect.height) * 1.4;
-  const clickX = (x !== undefined ? x : rect.left + rect.width / 2) - rect.left;
-  const clickY = (y !== undefined ? y : rect.top + rect.height / 2) - rect.top;
-
-  const posOriginal = getComputedStyle(el).position;
-  if(posOriginal === "static") el.style.position = "relative";
-  if(getComputedStyle(el).overflow === "visible") el.style.overflow = "hidden";
-
-  const r1 = document.createElement("span");
-  r1.className = "click-ripple cian";
-  r1.style.width = size + "px";
-  r1.style.height = size + "px";
-  r1.style.left = (clickX - size / 2) + "px";
-  r1.style.top = (clickY - size / 2) + "px";
-  el.appendChild(r1);
-
-  setTimeout(() => {
-    const r2 = document.createElement("span");
-    r2.className = "click-ripple magenta";
-    r2.style.width = size * 0.7 + "px";
-    r2.style.height = size * 0.7 + "px";
-    r2.style.left = (clickX - size * 0.35) + "px";
-    r2.style.top = (clickY - size * 0.35) + "px";
-    el.appendChild(r2);
-    setTimeout(() => r2.remove(), 600);
-  }, 80);
-
-  el.classList.remove("click-flash");
-  void el.offsetWidth;
-  el.classList.add("click-flash");
-  setTimeout(() => el.classList.remove("click-flash"), 450);
-
-  if(el.classList.contains("resp-card") ||
-     el.classList.contains("bien-card") ||
-     el.classList.contains("oficina-card")){
-    el.classList.add("click-shake");
-    setTimeout(() => el.classList.remove("click-shake"), 300);
-  }
-
-  setTimeout(() => r1.remove(), 600);
-}
-
-document.addEventListener("click", (e) => {
-  const target = e.target.closest(
-    ".home-btn, .resp-card, .bien-card, .oficina-card, .btn-icon, .btn-volver, " +
-    ".btn-nav, .btn-imprimir, .btn-confirmar, .btn-cancelar, .btn-preview, " +
-    ".btn-clear, .modal-close"
-  );
-  if(target) aplicarEfectoClick(target, e.clientX, e.clientY);
-}, true);
-
-/* ============================================================
-   [S05] ARTÍCULO DEFINIDO
+   ARTÍCULO DEFINIDO
    ============================================================ */
 const PALABRAS_DEL = [
   "CONSULTORIO","COMANDO","MURO","GABINETE","TINGLADO","PATIO","JARDIN","JARDÍN",
@@ -1381,13 +1560,18 @@ const PALABRAS_DE_LA = [
   "BIBLIOTECA","VIVIENDA","AVENIDA","PLAZA","SALA","SECCION","SECCIÓN","SUBSECCION","SUBSECCIÓN",
   "COMPANIA","COMPAÑÍA","BANDA","UNIDAD","CASA","ESCUELA","CANCHA"
 ];
+
 function obtenerArticuloArticulo(nombreOficina){
   if(!nombreOficina) return "DEL";
-  const limpio = nombreOficina.trim().toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const limpio = nombreOficina.trim().toUpperCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
   if(/^DE LA\s/.test(limpio) || /^DEL\s/.test(limpio)) return "";
   if(/^DE\s/.test(limpio)) return "";
+
   const primera = limpio.split(/\s+/)[0];
   const primeraNorm = primera.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
   for(const p of PALABRAS_DEL){
     const pn = p.normalize("NFD").replace(/[\u0300-\u036f]/g,"");
     if(primeraNorm === pn) return "DEL";
@@ -1398,6 +1582,7 @@ function obtenerArticuloArticulo(nombreOficina){
   }
   return "DEL";
 }
+
 function oficinaConArticulo(nombreOficina){
   if(!nombreOficina) return "";
   const art = obtenerArticuloArticulo(nombreOficina);
@@ -1406,37 +1591,44 @@ function oficinaConArticulo(nombreOficina){
 }
 
 /* ============================================================
-   [S06] NOMBRES
+   ABREVIACIÓN DE NOMBRES DE PILA
    ============================================================ */
 function abreviarNombresDePila(nombres){
   if(!nombres) return "";
   const tokens = nombres.trim().split(/\s+/).filter(Boolean);
   if(tokens.length <= 1) return nombres.trim();
-  return tokens.map((n, i) => {
+
+  const resultado = tokens.map((n, i) => {
     if(i === 0) return n;
     if(n.endsWith(".")) return n;
     return n.charAt(0).toUpperCase() + ".";
-  }).join(" ");
+  });
+  return resultado.join(" ");
 }
+
 function construirNombreFirmante(grado, nombres, apPat, apMat){
   const gradoLimpio = (grado || "").trim();
   const nombresAbr = abreviarNombresDePila(nombres || "");
   const apPatLimpio = (apPat || "").trim();
   const apMatLimpio = (apMat || "").trim();
+
   return [gradoLimpio, nombresAbr, apPatLimpio, apMatLimpio].filter(Boolean).join(" ");
 }
 
 /* ============================================================
-   [S07] ORDINALES
+   ORDINALES DE HOJA
    ============================================================ */
 function ordinalHoja(n){
-  const mapa = {1:"1RA.",2:"2DA.",3:"3RA.",4:"4TA.",5:"5TA.",6:"6TA.",7:"7MA.",8:"8VA.",9:"9NA.",10:"10MA."};
+  const mapa = {
+    1: "1RA.", 2: "2DA.", 3: "3RA.", 4: "4TA.", 5: "5TA.",
+    6: "6TA.", 7: "7MA.", 8: "8VA.", 9: "9NA.", 10: "10MA."
+  };
   if(mapa[n]) return mapa[n];
   return n + "VA.";
 }
 
 /* ============================================================
-   [S08] RESUMEN
+   RESUMEN DE BIENES
    ============================================================ */
 function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPrestados){
   const partes = [];
@@ -1444,6 +1636,7 @@ function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPresta
   if(cantFungibles > 0) partes.push(`${cantFungibles} ${cantFungibles === 1 ? 'FUNGIBLE' : 'FUNGIBLES'}`);
   if(cantInternos > 0) partes.push(`${cantInternos} ${cantInternos === 1 ? 'INTERNO' : 'INTERNOS'}`);
   if(cantPrestados > 0) partes.push(`${cantPrestados} ${cantPrestados === 1 ? 'BIEN PRESTADO' : 'BIENES PRESTADOS'}`);
+
   if(partes.length === 0) return "";
   if(partes.length === 1) return partes[0];
   if(partes.length === 2) return partes[0] + " Y " + partes[1];
@@ -1451,7 +1644,7 @@ function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPresta
 }
 
 /* ============================================================
-   [S09] PARSER CSV
+   PARSEO CSV
    ============================================================ */
 function parseCSV(text){
   const rows = [];
@@ -1493,10 +1686,11 @@ function csvAObjetos(texto){
 }
 
 /* ============================================================
-   [S10] CARGA DESDE NUBE
+   CARGA Y CACHÉ
    ============================================================ */
 async function cargarDesdeNube(forzar = false){
   const cont = document.getElementById("contenido");
+
   if(!forzar){
     const cache = localStorage.getItem(CACHE_KEY);
     if(cache){
@@ -1504,15 +1698,16 @@ async function cargarDesdeNube(forzar = false){
         const parsed = JSON.parse(cache);
         if(parsed && parsed.fijos && parsed.resp){
           aplicarDatos(parsed);
-          console.log("✔ Datos desde caché");
           mostrarHome();
           return;
         }
       }catch(e){ console.warn("Caché corrupto"); }
     }
   }
-  cont.innerHTML = `<div class="loading">◈ SINCRONIZANDO CON EL SERVIDOR...</div>`;
-  document.getElementById("statusText").textContent = "SYNC";
+
+  cont.innerHTML = `<div class="loading">☁ Cargando datos desde Google Drive...</div>`;
+  document.getElementById("statusText").textContent = "CARGANDO";
+
   try{
     const hojas = [
       { key: "fijos",     nombre: "BD_FIJOS" },
@@ -1521,12 +1716,14 @@ async function cargarDesdeNube(forzar = false){
       { key: "prestados", nombre: "BD_PRESTADOS" },
       { key: "resp",      nombre: "RESP" }
     ];
+
     const resultados = await Promise.all(
       hojas.map(h => fetch(`${API_URL_NUBE}?sheet=${h.nombre}`)
         .then(r => r.text())
         .then(texto => ({ key: h.key, nombre: h.nombre, texto }))
       )
     );
+
     const nuevo = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
     resultados.forEach(({ key, nombre, texto }) => {
       if(texto.trim().startsWith("<") || texto.trim().startsWith("{")){
@@ -1536,35 +1733,80 @@ async function cargarDesdeNube(forzar = false){
       }
       nuevo[key] = csvAObjetos(texto);
     });
+
     nuevo.fijos = nuevo.fijos.filter(o => obtenerIdAsig(o));
     nuevo.fungibles = nuevo.fungibles.filter(o => obtenerIdAsig(o));
     nuevo.internos = nuevo.internos.filter(o => obtenerIdAsig(o));
     nuevo.prestados = nuevo.prestados.filter(o => obtenerIdAsig(o) || getVal(o, "DESCRIPCION DEL ACTIVO"));
     nuevo.resp = nuevo.resp.filter(o => getVal(o, "ID") && getNombreCompletoResp(o));
+
     if(forzar){
       const cambios = contarCambios(DATA, nuevo);
       if(cambios === 0) mostrarToast("Datos al día", "info", "ℹ");
       else mostrarToast(`Datos actualizados — ${cambios} cambio(s)`, "success", "✔");
     }
+
     localStorage.setItem(CACHE_KEY, JSON.stringify(nuevo));
     localStorage.setItem(CACHE_HOJA_KEY, Date.now().toString());
+
     aplicarDatos(nuevo);
     document.getElementById("statusText").textContent = "ONLINE";
     mostrarHome();
+
   }catch(err){
     console.error(err);
-    cont.innerHTML = `<div class="error">⚠ NO SE PUDIERON CARGAR LOS DATOS<br><br><small>${esc(err.message)}</small></div>`;
+    cont.innerHTML = `<div class="error">⚠ No se pudieron cargar los datos desde Drive<br><br><small>${esc(err.message)}</small></div>`;
     document.getElementById("statusText").textContent = "ERROR";
     mostrarToast("Error al cargar datos", "error", "⚠");
   }
 }
+
+/* ============================================================
+   APLICAR DATOS + CONSTRUIR ÍNDICES
+   ============================================================ */
 function aplicarDatos(obj){
   DATA.fijos = obj.fijos || [];
   DATA.fungibles = obj.fungibles || [];
   DATA.internos = obj.internos || [];
   DATA.prestados = obj.prestados || [];
   DATA.resp = obj.resp || [];
+
+  /* Limpiar índices */
+  IDX.fijosPorId.clear();
+  IDX.fungiblesPorId.clear();
+  IDX.internosPorId.clear();
+  IDX.prestadosPorId.clear();
+  IDX.respPorId.clear();
+  IDX.conteoPorId.clear();
+  IDX.porCodigo.clear();
+
+  const indexar = (lista, mapPorId, tipoKey) => {
+    lista.forEach(b => {
+      const id = obtenerIdAsig(b);
+      if(id){
+        if(!mapPorId.has(id)) mapPorId.set(id, []);
+        mapPorId.get(id).push(b);
+        IDX.conteoPorId.set(id, (IDX.conteoPorId.get(id) || 0) + 1);
+      }
+      const cod = getVal(b, "CODIGO");
+      if(cod){
+        const key = tipoKey + "|" + cod;
+        IDX.porCodigo.set(key, b);
+      }
+    });
+  };
+
+  indexar(DATA.fijos, IDX.fijosPorId, "FIJOS");
+  indexar(DATA.fungibles, IDX.fungiblesPorId, "FUNGIBLES");
+  indexar(DATA.internos, IDX.internosPorId, "INTERNOS");
+  indexar(DATA.prestados, IDX.prestadosPorId, "PRESTADOS");
+
+  DATA.resp.forEach(r => {
+    const id = getVal(r, "ID");
+    if(id) IDX.respPorId.set(id, r);
+  });
 }
+
 function contarCambios(antes, despues){
   let cambios = 0;
   ["fijos","fungibles","internos","prestados","resp"].forEach(k => {
@@ -1572,6 +1814,7 @@ function contarCambios(antes, despues){
   });
   return cambios;
 }
+
 function recargarDesdeNube(){
   const btn = document.getElementById("btnReload");
   btn.classList.add("spinning");
@@ -1580,7 +1823,7 @@ function recargarDesdeNube(){
 }
 
 /* ============================================================
-   [S11] HELPERS RESPONSABLES
+   HELPERS
    ============================================================ */
 function getNombreCompletoResp(resp){
   if(!resp) return "";
@@ -1593,7 +1836,7 @@ function getNombreCompletoResp(resp){
 function getCedulaResp(resp){ return getVal(resp, "CEDULA", "CÉDULA"); }
 function getResponsablePorId(id){
   if(!id) return null;
-  return DATA.resp.find(x => getVal(x, "ID") === id.trim()) || null;
+  return IDX.respPorId.get(id.trim()) || null;
 }
 function getNombreResponsablePorId(id){
   const r = getResponsablePorId(id);
@@ -1614,23 +1857,22 @@ function ordenarIdAsignacion(a, b){
   if(numA !== numB) return numA - numB;
   return letA.localeCompare(letB);
 }
+/* Memoizado */
 function contarBienesPorAsignacion(id){
-  const idLimpio = (id || "").trim();
-  let total = 0;
-  total += DATA.fijos.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  total += DATA.fungibles.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  total += DATA.internos.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  total += DATA.prestados.filter(o => obtenerIdAsig(o) === idLimpio).length;
-  return total;
+  if(!id) return 0;
+  return IDX.conteoPorId.get(id.trim()) || 0;
 }
 
 /* ============================================================
-   [S12] NAVEGACIÓN
+   NAVEGACIÓN
    ============================================================ */
 function pushEstado(nombreEstado){
   try{ history.pushState({ pantalla: nombreEstado }, ""); }catch(e){}
 }
+
 window.addEventListener("popstate", (e) => {
+  if(ignorarPopstate) return;
+
   if(document.getElementById("modalVistaPrevia").classList.contains("visible")){
     cerrarModalVistaPrevia();
     pushEstado(estado.pantalla);
@@ -1661,14 +1903,20 @@ window.addEventListener("popstate", (e) => {
     return;
   }
   if(estado.pantalla === "home"){
-    const salir = confirm("¿Está seguro que desea salir del sistema?");
-    if(salir){ history.back(); }
-    else { pushEstado("home"); }
+    /* Evitar doble confirm: usar flag y diferir */
+    ignorarPopstate = true;
+    const salir = window.confirm("¿Está seguro que desea salir del sistema?");
+    if(salir){
+      history.back();
+    } else {
+      pushEstado("home");
+      setTimeout(() => { ignorarPopstate = false; }, 100);
+    }
   }
 });
 
 /* ============================================================
-   [S13] HOME
+   HOME
    ============================================================ */
 function mostrarHome(){
   estado.pantalla = "home";
@@ -1678,34 +1926,38 @@ function mostrarHome(){
   estado.bienActual = null;
   estado.vistaGeneralActual = null;
   estado.oficinaFiltroActual = null;
+
   const cont = document.getElementById("contenido");
   cont.innerHTML = `
     <div class="home">
-      <div class="home-title">MÓDULOS DE INVENTARIO</div>
+      <div class="home-hero">
+        <div class="home-hero-title">Sistema de Inventario</div>
+        <div class="home-hero-sub">◈ Décima División del Ejército ◈</div>
+      </div>
       <div class="home-buttons">
-        <button class="home-btn" data-color="verde" onclick="irVistaGeneral('fijos')">
+        <button class="home-btn" data-color="verde" onclick="irVistaGeneral('fijos', event, this)">
           <span class="home-btn-icon">◈</span>
           <span class="home-btn-label">Fijos</span>
           <span class="home-btn-count" id="count-fijos">0</span>
         </button>
-        <button class="home-btn" data-color="azul" onclick="irVistaGeneral('fungibles')">
+        <button class="home-btn" data-color="azul" onclick="irVistaGeneral('fungibles', event, this)">
           <span class="home-btn-icon">◆</span>
           <span class="home-btn-label">Fungibles</span>
           <span class="home-btn-count" id="count-fungibles">0</span>
         </button>
-        <button class="home-btn" data-color="marron" onclick="irVistaGeneral('internos')">
-          <span class="home-btn-icon">◉</span>
+        <button class="home-btn" data-color="marron" onclick="irVistaGeneral('internos', event, this)">
+          <span class="home-btn-icon">◇</span>
           <span class="home-btn-label">Internos</span>
           <span class="home-btn-count" id="count-internos">0</span>
         </button>
-        <button class="home-btn" data-color="vino" onclick="irVistaGeneral('prestados')">
-          <span class="home-btn-icon">◇</span>
+        <button class="home-btn" data-color="vino" onclick="irVistaGeneral('prestados', event, this)">
+          <span class="home-btn-icon">✦</span>
           <span class="home-btn-label">Prestados</span>
           <span class="home-btn-count" id="count-prestados">0</span>
         </button>
-        <button class="home-btn buscar" data-color="buscar" onclick="irBusqueda()">
-          <span class="home-btn-icon">⌕</span>
-          <span class="home-btn-label">Buscar</span>
+        <button class="home-btn buscar" data-color="buscar" onclick="irBusqueda(event, this)">
+          <span class="home-btn-icon">🔍</span>
+          <span class="home-btn-label">Búsqueda Orbital</span>
         </button>
       </div>
     </div>
@@ -1713,13 +1965,9 @@ function mostrarHome(){
   actualizarContadores();
   document.getElementById("statusText").textContent = "ONLINE";
 }
+
 function actualizarContadores(){
-  const c = {
-    fijos: DATA.fijos.length,
-    fungibles: DATA.fungibles.length,
-    internos: DATA.internos.length,
-    prestados: DATA.prestados.length
-  };
+  const c = { fijos: DATA.fijos.length, fungibles: DATA.fungibles.length, internos: DATA.internos.length, prestados: DATA.prestados.length };
   Object.keys(c).forEach(k => {
     const el = document.getElementById(`count-${k}`);
     if(el) el.textContent = c[k];
@@ -1727,13 +1975,15 @@ function actualizarContadores(){
 }
 
 /* ============================================================
-   [S14] BÚSQUEDA
+   BÚSQUEDA
    ============================================================ */
-function irBusqueda(){
+function irBusqueda(ev, btn){
+  if(ev && btn) ripple(ev, btn);
   estado.pantalla = "busqueda";
   pushEstado("busqueda");
   mostrarModoBusqueda();
 }
+
 function mostrarModoBusqueda(){
   const cont = document.getElementById("contenido");
   cont.innerHTML = `
@@ -1755,6 +2005,7 @@ function mostrarModoBusqueda(){
   input.focus();
   initBusquedaLive();
 }
+
 function volverDeBusqueda(){
   const input = document.getElementById("buscador");
   if(input) input.value = "";
@@ -1762,6 +2013,7 @@ function volverDeBusqueda(){
   mostrarHome();
   pushEstado("home");
 }
+
 function initBusquedaLive(){
   const input = document.getElementById("buscador");
   if(!input) return;
@@ -1784,6 +2036,7 @@ function initBusquedaLive(){
     if(e.key === "Enter"){ e.preventDefault(); ejecutarBusqueda(e.target.value.trim()); }
   });
 }
+
 function limpiarBusqueda(){
   const input = document.getElementById("buscador");
   if(!input) return;
@@ -1793,6 +2046,7 @@ function limpiarBusqueda(){
   if(btnClear) btnClear.classList.remove("visible");
   document.getElementById("resultados-busqueda").innerHTML = "";
 }
+
 function ejecutarBusqueda(texto){
   const val = (texto || document.getElementById("buscador").value || "").trim();
   const res = document.getElementById("resultados-busqueda");
@@ -1801,6 +2055,7 @@ function ejecutarBusqueda(texto){
   if(tipo === "nombre") renderResultadosResponsables(val, res);
   else renderResultadosBienes(val, tipo, res);
 }
+
 function buscarResponsables(termino){
   const t = norm(termino);
   if(t.length < 1) return [];
@@ -1827,6 +2082,7 @@ function buscarResponsables(termino){
   lista.sort((a,b) => a.nombre.localeCompare(b.nombre));
   return lista;
 }
+
 function todosLosBienes(){
   return [
     ...DATA.fijos.map(b => ({...b, __tipo: "FIJOS"})),
@@ -1835,6 +2091,7 @@ function todosLosBienes(){
     ...DATA.prestados.map(b => ({...b, __tipo: "PRESTADOS"}))
   ];
 }
+
 function buscarBienesPorCodigo(termino){
   const t = norm(termino);
   return todosLosBienes().filter(b => norm(getVal(b, "CODIGO")).includes(t));
@@ -1843,13 +2100,14 @@ function buscarBienesPorIdAsig(idAsig){
   const t = norm(idAsig);
   return todosLosBienes().filter(b => norm(obtenerIdAsig(b)) === t);
 }
+
 function renderResultadosResponsables(filtro, cont){
   const lista = buscarResponsables(filtro);
   if(!lista.length){
     cont.innerHTML = `<div class="empty-state"><div class="empty-state-icon">◌</div><div class="empty-state-title">Sin resultados</div></div>`;
     return;
   }
-  let html = `<div class="list-title"><span>◈ Responsables encontrados</span><span class="list-count">${lista.length}</span></div>`;
+  let html = `<div class="list-title"><span>◈ Responsables detectados</span><span class="list-count">${lista.length}</span></div>`;
   lista.forEach((r, i) => {
     const totalBienes = r.asignaciones.reduce((a, o) => a + contarBienesPorAsignacion(o.id), 0);
     html += `
@@ -1868,6 +2126,7 @@ function renderResultadosResponsables(filtro, cont){
   cont.innerHTML = html;
   window.__listaResponsablesActual = lista;
 }
+
 function renderResultadosBienes(filtro, tipoBusqueda, cont){
   const bienes = tipoBusqueda === "id" ? buscarBienesPorIdAsig(filtro) : buscarBienesPorCodigo(filtro);
   if(!bienes.length){
@@ -1875,7 +2134,7 @@ function renderResultadosBienes(filtro, tipoBusqueda, cont){
     return;
   }
   if(bienes.length === 1){ abrirDetalleBienDirecto(bienes[0]); return; }
-  let html = `<div class="list-title"><span>◈ Bienes encontrados</span><span class="list-count">${bienes.length}</span></div>`;
+  let html = `<div class="list-title"><span>◈ Bienes detectados</span><span class="list-count">${bienes.length}</span></div>`;
   bienes.forEach((b, i) => {
     const idAsig = obtenerIdAsig(b);
     const oficina = getOficinaResponsablePorId(idAsig);
@@ -1900,20 +2159,23 @@ function renderResultadosBienes(filtro, tipoBusqueda, cont){
 }
 
 /* ============================================================
-   [S15] VISTAS GENERALES
+   VISTAS GENERALES
    ============================================================ */
-function irVistaGeneral(tipo){
+function irVistaGeneral(tipo, ev, btn){
+  if(ev && btn) ripple(ev, btn);
   estado.pantalla = "vistaGeneral";
   estado.vistaGeneralActual = tipo;
   estado.oficinaFiltroActual = null;
   pushEstado("vistaGeneral");
   renderVistaGeneral(tipo);
 }
+
 function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
   const cont = document.getElementById("contenido");
   const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
   const listaCompleta = DATA[tipo] || [];
   const titulo = titulos[tipo] || tipo.toUpperCase();
+
   if(!oficinaFiltro){
     let html = `<button class="btn-volver" onclick="volverDeVistaGeneral()">← Volver</button>
       <div class="list-title"><span>◈ ${titulo} — Total</span><span class="list-count">${listaCompleta.length}</span></div>`;
@@ -1943,6 +2205,7 @@ function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
     cont.innerHTML = html;
     return;
   }
+
   const listaFiltrada = listaCompleta.filter(b => getOficinaResponsablePorId(obtenerIdAsig(b)) === oficinaFiltro);
   let html = `<button class="btn-volver" onclick="renderVistaGeneral('${tipo}')">← Volver</button>
     <div class="oficina-encabezado">
@@ -1960,6 +2223,7 @@ function renderVistaGeneral(tipo, oficinaFiltro, textoBusqueda){
   html += tablaGeneral(tipo, listaFiltrada);
   cont.innerHTML = html;
 }
+
 function volverDeVistaGeneral(){
   estado.pantalla = "home";
   estado.vistaGeneralActual = null;
@@ -1967,10 +2231,12 @@ function volverDeVistaGeneral(){
   mostrarHome();
   pushEstado("home");
 }
+
 function filtrarPorOficina(oficina){
   estado.oficinaFiltroActual = oficina;
   renderVistaGeneral(estado.vistaGeneralActual, oficina, "");
 }
+
 function tablaGeneral(tipo, lista){
   const titulos = { fijos: "FIJOS", fungibles: "FUNGIBLES", internos: "INTERNOS", prestados: "PRESTADOS" };
   const colorMap = { fijos: "verde", fungibles: "azul", internos: "marron", prestados: "vino" };
@@ -2010,7 +2276,7 @@ function tablaGeneral(tipo, lista){
 }
 
 /* ============================================================
-   [S16] MODAL PRINCIPAL
+   MODAL RESPONSABLE
    ============================================================ */
 function abrirModalResponsable(idx){
   const lista = window.__listaResponsablesActual || [];
@@ -2029,6 +2295,7 @@ function abrirModalResponsable(idx){
   document.getElementById("modal").classList.add("visible");
   pushEstado("modal");
 }
+
 function abrirOficinaModal(idAsig){
   const r = estado.responsableActual;
   if(!r) return;
@@ -2038,11 +2305,13 @@ function abrirOficinaModal(idAsig){
   estado.oficinaActual = oficina;
   document.getElementById("modal-body").innerHTML = renderModalBody();
 }
+
 function volverAOficinasModal(){
   estado.modalVista = "oficinas";
   estado.oficinaActual = null;
   document.getElementById("modal-body").innerHTML = renderModalBody();
 }
+
 function abrirDetalleBienDirecto(bien){
   estado.modalVista = "detalleBien";
   estado.bienActual = bien;
@@ -2051,22 +2320,22 @@ function abrirDetalleBienDirecto(bien){
   document.getElementById("modal").classList.add("visible");
   pushEstado("modal");
 }
+
+function buscarBienEnIndice(codigo, tipo){
+  if(!codigo) return null;
+  const key = tipo.toUpperCase() + "|" + codigo;
+  return IDX.porCodigo.get(key) || null;
+}
+
 function abrirDetalleBienDirectoPorCodigo(codigo, tipo){
-  let bien = null;
-  if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
-  else if(tipo === "FUNGIBLES") bien = DATA.fungibles.find(b => getVal(b, "CODIGO") === codigo);
-  else if(tipo === "INTERNOS") bien = DATA.internos.find(b => getVal(b, "CODIGO") === codigo);
-  else if(tipo === "PRESTADOS") bien = DATA.prestados.find(b => getVal(b, "CODIGO") === codigo);
+  const bien = buscarBienEnIndice(codigo, tipo);
   if(!bien) return;
   bien.__tipo = tipo;
   abrirDetalleBienDirecto(bien);
 }
+
 function abrirDetalleBienDesdeModal(codigo, tipo){
-  let bien = null;
-  if(tipo === "FIJOS") bien = DATA.fijos.find(b => getVal(b, "CODIGO") === codigo);
-  else if(tipo === "FUNGIBLES") bien = DATA.fungibles.find(b => getVal(b, "CODIGO") === codigo);
-  else if(tipo === "INTERNOS") bien = DATA.internos.find(b => getVal(b, "CODIGO") === codigo);
-  else if(tipo === "PRESTADOS") bien = DATA.prestados.find(b => getVal(b, "CODIGO") === codigo);
+  const bien = buscarBienEnIndice(codigo, tipo);
   if(!bien) return;
   bien.__tipo = tipo;
   estado.bienActual = bien;
@@ -2074,12 +2343,14 @@ function abrirDetalleBienDesdeModal(codigo, tipo){
   document.getElementById("modal-titulo").textContent = "Detalle del Bien";
   document.getElementById("modal-body").innerHTML = renderDetalleBien(bien);
 }
+
 function volverATablasDesdeDetalleBien(){
   estado.modalVista = "tablas";
   estado.bienActual = null;
   document.getElementById("modal-titulo").textContent = estado.responsableActual ? estado.responsableActual.nombre : "Bienes";
   document.getElementById("modal-body").innerHTML = renderModalBody();
 }
+
 function cerrarModal(){
   document.getElementById("modal").classList.remove("visible");
   estado.modalVista = "oficinas";
@@ -2087,12 +2358,14 @@ function cerrarModal(){
   estado.oficinaActual = null;
   estado.bienActual = null;
 }
+
 function renderModalBody(){
   if(estado.modalVista === "oficinas") return renderModalOficinas();
   if(estado.modalVista === "tablas") return renderModalTablas();
   if(estado.modalVista === "detalleBien") return renderDetalleBien(estado.bienActual);
   return "";
 }
+
 function renderModalOficinas(){
   const r = estado.responsableActual;
   if(!r) return "";
@@ -2110,17 +2383,20 @@ function renderModalOficinas(){
   });
   return html;
 }
+
 function renderModalTablas(){
   const of = estado.oficinaActual;
   const r = estado.responsableActual;
   if(!of || !r) return "";
-  const fijos = DATA.fijos.filter(b => obtenerIdAsig(b) === of.id);
-  const fungibles = DATA.fungibles.filter(b => obtenerIdAsig(b) === of.id);
-  const internos = DATA.internos.filter(b => obtenerIdAsig(b) === of.id);
-  const prestados = DATA.prestados.filter(b => obtenerIdAsig(b) === of.id);
+  const fijos = IDX.fijosPorId.get(of.id) || [];
+  const fungibles = IDX.fungiblesPorId.get(of.id) || [];
+  const internos = IDX.internosPorId.get(of.id) || [];
+  const prestados = IDX.prestadosPorId.get(of.id) || [];
   const total = fijos.length + fungibles.length + internos.length + prestados.length;
   const btnVolver = r.asignaciones.length > 1 ? `<button class="btn-nav" onclick="volverAOficinasModal()">← Oficinas</button>` : "";
+
   const btnImprimir = `<button class="btn-imprimir" onclick="abrirModalEntrante('${escAttr(of.id)}')">🖨 Imprimir Acta</button>`;
+
   let html = `${btnVolver}
     <div class="oficina-encabezado">
       <div>
@@ -2130,12 +2406,14 @@ function renderModalTablas(){
       <div class="oficina-encabezado-count">${total}</div>
     </div>
     ${btnImprimir}`;
+
   html += tablaModal("FIJOS", fijos, "verde");
   html += tablaModal("FUNGIBLES", fungibles, "azul");
   html += tablaModal("INTERNOS", internos, "marron");
   if(prestados.length) html += tablaModal("PRESTADOS", prestados, "vino");
   return html;
 }
+
 function tablaModal(titulo, lista, color){
   if(!lista.length){
     return `<div class="tabla-section"><div class="tabla-header" data-color="${color}"><div class="tabla-header-titulo"><span class="dot"></span>${titulo}</div><div class="tabla-header-count">0</div></div><div class="empty-state" style="padding:30px 20px;"><div class="empty-state-sub">NO CUENTA ${titulo}</div></div></div>`;
@@ -2169,6 +2447,7 @@ function tablaModal(titulo, lista, color){
   html += `</tbody></table></div></div>`;
   return html;
 }
+
 function renderDetalleBien(bien){
   if(!bien) return "";
   const tipo = bien.__tipo || "FIJOS";
@@ -2207,10 +2486,10 @@ function renderDetalleBien(bien){
     ];
   }
   const fotoRaw = obtenerFoto(bien);
-  const fotoUrl = normalizarUrlFoto(fotoRaw);
+  const fotoUrl = sanitizarUrlFoto(fotoRaw);
   const tieneFoto = !!fotoUrl;
   const fotoHTML = tieneFoto
-    ? `<img src="${escAttr(fotoUrl)}" alt="Foto" onclick="event.stopPropagation();abrirLightbox('${escAttr(fotoUrl)}')">`
+    ? `<img src="${escAttr(fotoUrl)}" alt="Foto" loading="lazy" onclick="event.stopPropagation();abrirLightbox('${escAttr(fotoUrl)}')">`
     : `<span style="font-size:28px;opacity:.5;">◈</span>`;
   let btnVolver = estado.responsableActual
     ? `<button class="btn-nav" onclick="volverATablasDesdeDetalleBien()">← Volver a tablas</button>`
@@ -2240,26 +2519,57 @@ function renderDetalleBien(bien){
 }
 
 /* ============================================================
-   [S17] FLUJO DEL ACTA
+   MÓDULO DE ACTA
    ============================================================ */
+function resetFormularioActa(){
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if(el) el.value = val || "";
+  };
+  set("ent_grado", DEFAULTS_ACTA.entrante.grado);
+  set("ent_nombres", DEFAULTS_ACTA.entrante.nombres);
+  set("ent_appat", DEFAULTS_ACTA.entrante.appat);
+  set("ent_apmat", DEFAULTS_ACTA.entrante.apmat);
+  set("ent_cargo", DEFAULTS_ACTA.entrante.cargo);
+
+  set("sup1_grado", DEFAULTS_ACTA.sup1.grado);
+  set("sup1_nombres", DEFAULTS_ACTA.sup1.nombres);
+  set("sup1_appat", DEFAULTS_ACTA.sup1.appat);
+  set("sup1_apmat", DEFAULTS_ACTA.sup1.apmat);
+  set("sup1_cargo", DEFAULTS_ACTA.sup1.cargo);
+
+  set("sup2_grado", DEFAULTS_ACTA.sup2.grado);
+  set("sup2_nombres", DEFAULTS_ACTA.sup2.nombres);
+  set("sup2_appat", DEFAULTS_ACTA.sup2.appat);
+  set("sup2_apmat", DEFAULTS_ACTA.sup2.apmat);
+  set("sup2_cargo", DEFAULTS_ACTA.sup2.cargo);
+
+  set("vobo_grado", DEFAULTS_ACTA.vobo.grado);
+  set("vobo_nombres", DEFAULTS_ACTA.vobo.nombres);
+  set("vobo_appat", DEFAULTS_ACTA.vobo.appat);
+  set("vobo_apmat", DEFAULTS_ACTA.vobo.apmat);
+  set("vobo_cargo", DEFAULTS_ACTA.vobo.cargo);
+}
+
 function abrirModalEntrante(idAsignacion){
   const r = estado.responsableActual;
   if(!r) return;
   const oficina = r.asignaciones.find(o => o.id === idAsignacion);
   if(!oficina) return;
+
   actaEnProceso.responsable = r;
   actaEnProceso.oficina = oficina;
+
   cerrarModal();
-  ["ent_grado","ent_nombres","ent_appat","ent_apmat","ent_cargo"].forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.value = "";
-  });
+  resetFormularioActa();
   document.getElementById("modalEntrante").classList.add("visible");
   pushEstado("modalActa");
 }
+
 function cerrarModalEntrante(){
   document.getElementById("modalEntrante").classList.remove("visible");
 }
+
 function generarVistaPrevia(){
   const datos = {
     entrante: {
@@ -2292,52 +2602,44 @@ function generarVistaPrevia(){
     }
   };
   actaEnProceso.datos = datos;
-  const paginas = generarPaginasActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
-  actaEnProceso.paginas = paginas;
+  actaEnProceso.html = generarHTMLActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
   cerrarModalEntrante();
-
-  /* La vista previa muestra las páginas separadas con un marcador */
-  let htmlPreview = "";
-  paginas.forEach((p, i) => {
-    if(i > 0){
-      htmlPreview += `<div style="height:24px;background:repeating-linear-gradient(90deg,#d0d0d0 0px,#d0d0d0 8px,transparent 8px,transparent 16px);margin:12px -40px;text-align:center;line-height:24px;font-size:8pt;color:#666;font-weight:bold;">▲ PÁGINA ${i+1} ▲</div>`;
-    }
-    htmlPreview += p.html;
-  });
-  document.getElementById("previewActa").innerHTML = htmlPreview;
+  document.getElementById("previewActa").innerHTML = actaEnProceso.html;
   document.getElementById("modalVistaPrevia").classList.add("visible");
   pushEstado("modalVistaPrevia");
 }
+
 function cerrarModalVistaPrevia(){
   document.getElementById("modalVistaPrevia").classList.remove("visible");
 }
 
-/* ============================================================
-   [S18] GENERAR PÁGINAS DEL ACTA — v8.0
-   ------------------------------------------------------------
-   Devuelve un array de páginas. Cada página es un objeto:
-   { html: string } — contenido HTML COMPLETO de una hoja.
+function guardarPDF(){
+  document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
+  mostrarToast("Elija 'Guardar como PDF' en el diálogo", "info", "💾");
+  setTimeout(() => window.print(), 400);
+}
 
-   Reglas:
-     1. Hoja 1: Header + Sección I + Sección II (parcial con título)
-     2. Hojas siguientes: continuación de secciones SIN título si
-        son continuación, CON título si son nueva sección.
-     3. Encabezado "2DA HOJA..." SOLO si las firmas van solas.
-     4. Si una sección nueva no cabe en el espacio restante de la
-        hoja actual, se pasa completa a la siguiente hoja.
-     5. Si una sección es tan grande que no cabe entera en una hoja
-        vacía, se divide: el primer trozo lleva título, los
-        siguientes son "continuación" (solo tabla, con thead).
+function imprimirActaDirecta(){
+  document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
+  setTimeout(() => window.print(), 300);
+}
+
+/* ============================================================
+   GENERAR HTML DEL ACTA CON LAYOUT INTELIGENTE
+   ------------------------------------------------------------
+   El motor divide las tablas por FILAS, no por bloques enteros.
+   Cada fila es un "átomo" medible. El thead se repite al cortar.
    ============================================================ */
-function generarPaginasActa(r, oficina, datos){
+function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
-  const fijos = DATA.fijos.filter(b => obtenerIdAsig(b) === idAsignacion);
-  const fungibles = DATA.fungibles.filter(b => obtenerIdAsig(b) === idAsignacion);
-  const internos = DATA.internos.filter(b => obtenerIdAsig(b) === idAsignacion);
-  const prestados = DATA.prestados.filter(b => obtenerIdAsig(b) === idAsignacion);
+  const fijos = IDX.fijosPorId.get(idAsignacion) || [];
+  const fungibles = IDX.fungiblesPorId.get(idAsignacion) || [];
+  const internos = IDX.internosPorId.get(idAsignacion) || [];
+  const prestados = IDX.prestadosPorId.get(idAsignacion) || [];
 
   const fechaActual = new Date();
   const fechaLarga = `Tupiza, ${mesCapitalizado(fechaActual.getMonth())} ${fechaActual.getDate()} del ${fechaActual.getFullYear()}`;
+
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
@@ -2364,312 +2666,286 @@ function generarPaginasActa(r, oficina, datos){
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
-  const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
-
-  function generarEncabezadoContinuacion(numHoja){
-    const texto = `${ordinalHoja(numHoja)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
-    let h = `<div class="acta-continuacion">${esc(texto)}</div>`;
-    if(resumenBienes){
-      h += `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>`;
-    }
-    return h;
-  }
-
   /* ============================================================
-     MEDICIÓN
+     CONSTRUIR ÁTOMOS MEDIBLES
+     Cada átomo es la unidad mínima que NO se puede dividir.
      ============================================================ */
-  const contMed = document.getElementById("actaMedicion");
-  function medirHTML(html){
-    contMed.innerHTML = html;
-    void contMed.offsetHeight;
-    return contMed.scrollHeight;
-  }
+  const atomos = [];
 
-  const headerHTML = `
-    <div class="acta-membrete">
-      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
-      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
-      <div class="linea3">BOLIVIA</div>
-    </div>
-    <div class="acta-titulo">
-      <span class="titulo-linea1">${esc(tituloL1)}</span>
-      <span class="titulo-linea2">${tituloL2}</span>
-    </div>
-  `;
-  const headerAltura = medirHTML(headerHTML);
+  /* Encabezado (membrete + título) */
+  atomos.push({
+    tipo: "header",
+    html: `
+      <div class="acta-membrete">
+        <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
+        <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
+        <div class="linea3">BOLIVIA</div>
+      </div>
+      <div class="acta-titulo">
+        <span class="titulo-linea1">${esc(tituloL1)}</span>
+        <span class="titulo-linea2">${tituloL2}</span>
+      </div>
+    `
+  });
 
+  /* Secciones con filas individuales */
+  const secciones = [
+    { numRomano: "I.- ", titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos, tipoClase: "fijos" },
+    { numRomano: "II.- ", titulo: "INVENTARIO DE ACTIVOS FUNGIBLES", lista: fungibles, tipoClase: "fungibles" },
+    { numRomano: "III.- ", titulo: "INVENTARIO INTERNO", lista: internos, tipoClase: "internos" },
+    { numRomano: "IV.- ", titulo: "INVENTARIO DE BIENES PRESTADOS", lista: prestados, tipoClase: "prestados" }
+  ];
+
+  secciones.forEach(sec => {
+    atomos.push({
+      tipo: "seccion-titulo",
+      html: `<div class="acta-seccion-titulo">${sec.numRomano}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`,
+      seccion: sec.tipoClase
+    });
+
+    atomos.push({
+      tipo: "thead",
+      html: generarTheadActa(sec.tipoClase),
+      seccion: sec.tipoClase
+    });
+
+    if(sec.lista.length === 0){
+      atomos.push({
+        tipo: "fila-vacia",
+        html: `<table class="acta-tabla"><tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table>`,
+        seccion: sec.tipoClase
+      });
+    } else {
+      sec.lista.forEach((b, i) => {
+        atomos.push({
+          tipo: "fila",
+          html: generarFilaActa(b, i, sec.tipoClase),
+          seccion: sec.tipoClase,
+          esUltimaFila: i === sec.lista.length - 1
+        });
+      });
+    }
+  });
+
+  /* Firmas */
   const firmasHTML = generarBloqueFirmas({
     nombreSaliente, cargoSaliente, nombreEntrante, cargoEntrante,
     nombreSup1, cargoSup1, nombreSup2, cargoSup2,
     nombreVobo, cargoVobo, fechaLarga
   });
-  const firmasAltura = medirHTML(firmasHTML);
+  atomos.push({ tipo: "firmas", html: firmasHTML });
 
-  /* Helper: construir HTML de una sección completa */
-  function htmlSeccionCompleta(sec, filas){
-    const filasHTML = filas.map(f => f.html).join("");
-    return `<div class="acta-seccion">
-      <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-      <table class="acta-tabla">
-        <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-        <tbody>${filasHTML}</tbody>
-      </table>
-    </div>`;
-  }
-
-  /* Helper: construir HTML de continuación (solo tabla) */
-  function htmlContinuacion(sec, filas){
-    const filasHTML = filas.map(f => f.html).join("");
-    return `<table class="acta-tabla">
-      <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-      <tbody>${filasHTML}</tbody>
-    </table>`;
-  }
-
-  /* Helper: medir thead */
-  function medirThead(tipo){
-    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody></tbody></table>`;
-    return medirHTML(html);
-  }
-
-  /* Helper: medir fila incremental */
-  function medirFilaIncremental(filaHTML, tipo, alturaThead){
-    const htmlCon = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
-    const totalCon = medirHTML(htmlCon);
-    return Math.max(totalCon - alturaThead, 14);
-  }
-
-  /* Construir secciones con sus filas medidas */
-  const seccionesDef = [
-    { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
-    { nombre: "FUNGIBLES", num: "II.- ",  titulo: "INVENTARIO DE ACTIVOS FUNGIBLES",     lista: fungibles, tipo: "fungibles" },
-    { nombre: "INTERNOS",  num: "III.- ", titulo: "INVENTARIO INTERNO",                  lista: internos,  tipo: "internos" },
-    { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
-  ];
-
-  const secciones = seccionesDef.map(sec => {
-    const alturaThead = medirThead(sec.tipo);
-    if(!sec.lista.length){
-      const filaVacia = `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
-      const alturaFila = medirFilaIncremental(filaVacia, sec.tipo, alturaThead);
-      return {
-        ...sec,
-        alturaThead,
-        filas: [{ html: filaVacia, altura: alturaFila }],
-        vacia: true
-      };
-    }
-    const filas = sec.lista.map((b, i) => {
-      const filaStr = generarFilaTabla(b, i, sec.tipo);
-      const altura = medirFilaIncremental(filaStr, sec.tipo, alturaThead);
-      return { html: filaStr, altura };
-    });
-    return { ...sec, alturaThead, filas, vacia: false };
+  /* ============================================================
+     MEDIR ÁTOMOS
+     ============================================================ */
+  const contMed = document.getElementById("actaMedicion");
+  /* Envolvemos cada átomo en un contenedor compatible con impresión para medir tamaño real */
+  atomos.forEach(a => {
+    contMed.innerHTML = `<div class="acta-seccion" style="margin-top:0;">${a.html}</div>`;
+    void contMed.offsetHeight;
+    a.altura = contMed.scrollHeight;
   });
 
   /* ============================================================
-     EMPAQUETADOR — construye array de páginas
+     ENSAMBLAR CON PAGE-BREAKS
+     ------------------------------------------------------------
+     - Acumulamos altura en la hoja actual.
+     - Al desbordar, insertamos salto y RE-EMITIMOS thead si estamos en medio de una tabla.
+     - Las firmas siempre van en hoja nueva y registramos en qué número quedaron.
      ============================================================ */
-  const paginas = [];
+  let htmlFinal = "";
+  let alturaAcumulada = 0;
+  let hojaActual = 1;
 
-  /* Trabajamos con una "página en construcción" */
-  let paginaActual = {
-    html: "",
-    altura: 0
+  /* Necesitamos saber si estamos dentro de una tabla y qué sección */
+  let seccionAbierta = null;         /* tipo de la sección con tabla activa */
+  let hayFilasPendientes = false;    /* quedan filas en la sección */
+  let indiceAtomo = 0;
+
+  const hayFilaDespues = (idx, seccion) => {
+    for(let j = idx + 1; j < atomos.length; j++){
+      if(atomos[j].seccion === seccion && (atomos[j].tipo === "fila" || atomos[j].tipo === "fila-vacia")) return true;
+      if(atomos[j].seccion !== seccion && atomos[j].tipo !== "thead") return false;
+    }
+    return false;
   };
 
-  /* Colocar el header en la página 1 */
-  paginaActual.html = headerHTML;
-  paginaActual.altura = headerAltura;
+  for(let i = 0; i < atomos.length; i++){
+    const a = atomos[i];
 
-  /* Cola de secciones */
-  const cola = secciones.map(s => ({
-    ...s,
-    filasRestantes: [...s.filas],
-    yaSeMostroTitulo: false
-  }));
+    /* -------- FIRMAS: siempre en hoja nueva -------- */
+    if(a.tipo === "firmas"){
+      htmlFinal += `<div class="saltar-pagina"></div>`;
+      hojaActual++;
+      /* Cerrar cualquier tabla abierta antes de firmas */
+      if(seccionAbierta){
+        htmlFinal += `</tbody></table>`;
+        seccionAbierta = null;
+      }
+      htmlFinal += a.html;
+      continue;
+    }
 
-  /* Procesar secciones */
-  for(let i = 0; i < cola.length; i++){
-    const sec = cola[i];
-    if(sec.filasRestantes.length === 0 && sec.vacia === false) continue;
+    /* -------- THEAD: abrir tabla nueva -------- */
+    if(a.tipo === "thead"){
+      /* Si ya había una tabla abierta, cerrarla */
+      if(seccionAbierta){
+        htmlFinal += `</tbody></table>`;
+        seccionAbierta = null;
+      }
+      const espacioRestante = ALTURA_UTIL_HOJA - alturaAcumulada;
+      /* Necesitamos al menos el thead + 1 fila para que valga la pena empezar aquí */
+      const siguiente = atomos[i+1];
+      const alturaMinima = a.altura + (siguiente ? siguiente.altura : 0);
 
-    /* Espacio restante en la página actual */
-    const espacioRestante = ALTURA_UTIL_HOJA_PX - paginaActual.altura;
-
-    /* ¿Cabe el inicio completo (título + thead + 1ra fila)? */
-    const primeraFila = sec.filasRestantes[0];
-    const htmlInicio = htmlSeccionCompleta(sec, [primeraFila]);
-    const alturaInicio = medirHTML(htmlInicio);
-
-    if(alturaInicio <= espacioRestante && paginaActual.altura > 0){
-      /* Colocar título + thead + tantas filas como quepan */
-      const alturaThead = medirThead(sec.tipo);
-      const alturaTituloThead = alturaInicio - primeraFila.altura;
-
-      const filasQueCaben = [primeraFila];
-      let alturaFilasAcum = primeraFila.altura;
-      let idx = 1;
-
-      while(idx < sec.filasRestantes.length){
-        const siguienteFila = sec.filasRestantes[idx];
-        const alturaTest = alturaTituloThead + alturaFilasAcum + siguienteFila.altura;
-        if(alturaTest <= espacioRestante){
-          filasQueCaben.push(siguienteFila);
-          alturaFilasAcum += siguienteFila.altura;
-          idx++;
-        } else {
-          break;
-        }
+      if(alturaMinima > espacioRestante && alturaAcumulada > 0){
+        htmlFinal += `<div class="saltar-pagina"></div>`;
+        hojaActual++;
+        alturaAcumulada = 0;
       }
 
-      /* Colocar esta sección (parcial o completa) en la página actual */
-      paginaActual.html += htmlSeccionCompleta(sec, filasQueCaben);
-      paginaActual.altura += alturaTituloThead + alturaFilasAcum;
+      htmlFinal += a.html;  /* thead abre tabla */
+      seccionAbierta = a.seccion;
+      alturaAcumulada += a.altura;
+      continue;
+    }
 
-      /* Actualizar cola */
-      sec.filasRestantes = sec.filasRestantes.slice(idx);
-      sec.yaSeMostroTitulo = true;
-
-      /* Si quedan filas, pasar a la siguiente página y reabrir con continuación */
-      if(sec.filasRestantes.length > 0){
-        /* Nueva página */
-        paginas.push({ html: paginaActual.html });
-        paginaActual = { html: "", altura: 0 };
-
-        /* Colocar continuación (sin título) con tantas filas como quepan */
-        const alturaTheadCont = medirThead(sec.tipo);
-        const alturaDisponibleCont = ALTURA_UTIL_HOJA_PX - alturaTheadCont;
-
-        const filasCont = [];
-        let alturaContAcum = 0;
-        for(const f of sec.filasRestantes){
-          if(alturaContAcum + f.altura <= alturaDisponibleCont){
-            filasCont.push(f);
-            alturaContAcum += f.altura;
-          } else {
-            break;
-          }
-        }
-
-        paginaActual.html = htmlContinuacion(sec, filasCont);
-        paginaActual.altura = alturaTheadCont + alturaContAcum;
-        sec.filasRestantes = sec.filasRestantes.slice(filasCont.length);
-
-        /* Si quedan más filas, seguir procesando esta sección */
-        if(sec.filasRestantes.length > 0){
-          i--; /* repetir la misma sección */
-          continue;
-        }
+    /* -------- FILA VACÍA -------- */
+    if(a.tipo === "fila-vacia"){
+      if(seccionAbierta !== a.seccion){
+        /* Abrir tabla si no estaba */
+        htmlFinal += `<table class="acta-tabla"><tbody>`;
+        seccionAbierta = a.seccion;
       }
-    } else {
-      /* No cabe el inicio en la página actual (o está vacía) */
-      /* Cerrar página actual si tiene contenido */
-      if(paginaActual.altura > 0){
-        paginas.push({ html: paginaActual.html });
-        paginaActual = { html: "", altura: 0 };
-      }
+      htmlFinal += `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table>`;
+      seccionAbierta = null;
+      alturaAcumulada += a.altura;
+      continue;
+    }
 
-      /* Nueva página: colocar el inicio */
-      const espacioNueva = ALTURA_UTIL_HOJA_PX;
+    /* -------- FILA NORMAL -------- */
+    if(a.tipo === "fila"){
+      const espacioRestante = ALTURA_UTIL_HOJA - alturaAcumulada;
 
-      /* ¿Cabe el inicio completo? */
-      if(alturaInicio <= espacioNueva){
-        const alturaThead = medirThead(sec.tipo);
-        const alturaTituloThead = alturaInicio - primeraFila.altura;
-
-        const filasQueCaben = [primeraFila];
-        let alturaFilasAcum = primeraFila.altura;
-        let idx = 1;
-
-        while(idx < sec.filasRestantes.length){
-          const siguienteFila = sec.filasRestantes[idx];
-          const alturaTest = alturaTituloThead + alturaFilasAcum + siguienteFila.altura;
-          if(alturaTest <= espacioNueva){
-            filasQueCaben.push(siguienteFila);
-            alturaFilasAcum += siguienteFila.altura;
-            idx++;
-          } else {
-            break;
-          }
+      if(a.altura <= espacioRestante){
+        /* Cabe */
+        if(seccionAbierta !== a.seccion){
+          /* Reabrir thead si venimos de salto */
+          htmlFinal += generarTheadActa(a.seccion);
+          seccionAbierta = a.seccion;
         }
-
-        paginaActual.html = htmlSeccionCompleta(sec, filasQueCaben);
-        paginaActual.altura = alturaTituloThead + alturaFilasAcum;
-
-        sec.filasRestantes = sec.filasRestantes.slice(idx);
-        sec.yaSeMostroTitulo = true;
-
-        if(sec.filasRestantes.length > 0){
-          i--;
-          continue;
-        }
+        htmlFinal += a.html;
+        alturaAcumulada += a.altura;
       } else {
-        /* No cabe ni una fila — caso anómalo, colocar toda la sección igual */
-        paginaActual.html = htmlSeccionCompleta(sec, sec.filasRestantes);
-        paginaActual.altura = medirHTML(paginaActual.html);
-        sec.filasRestantes = [];
+        /* No cabe → saltar de hoja, cerrar tabla y reabrir thead */
+        if(seccionAbierta){
+          htmlFinal += `</tbody></table>`;
+        }
+        htmlFinal += `<div class="saltar-pagina"></div>`;
+        hojaActual++;
+        alturaAcumulada = 0;
+
+        /* Reabrir thead */
+        htmlFinal += generarTheadActa(a.seccion);
+        seccionAbierta = a.seccion;
+        htmlFinal += a.html;
+        alturaAcumulada += a.altura;
       }
+      continue;
+    }
+
+    /* -------- HEADER / SECCION-TITULO / OTROS BLOQUES -------- */
+    const espacioRestante = ALTURA_UTIL_HOJA - alturaAcumulada;
+
+    /* Regla: si es título de sección, debe ir acompañado de al menos 2 filas siguientes */
+    if(a.tipo === "seccion-titulo"){
+      let alturaSiguientes = a.altura;
+      for(let j = i + 1; j < atomos.length && j <= i + 2; j++){
+        if(atomos[j].tipo === "thead" || atomos[j].tipo === "fila" || atomos[j].tipo === "fila-vacia"){
+          alturaSiguientes += atomos[j].altura;
+        } else break;
+      }
+      /* Cerrar tabla previa */
+      if(seccionAbierta){
+        htmlFinal += `</tbody></table>`;
+        seccionAbierta = null;
+      }
+      if(alturaSiguientes > espacioRestante && alturaAcumulada > 0){
+        htmlFinal += `<div class="saltar-pagina"></div>`;
+        hojaActual++;
+        alturaAcumulada = 0;
+      }
+      htmlFinal += a.html;
+      alturaAcumulada += a.altura;
+      continue;
+    }
+
+    /* Bloque genérico (header) */
+    if(a.altura <= espacioRestante){
+      htmlFinal += a.html;
+      alturaAcumulada += a.altura;
+    } else {
+      if(seccionAbierta){
+        htmlFinal += `</tbody></table>`;
+        seccionAbierta = null;
+      }
+      htmlFinal += `<div class="saltar-pagina"></div>`;
+      hojaActual++;
+      alturaAcumulada = a.altura;
+      htmlFinal += a.html;
     }
   }
 
-  /* ============================================================
-     FIRMAS
-     ============================================================ */
-  /* Cerrar la última página si tiene contenido */
-  if(paginaActual.altura > 0){
-    paginas.push({ html: paginaActual.html });
-    paginaActual = { html: "", altura: 0 };
+  /* Cerrar tabla si quedó abierta */
+  if(seccionAbierta){
+    htmlFinal += `</tbody></table>`;
+    seccionAbierta = null;
   }
 
-  /* ¿Caben las firmas en la última página? */
-  const ultimaPagina = paginas[paginas.length - 1];
-  const alturaUltimaPagina = medirHTML(ultimaPagina.html);
-  const espacioUltima = ALTURA_UTIL_HOJA_PX - alturaUltimaPagina;
+  /* ============================================================
+     INSERTAR ENCABEZADO DE CONTINUACIÓN EN LA HOJA DE FIRMAS
+     ============================================================ */
+  const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
+  const textoContinuacion = `${ordinalHoja(hojaActual)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
 
-  if(firmasAltura <= espacioUltima){
-    ultimaPagina.html += firmasHTML;
+  let bloqueContinuacion = `<div class="acta-continuacion">${esc(textoContinuacion)}</div>`;
+  if(resumenBienes){
+    bloqueContinuacion += `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>`;
+  }
+
+  htmlFinal = htmlFinal.replace(
+    '<div class="acta-bloque-firmas">',
+    `<div class="acta-bloque-firmas">${bloqueContinuacion}`
+  );
+
+  return htmlFinal;
+}
+
+/* Genera solo el thead con <table> abierta (sin cerrar) */
+function generarTheadActa(tipoClase){
+  let columnasHTML = "";
+  if(tipoClase === "fijos"){
+    columnasHTML = `<th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
   } else {
-    /* Firmas en página propia */
-    const numHoja = paginas.length + 1;
-    const enc = generarEncabezadoContinuacion(numHoja);
-    paginas.push({ html: enc + firmasHTML });
+    columnasHTML = `<th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
   }
-
-  /* ============================================================
-     APLICAR ENCABEZADOS DE CONTINUACIÓN
-     ------------------------------------------------------------
-     Regla: encabezado SOLO en la última página si es de firmas solas.
-     En las demás páginas NO se añade nada.
-     ============================================================ */
-  /* El encabezado ya se añadió solo cuando se creó la página de firmas solas. */
-
-  return paginas;
+  return `<table class="acta-tabla acta-tabla-fragmento"><thead><tr>${columnasHTML}</tr></thead><tbody>`;
 }
 
-/* ============================================================
-   [S19] HELPERS DE TABLA
-   ============================================================ */
-function columnasDeTipo(tipo){
-  if(tipo === "fijos"){
-    return `<th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
-  }
-  return `<th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
-}
-function generarFilaTabla(b, i, tipo){
+/* Genera una sola fila <tr> */
+function generarFilaActa(b, i, tipoClase){
   const codigo = getVal(b, "CODIGO");
   const cant = getVal(b, "CANTIDAD");
   const desc = getVal(b, "DESCRIPCION DEL ACTIVO");
   const estado = getVal(b, "ESTADO");
-  if(tipo === "fijos"){
+  if(tipoClase === "fijos"){
     return `<tr><td class="center">${i+1}.-</td><td class="center">${esc(codigo)}</td><td class="descripcion">${esc(desc)}</td><td class="center">${esc(estado)}</td></tr>`;
+  } else {
+    return `<tr><td class="center">${i+1}.-</td><td class="center">${esc(cant)}</td><td class="descripcion">${esc(desc)}</td><td class="center">${esc(estado)}</td></tr>`;
   }
-  return `<tr><td class="center">${i+1}.-</td><td class="center">${esc(cant)}</td><td class="descripcion">${esc(desc)}</td><td class="center">${esc(estado)}</td></tr>`;
 }
 
-/* ============================================================
-   [S20] BLOQUE DE FIRMAS
-   ============================================================ */
+/* Genera el bloque de firmas completo */
 function generarBloqueFirmas(d){
   let bloqueFirmasHTML = `
     <div class="acta-firmas-fila">
@@ -2685,6 +2961,7 @@ function generarBloqueFirmas(d){
       </div>
     </div>
   `;
+
   if(d.nombreSup1 && d.nombreSup2){
     bloqueFirmasHTML += `
       <div class="acta-firmas-fila">
@@ -2710,6 +2987,7 @@ function generarBloqueFirmas(d){
         <div class="acta-firma-cargo">${esc(d.cargoSup2)}</div>
       </div>`;
   }
+
   bloqueFirmasHTML += `
     <div class="acta-firma-bloque">
       <div class="acta-vobo">Vo. Bo.</div>
@@ -2717,6 +2995,7 @@ function generarBloqueFirmas(d){
       <div class="acta-firma-cargo">${esc(d.cargoVobo)}</div>
     </div>
   `;
+
   return `<div class="acta-bloque-firmas">
     <div class="acta-fecha-firmas">${esc(d.fechaLarga)}</div>
     <div class="acta-firmas">${bloqueFirmasHTML}</div>
@@ -2724,7 +3003,7 @@ function generarBloqueFirmas(d){
 }
 
 /* ============================================================
-   [S21] MESES
+   MESES
    ============================================================ */
 function mesCapitalizado(m){
   const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
@@ -2732,189 +3011,43 @@ function mesCapitalizado(m){
 }
 
 /* ============================================================
-   [S22] LIGHTBOX
+   LIGHTBOX / RIPPLE
    ============================================================ */
 function abrirLightbox(url){
-  document.getElementById("lightbox-img").src = url;
+  const segura = sanitizarUrlFoto(url);
+  if(!segura) return;
+  document.getElementById("lightbox-img").src = segura;
   document.getElementById("lightbox").classList.add("visible");
 }
 function cerrarLightbox(){ document.getElementById("lightbox").classList.remove("visible"); }
+function ripple(e, btn){
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = e.clientX - rect.left - size / 2;
+  const y = e.clientY - rect.top - size / 2;
+  const span = document.createElement("span");
+  span.style.position = "absolute";
+  span.style.borderRadius = "50%";
+  span.style.background = "var(--cian)";
+  span.style.opacity = "0.4";
+  span.style.pointerEvents = "none";
+  span.style.width = size + "px";
+  span.style.height = size + "px";
+  span.style.left = x + "px";
+  span.style.top = y + "px";
+  span.style.transform = "scale(0)";
+  span.style.animation = "rippleAnim .6s ease-out";
+  btn.style.position = "relative";
+  btn.style.overflow = "hidden";
+  btn.appendChild(span);
+  setTimeout(() => span.remove(), 600);
+}
+const styleRipple = document.createElement("style");
+styleRipple.innerHTML = "@keyframes rippleAnim{to{transform:scale(4);opacity:0;}}";
+document.head.appendChild(styleRipple);
 
 /* ============================================================
-   [S23] GENERAR PDF CON jsPDF + html2canvas
-   ============================================================ */
-async function guardarPDF(){
-  if(!actaEnProceso.paginas || !actaEnProceso.paginas.length){
-    mostrarToast("No hay acta generada", "error", "⚠");
-    return;
-  }
-
-  const btnPDF = document.getElementById("btnGuardarPDF");
-  const overlay = document.getElementById("pdfOverlay");
-  const overlaySub = document.getElementById("pdfOverlaySub");
-
-  btnPDF.disabled = true;
-  overlay.classList.add("visible");
-  overlaySub.textContent = `Preparando página 1 de ${actaEnProceso.paginas.length}`;
-
-  try{
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({
-      unit: "mm",
-      format: "letter",
-      orientation: "portrait"
-    });
-
-    const paginas = actaEnProceso.paginas;
-
-    for(let i = 0; i < paginas.length; i++){
-      overlaySub.textContent = `Procesando página ${i+1} de ${paginas.length}`;
-
-      /* Crear contenedor con el tamaño exacto de la hoja */
-      const contenedor = document.createElement("div");
-      contenedor.className = "acta-render";
-      contenedor.innerHTML = paginas[i].html;
-      document.body.appendChild(contenedor);
-
-      /* Esperar un frame para que se renderice */
-      await new Promise(r => setTimeout(r, 50));
-
-      /* Renderizar a canvas */
-      const canvas = await html2canvas(contenedor, {
-        scale: 2,
-        backgroundColor: "#ffffff",
-        useCORS: true,
-        logging: false,
-        width: contenedor.scrollWidth,
-        height: contenedor.scrollHeight,
-        windowWidth: contenedor.scrollWidth,
-        windowHeight: contenedor.scrollHeight
-      });
-
-      /* Añadir al PDF */
-      if(i > 0) pdf.addPage();
-      const imgData = canvas.toDataURL("image/jpeg", 0.95);
-      /* La imagen ocupa toda la hoja (márgenes incluidos en el contenedor) */
-      const imgWidth = 215.9;  /* Letter ancho */
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, Math.min(imgHeight, 279.4));
-
-      /* Limpiar */
-      document.body.removeChild(contenedor);
-
-      /* Yield al navegador para no bloquear el UI */
-      await new Promise(r => setTimeout(r, 10));
-    }
-
-    /* Guardar */
-    const nombreArchivo = `Acta_${oficinaConArticulo(actaEnProceso.oficina.oficina).replace(/[^a-zA-Z0-9]/g, "_")}_${Date.now()}.pdf`;
-    pdf.save(nombreArchivo);
-
-    mostrarToast("PDF generado correctamente", "success", "✔");
-  }catch(err){
-    console.error(err);
-    mostrarToast(`Error al generar PDF: ${err.message}`, "error", "⚠");
-  }finally{
-    overlay.classList.remove("visible");
-    btnPDF.disabled = false;
-  }
-}
-
-/* ============================================================
-   [S24] IMPRIMIR (alternativa con window.print)
-   ============================================================ */
-function imprimirActaDirecta(){
-  if(!actaEnProceso.paginas || !actaEnProceso.paginas.length){
-    mostrarToast("No hay acta generada", "error", "⚠");
-    return;
-  }
-
-  /* Crear iframe temporal para imprimir sin afectar la página */
-  const iframe = document.createElement("iframe");
-  iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
-  document.body.appendChild(iframe);
-
-  const doc = iframe.contentWindow.document;
-  doc.open();
-  doc.write(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <title>Acta</title>
-      <style>
-        @page{size:letter portrait;margin:0;}
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:#fff;font-family:Arial,sans-serif;color:#000;}
-        .pagina{
-          width:215.9mm;
-          min-height:279.4mm;
-          padding:20mm 20mm 20mm 30mm;
-          page-break-after:always;
-          break-after:page;
-          position:relative;
-          background:#fff;
-          box-sizing:border-box;
-        }
-        .pagina:last-child{page-break-after:auto;break-after:auto;}
-        ${document.getElementById("previewActa").style.cssText ? "" : ""}
-      </style>
-      <style>${getEstilosActaParaImpresion()}</style>
-    </head>
-    <body>
-      ${actaEnProceso.paginas.map(p => `<div class="pagina">${p.html}</div>`).join("")}
-    </body>
-    </html>
-  `);
-  doc.close();
-
-  setTimeout(() => {
-    try{
-      iframe.contentWindow.focus();
-      iframe.contentWindow.print();
-    }catch(e){
-      console.error(e);
-    }
-    setTimeout(() => document.body.removeChild(iframe), 1000);
-  }, 300);
-}
-
-/* Extrae los estilos del acta para la impresión */
-function getEstilosActaParaImpresion(){
-  return `
-    .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 10pt 0;text-transform:uppercase;text-align:left;}
-    .acta-membrete .linea1{padding-left:0;}
-    .acta-membrete .linea2{padding-left:9pt;}
-    .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
-    .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.1;}
-    .acta-titulo .titulo-linea1{display:block;}
-    .acta-titulo .titulo-linea2{display:block;}
-    .acta-seccion{margin-top:6pt;}
-    .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;line-height:1.0;}
-    .acta-seccion-titulo .subrayado{text-decoration:underline;}
-    .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;border:1px solid #000;}
-    .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;}
-    .acta-tabla td{border:1px solid #000;padding:3pt 4pt;font-size:9pt;vertical-align:top;line-height:1.15;}
-    .acta-tabla td.center{text-align:center;}
-    .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
-    .acta-tabla td.vacia{text-align:center;padding:8pt 4pt;font-style:italic;text-transform:uppercase;}
-    .acta-bloque-firmas{margin-top:24pt;}
-    .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;}
-    .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
-    .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
-    .acta-firma-bloque-lado{flex:1;text-align:center;}
-    .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
-    .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;line-height:1.0;}
-    .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;line-height:1.2;}
-    .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;line-height:1.0;}
-    .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
-    .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
-    .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
-  `;
-}
-
-/* ============================================================
-   [S25] ATAJOS
+   ATAJOS
    ============================================================ */
 document.addEventListener("keydown", e => {
   if((e.ctrlKey || e.metaKey) && e.key === "k"){
@@ -2932,9 +3065,10 @@ document.addEventListener("keydown", e => {
 });
 
 /* ============================================================
-   [S26] INICIALIZACIÓN
+   INICIALIZACIÓN
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
+  calcularAlturaUtilHoja();
   try{
     history.replaceState({ pantalla: "home" }, "");
     history.pushState({ pantalla: "home" }, "");
