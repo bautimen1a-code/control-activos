@@ -1972,7 +1972,7 @@ function dibujarBloqueFirmasPDF(doc, datos, r, yInicio){
   doc.setFontSize(10);
   doc.text("ENTREGUÉ CONFORME:", colIzqX, y, { align: "center" });
   doc.text("RECIBÍ CONFORME:", colDerX, y, { align: "center" });
-  y += 30;
+  y += 22;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
@@ -1984,7 +1984,7 @@ function dibujarBloqueFirmasPDF(doc, datos, r, yInicio){
   doc.setFontSize(9);
   doc.text(cargoSaliente, colIzqX, y, { align: "center" });
   doc.text(cargoEntrante, colDerX, y, { align: "center" });
-  y += 12;
+  y += 22;
 
   if(nombreSup1 || nombreSup2){
     doc.setFont("helvetica", "normal");
