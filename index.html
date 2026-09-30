@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control DIV-10 · V7.0</title>
+<title>Control DIV-10 · V8.0</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 /* ============================================================
    [01] VARIABLES Y TEMA
@@ -92,14 +94,11 @@ body{
     var(--bg);
 }
 .bg-layer::before{
-  content:"";
-  position:absolute;inset:0;
+  content:"";position:absolute;inset:0;
   background-image:
     linear-gradient(45deg, rgba(255,255,255,.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.02) 75%),
     linear-gradient(45deg, rgba(255,255,255,.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.02) 75%);
-  background-size:6px 6px;
-  background-position:0 0, 3px 3px;
-  opacity:.5;
+  background-size:6px 6px;background-position:0 0, 3px 3px;opacity:.5;
 }
 body.light .bg-layer::before{
   background-image:
@@ -107,18 +106,13 @@ body.light .bg-layer::before{
     linear-gradient(45deg, rgba(0,0,0,.02) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.02) 75%);
 }
 .bg-layer::after{
-  content:"";
-  position:absolute;
-  top:50%;left:50%;
-  width:200vmax;height:200vmax;
-  transform:translate(-50%,-50%);
+  content:"";position:absolute;top:50%;left:50%;
+  width:200vmax;height:200vmax;transform:translate(-50%,-50%);
   background:
     repeating-conic-gradient(from 0deg at 50% 50%,
       transparent 0deg, rgba(124,179,66,.03) 1deg, transparent 2deg, transparent 90deg,
       transparent 90deg, rgba(232,169,58,.03) 91deg, transparent 92deg, transparent 180deg);
-  opacity:.6;
-  animation:radarSpin 60s linear infinite;
-  pointer-events:none;
+  opacity:.6;animation:radarSpin 60s linear infinite;pointer-events:none;
 }
 @keyframes radarSpin{from{transform:translate(-50%,-50%) rotate(0);}to{transform:translate(-50%,-50%) rotate(360deg);}}
 
@@ -138,8 +132,7 @@ body.light .bg-layer::before{
 ::-webkit-scrollbar-track{background:var(--bg-terminal);}
 ::-webkit-scrollbar-thumb{
   background:linear-gradient(180deg,var(--gris-metal),var(--gris-metal-claro));
-  border:2px solid var(--bg-terminal);
-  border-radius:2px;
+  border:2px solid var(--bg-terminal);border-radius:2px;
 }
 ::-webkit-scrollbar-thumb:hover{background:var(--verde);}
 
@@ -155,17 +148,12 @@ body.light .bg-layer::before{
   position:sticky;top:0;z-index:50;
   background:linear-gradient(180deg, var(--bg-panel) 0%, rgba(26,38,32,.95) 100%);
   border-bottom:2px solid var(--borde-fuerte);
-  padding:0;
-  overflow:hidden;
-  transition:background .4s ease;
+  padding:0;overflow:hidden;transition:background .4s ease;
   box-shadow:0 2px 0 rgba(0,0,0,.2), 0 4px 20px rgba(0,0,0,.3);
 }
-body.light .header{
-  background:linear-gradient(180deg, #ffffff 0%, #f0f4f0 100%);
-}
+body.light .header{background:linear-gradient(180deg, #ffffff 0%, #f0f4f0 100%);}
 .header::before{
-  content:"";
-  position:absolute;top:0;left:0;right:0;height:2px;
+  content:"";position:absolute;top:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,var(--rojo) 0%, var(--ambar) 30%, var(--verde) 70%, var(--rojo) 100%);
   opacity:.75;
 }
@@ -176,80 +164,56 @@ body.light .header{
 }
 .header-logo{display:flex;align-items:center;gap:14px;}
 .header-logo-icon{
-  width:46px;height:46px;
-  position:relative;
+  width:46px;height:46px;position:relative;
   display:flex;align-items:center;justify-content:center;
   font-size:22px;font-weight:900;color:var(--bg-terminal);
   background:linear-gradient(135deg, var(--ambar), #c68a1a);
-  border:2px solid var(--gris-metal-claro);
-  border-radius:6px;
+  border:2px solid var(--gris-metal-claro);border-radius:6px;
   box-shadow:
     0 0 0 1px rgba(0,0,0,.4),
     inset 0 1px 0 rgba(255,255,255,.3),
     inset 0 -2px 4px rgba(0,0,0,.3),
     0 4px 12px rgba(0,0,0,.4);
-  transform:rotate(-3deg);
-  transition:transform .3s ease;
+  transform:rotate(-3deg);transition:transform .3s ease;
 }
 .header-logo-icon:hover{transform:rotate(0deg) scale(1.05);}
-
 .header-text h1{
-  font-size:16px;font-weight:900;
-  letter-spacing:2px;text-transform:uppercase;
-  color:var(--texto);
-  line-height:1.1;
+  font-size:16px;font-weight:900;letter-spacing:2px;
+  text-transform:uppercase;color:var(--texto);line-height:1.1;
 }
-.header-text h1 .highlight{
-  color:var(--ambar);
-  text-shadow:0 0 12px var(--ambar-glow);
-}
+.header-text h1 .highlight{color:var(--ambar);text-shadow:0 0 12px var(--ambar-glow);}
 .header-text .subtitle{
-  font-family:var(--mono);
-  font-size:9px;letter-spacing:3px;
-  color:var(--texto-suave);
-  text-transform:uppercase;
-  margin-top:3px;
+  font-family:var(--mono);font-size:9px;letter-spacing:3px;
+  color:var(--texto-suave);text-transform:uppercase;margin-top:3px;
   display:flex;align-items:center;gap:8px;
 }
 .header-text .subtitle::before{
-  content:"";
-  display:inline-block;
-  width:6px;height:6px;border-radius:50%;
-  background:var(--verde);
-  box-shadow:0 0 8px var(--verde);
+  content:"";display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--verde);box-shadow:0 0 8px var(--verde);
   animation:blink 2s ease-in-out infinite;
 }
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
-
 .header-actions{display:flex;align-items:center;gap:10px;}
-
 .btn-icon{
   width:44px;height:44px;
   background:linear-gradient(180deg, var(--gris-metal-claro) 0%, var(--gris-metal) 100%);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
-  color:var(--texto);
-  font-size:18px;cursor:pointer;
+  border:1px solid var(--borde-fuerte);border-radius:6px;
+  color:var(--texto);font-size:18px;cursor:pointer;
   display:flex;align-items:center;justify-content:center;
-  transition:all .15s ease;
-  flex-shrink:0;
-  position:relative;
-  overflow:hidden;
+  transition:all .15s ease;flex-shrink:0;position:relative;overflow:hidden;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.15),
     inset 0 -2px 4px rgba(0,0,0,.3),
     0 2px 4px rgba(0,0,0,.25);
 }
 .btn-icon::before{
-  content:"";
-  position:absolute;inset:0;
+  content:"";position:absolute;inset:0;
   background:linear-gradient(180deg, transparent 50%, rgba(0,0,0,.15) 100%);
   pointer-events:none;
 }
 .btn-icon:hover{
   background:linear-gradient(180deg, var(--ambar) 0%, #c68a1a 100%);
-  color:var(--bg-terminal);
-  transform:translateY(-1px);
+  color:var(--bg-terminal);transform:translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.4),
     inset 0 -2px 4px rgba(0,0,0,.3),
@@ -257,36 +221,24 @@ body.light .header{
 }
 .btn-icon:active{
   transform:translateY(1px);
-  box-shadow:
-    inset 0 2px 6px rgba(0,0,0,.4),
-    0 1px 2px rgba(0,0,0,.3);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.3);
 }
 .btn-icon.spinning{animation:spin 1s linear infinite;}
 @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
-
 .header-status{
-  display:flex;align-items:center;gap:8px;
-  padding:8px 14px;
-  background:var(--bg-terminal);
-  border:1px solid var(--borde-fuerte);
-  border-radius:4px;
-  font-size:10px;font-family:var(--mono);
-  color:var(--verde-brillante);
-  letter-spacing:2px;
-  position:relative;
-  overflow:hidden;
+  display:flex;align-items:center;gap:8px;padding:8px 14px;
+  background:var(--bg-terminal);border:1px solid var(--borde-fuerte);
+  border-radius:4px;font-size:10px;font-family:var(--mono);
+  color:var(--verde-brillante);letter-spacing:2px;
+  position:relative;overflow:hidden;
 }
 .header-status::before{
-  content:"";
-  position:absolute;top:0;left:0;bottom:0;width:3px;
-  background:var(--verde);
-  box-shadow:0 0 8px var(--verde);
+  content:"";position:absolute;top:0;left:0;bottom:0;width:3px;
+  background:var(--verde);box-shadow:0 0 8px var(--verde);
 }
 .status-dot{
-  width:8px;height:8px;background:var(--verde);
-  border-radius:50%;
-  box-shadow:0 0 8px var(--verde);
-  animation:blink 1.6s ease-in-out infinite;
+  width:8px;height:8px;background:var(--verde);border-radius:50%;
+  box-shadow:0 0 8px var(--verde);animation:blink 1.6s ease-in-out infinite;
 }
 
 /* ============================================================
@@ -299,158 +251,106 @@ body.light .header{
    ============================================================ */
 .home{display:flex;flex-direction:column;gap:20px;padding-top:8px;animation:fadeIn .5s ease both;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
-
 .home-title{
-  font-size:11px;letter-spacing:6px;
-  color:var(--texto-suave);
-  text-transform:uppercase;
-  padding:8px 0;
-  border-bottom:1px solid var(--borde);
+  font-size:11px;letter-spacing:6px;color:var(--texto-suave);
+  text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--borde);
   display:flex;align-items:center;gap:12px;
 }
-.home-title::before,
-.home-title::after{
-  content:"";
-  flex:1;height:1px;
+.home-title::before,.home-title::after{
+  content:"";flex:1;height:1px;
   background:linear-gradient(90deg,transparent,var(--borde-fuerte),transparent);
 }
-
 .home-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-
 .home-btn{
-  position:relative;
-  background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
-  border:1px solid var(--borde);
-  border-radius:8px;
-  padding:24px 16px;
-  cursor:pointer;
-  transition:all .2s ease;
-  overflow:hidden;
-  text-align:center;
+  position:relative;background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
+  border:1px solid var(--borde);border-radius:8px;padding:24px 16px;
+  cursor:pointer;transition:all .2s ease;overflow:hidden;text-align:center;
   display:flex;flex-direction:column;align-items:center;gap:12px;
-  color:var(--texto);
-  box-shadow:var(--sombra-panel);
+  color:var(--texto);box-shadow:var(--sombra-panel);
 }
 .home-btn::before{
-  content:"";
-  position:absolute;top:0;left:0;right:0;height:3px;
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
   background:var(--color,var(--ambar));
   transform:scaleX(0);transform-origin:left;
   transition:transform .3s ease;
   box-shadow:0 0 8px var(--color,var(--ambar));
 }
 .home-btn:hover{
-  transform:translateY(-3px);
-  border-color:var(--color,var(--ambar));
+  transform:translateY(-3px);border-color:var(--color,var(--ambar));
   box-shadow:var(--sombra-elevado), 0 0 30px var(--color-glow, var(--ambar-glow));
 }
 .home-btn:hover::before{transform:scaleX(1);}
 .home-btn:active{transform:translateY(0);}
-
 .home-btn[data-color="verde"]{--color:var(--verde);--color-glow:var(--verde-glow);}
 .home-btn[data-color="azul"]{--color:var(--azul);--color-glow:var(--azul-glow);}
 .home-btn[data-color="marron"]{--color:var(--ambar);--color-glow:var(--ambar-glow);}
 .home-btn[data-color="vino"]{--color:var(--rojo);--color-glow:var(--rojo-glow);}
 .home-btn[data-color="buscar"]{--color:var(--ambar);--color-glow:var(--ambar-glow);}
-
 .home-btn-icon{
-  font-size:32px;
-  color:var(--color,var(--ambar));
+  font-size:32px;color:var(--color,var(--ambar));
   filter:drop-shadow(0 0 8px var(--color,var(--ambar)));
   transition:transform .3s ease;
 }
 .home-btn:hover .home-btn-icon{transform:scale(1.15);}
-
-.home-btn-label{
-  font-size:10px;letter-spacing:3px;
-  text-transform:uppercase;
-  color:var(--texto-suave);
-  font-weight:700;
-}
+.home-btn-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;}
 .home-btn-count{
-  font-size:30px;font-weight:900;
-  color:var(--color,var(--ambar));
-  line-height:1;
-  text-shadow:0 0 16px var(--color-glow, var(--ambar-glow));
+  font-size:30px;font-weight:900;color:var(--color,var(--ambar));
+  line-height:1;text-shadow:0 0 16px var(--color-glow, var(--ambar-glow));
 }
-
 .home-btn.buscar{
-  grid-column:span 4;
-  padding:22px;
+  grid-column:span 4;padding:22px;
   background:linear-gradient(180deg, var(--bg-terminal) 0%, var(--bg-panel) 100%);
-  flex-direction:row;justify-content:center;gap:16px;
-  border-color:var(--ambar);
+  flex-direction:row;justify-content:center;gap:16px;border-color:var(--ambar);
 }
 .home-btn.buscar .home-btn-icon{font-size:26px;}
 .home-btn.buscar .home-btn-label{font-size:13px;letter-spacing:6px;color:var(--ambar-brillante);}
 
 /* ============================================================
-   [08] MODO BÚSQUEDA
+   [08] BÚSQUEDA
    ============================================================ */
 .modo-busqueda{animation:fadeIn .35s ease both;display:flex;flex-direction:column;gap:16px;min-height:60vh;}
 .modo-busqueda-top{display:flex;gap:12px;align-items:center;width:100%;min-width:0;}
-
 .btn-volver{
   display:inline-flex;align-items:center;gap:8px;
   background:linear-gradient(180deg, var(--gris-metal-claro) 0%, var(--gris-metal) 100%);
-  color:var(--texto);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
-  padding:12px 18px;
-  font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;font-weight:700;
-  flex-shrink:0;white-space:nowrap;
+  color:var(--texto);border:1px solid var(--borde-fuerte);border-radius:6px;
+  padding:12px 18px;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;font-weight:700;flex-shrink:0;white-space:nowrap;
   transition:all .15s ease;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.15),
-    0 2px 4px rgba(0,0,0,.25);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 2px 4px rgba(0,0,0,.25);
 }
 .btn-volver:hover{
   background:linear-gradient(180deg, var(--ambar) 0%, #c68a1a 100%);
-  color:var(--bg-terminal);
-  transform:translateY(-1px);
+  color:var(--bg-terminal);transform:translateY(-1px);
   box-shadow:0 4px 12px var(--ambar-glow);
 }
 .btn-volver:active{transform:translateY(1px);}
-
 .search-wrapper{flex:1;min-width:0;position:relative;}
 .search-box{
-  display:flex;align-items:center;
-  background:var(--bg-terminal);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
-  padding:4px 14px;
-  width:100%;
-  transition:all .2s ease;
-  box-shadow:inset 0 2px 6px rgba(0,0,0,.3);
+  display:flex;align-items:center;background:var(--bg-terminal);
+  border:1px solid var(--borde-fuerte);border-radius:6px;padding:4px 14px;
+  width:100%;transition:all .2s ease;box-shadow:inset 0 2px 6px rgba(0,0,0,.3);
 }
 .search-box:focus-within{
   border-color:var(--ambar);
   box-shadow:inset 0 2px 6px rgba(0,0,0,.3), 0 0 20px var(--ambar-glow);
 }
-.search-icon{
-  color:var(--ambar);font-size:18px;margin-right:12px;flex-shrink:0;
-  filter:drop-shadow(0 0 6px var(--ambar-glow));
-}
+.search-icon{color:var(--ambar);font-size:18px;margin-right:12px;flex-shrink:0;filter:drop-shadow(0 0 6px var(--ambar-glow));}
 .search-input{
-  flex:1;min-width:0;
-  background:transparent;border:none;outline:none;
-  padding:14px 0;
-  font-size:14px;color:var(--texto);
-  font-family:var(--mono);font-weight:500;letter-spacing:.5px;
-  width:100%;
+  flex:1;min-width:0;background:transparent;border:none;outline:none;
+  padding:14px 0;font-size:14px;color:var(--texto);
+  font-family:var(--mono);font-weight:500;letter-spacing:.5px;width:100%;
 }
 .search-input::placeholder{color:var(--texto-muy-suave);letter-spacing:0;}
 .btn-clear{
   background:transparent;border:none;color:var(--texto-muy-suave);
-  font-size:16px;cursor:pointer;width:32px;height:32px;
-  border-radius:50%;display:none;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;width:32px;height:32px;border-radius:50%;
+  display:none;align-items:center;justify-content:center;
   transition:all .2s ease;flex-shrink:0;padding:0;margin-left:8px;font-weight:800;
 }
 .btn-clear.visible{display:flex;}
 .btn-clear:hover{
-  background:var(--rojo);color:#fff;
-  transform:rotate(90deg) scale(1.1);
+  background:var(--rojo);color:#fff;transform:rotate(90deg) scale(1.1);
   box-shadow:0 0 12px var(--rojo-glow);
 }
 
@@ -459,124 +359,66 @@ body.light .header{
    ============================================================ */
 .list-title{
   display:flex;justify-content:space-between;align-items:center;
-  padding:14px 0;margin-bottom:14px;
-  border-bottom:2px solid var(--borde-fuerte);
+  padding:14px 0;margin-bottom:14px;border-bottom:2px solid var(--borde-fuerte);
   font-size:11px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--texto-suave);font-weight:700;
-  animation:fadeIn .4s ease both;
+  color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;
 }
 .list-count{
-  background:var(--bg-terminal);
-  border:1px solid var(--ambar);
-  color:var(--ambar);
-  padding:4px 14px;
-  border-radius:4px;
+  background:var(--bg-terminal);border:1px solid var(--ambar);
+  color:var(--ambar);padding:4px 14px;border-radius:4px;
   font-family:var(--mono);font-weight:800;
   box-shadow:inset 0 0 8px rgba(232,169,58,.15);
 }
-
 .resp-card{
-  position:relative;
-  background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
-  border:1px solid var(--borde);
-  border-left:4px solid var(--ambar);
-  border-radius:8px;
-  padding:18px 22px;
-  margin-bottom:12px;
-  cursor:pointer;
-  transition:all .2s ease;
-  overflow:hidden;
+  position:relative;background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
+  border:1px solid var(--borde);border-left:4px solid var(--ambar);
+  border-radius:8px;padding:18px 22px;margin-bottom:12px;cursor:pointer;
+  transition:all .2s ease;overflow:hidden;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
   box-shadow:var(--sombra-panel);
 }
 .resp-card::before{
-  content:"";
-  position:absolute;
-  top:0;right:0;
-  width:80px;height:100%;
+  content:"";position:absolute;top:0;right:0;width:80px;height:100%;
   background:linear-gradient(90deg, transparent, rgba(232,169,58,.04));
   pointer-events:none;
 }
 .resp-card:hover{
-  transform:translateX(6px);
-  border-color:var(--ambar);
+  transform:translateX(6px);border-color:var(--ambar);
   border-left-color:var(--verde);
   box-shadow:var(--sombra-elevado), 0 0 24px var(--ambar-glow);
 }
 .resp-card:active{transform:translateX(3px);}
-
 .resp-card-info{flex:1;min-width:0;position:relative;z-index:1;}
-.resp-card-name{
-  font-size:15px;font-weight:700;color:var(--texto);
-  letter-spacing:.3px;margin-bottom:8px;
-  transition:color .2s ease;
-}
+.resp-card-name{font-size:15px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:8px;transition:color .2s ease;}
 .resp-card:hover .resp-card-name{color:var(--ambar-brillante);}
-.resp-card-meta{
-  display:flex;flex-wrap:wrap;gap:12px;
-  font-size:11px;color:var(--texto-suave);
-  font-family:var(--mono);
-}
-.resp-card-arrow{
-  font-size:28px;color:var(--texto-muy-suave);
-  transition:all .3s ease;flex-shrink:0;
-}
-.resp-card:hover .resp-card-arrow{
-  color:var(--ambar);
-  transform:translateX(8px);
-}
-
+.resp-card-meta{display:flex;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--texto-suave);font-family:var(--mono);}
+.resp-card-arrow{font-size:28px;color:var(--texto-muy-suave);transition:all .3s ease;flex-shrink:0;}
+.resp-card:hover .resp-card-arrow{color:var(--ambar);transform:translateX(8px);}
 .bien-card{
-  position:relative;
-  background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
-  border:1px solid var(--borde);
-  border-left:4px solid var(--verde);
-  border-radius:8px;
-  padding:16px 20px;
-  margin-bottom:12px;
-  cursor:pointer;
-  transition:all .2s ease;
-  display:flex;gap:16px;align-items:flex-start;
+  position:relative;background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
+  border:1px solid var(--borde);border-left:4px solid var(--verde);
+  border-radius:8px;padding:16px 20px;margin-bottom:12px;cursor:pointer;
+  transition:all .2s ease;display:flex;gap:16px;align-items:flex-start;
   box-shadow:var(--sombra-panel);
 }
 .bien-card:hover{
-  transform:translateX(6px);
-  border-color:var(--verde);
-  border-left-color:var(--ambar);
+  transform:translateX(6px);border-color:var(--verde);border-left-color:var(--ambar);
   box-shadow:var(--sombra-elevado), 0 0 24px var(--verde-glow);
 }
 .bien-card-thumb{
-  width:64px;height:64px;
-  background:var(--bg-terminal);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
+  width:64px;height:64px;background:var(--bg-terminal);
+  border:1px solid var(--borde-fuerte);border-radius:6px;
   display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:var(--texto-muy-suave);
-  flex-shrink:0;overflow:hidden;
+  font-size:24px;color:var(--texto-muy-suave);flex-shrink:0;overflow:hidden;
 }
 .bien-card-thumb img{width:100%;height:100%;object-fit:cover;}
 .bien-card-info{flex:1;min-width:0;}
-.bien-card-code{
-  font-family:var(--mono);
-  font-size:11px;color:var(--ambar);
-  font-weight:700;letter-spacing:1.5px;
-  margin-bottom:5px;text-transform:uppercase;
-}
-.bien-card-desc{
-  font-size:13px;font-weight:600;color:var(--texto);
-  line-height:1.4;margin-bottom:8px;
-}
-.bien-card-meta{
-  display:flex;flex-wrap:wrap;gap:8px;
-  font-size:10px;font-family:var(--mono);
-  color:var(--texto-suave);
-}
+.bien-card-code{font-family:var(--mono);font-size:11px;color:var(--ambar);font-weight:700;letter-spacing:1.5px;margin-bottom:5px;text-transform:uppercase;}
+.bien-card-desc{font-size:13px;font-weight:600;color:var(--texto);line-height:1.4;margin-bottom:8px;}
+.bien-card-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:10px;font-family:var(--mono);color:var(--texto-suave);}
 .bien-card-tipo{
-  padding:3px 10px;
-  font-size:9px;font-weight:800;letter-spacing:1.5px;
-  text-transform:uppercase;
-  border-radius:3px;
-  background:var(--bg-terminal);
+  padding:3px 10px;font-size:9px;font-weight:800;letter-spacing:1.5px;
+  text-transform:uppercase;border-radius:3px;background:var(--bg-terminal);
   border:1px solid var(--borde);
 }
 .bien-card-tipo.fijos{color:var(--verde);border-color:var(--verde);}
@@ -588,103 +430,70 @@ body.light .header{
    [10] MODALES
    ============================================================ */
 .modal-overlay{
-  position:fixed;inset:0;
-  background:rgba(10,16,12,.85);
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-  z-index:100;
-  display:none;align-items:center;justify-content:center;
+  position:fixed;inset:0;background:rgba(10,16,12,.85);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:100;display:none;align-items:center;justify-content:center;
   padding:20px;overflow-y:auto;
 }
 body.light .modal-overlay{background:rgba(20,30,20,.4);}
 .modal-overlay.visible{display:flex;}
-
 .modal{
-  background:var(--bg-panel);
-  border:2px solid var(--borde-fuerte);
-  border-radius:12px;
-  max-width:780px;width:100%;max-height:92vh;
-  overflow:hidden;display:flex;flex-direction:column;
+  background:var(--bg-panel);border:2px solid var(--borde-fuerte);border-radius:12px;
+  max-width:780px;width:100%;max-height:92vh;overflow:hidden;
+  display:flex;flex-direction:column;
   box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4);
-  position:relative;
-  animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
+  position:relative;animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);}}
 .modal::before{
-  content:"";
-  position:absolute;top:0;left:0;right:0;height:3px;
+  content:"";position:absolute;top:0;left:0;right:0;height:3px;
   background:linear-gradient(90deg, var(--ambar) 0%, var(--verde) 50%, var(--ambar) 100%);
   z-index:1;
 }
 .modal-form{max-width:740px;}
 .modal-vista{max-width:980px;}
-
 .modal-header{
-  padding:18px 24px;
-  border-bottom:2px solid var(--borde);
+  padding:18px 24px;border-bottom:2px solid var(--borde);
   display:flex;justify-content:space-between;align-items:center;gap:12px;
   background:linear-gradient(180deg, var(--bg-elevado), var(--bg-panel));
 }
-.modal-header h2{
-  font-size:13px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--texto);font-weight:700;
-  flex:1;min-width:0;word-break:break-word;
-}
+.modal-header h2{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--texto);font-weight:700;flex:1;min-width:0;word-break:break-word;}
 .modal-close{
-  width:34px;height:34px;
-  background:var(--gris-metal);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
-  color:var(--texto-suave);
-  cursor:pointer;font-size:18px;
+  width:34px;height:34px;background:var(--gris-metal);
+  border:1px solid var(--borde-fuerte);border-radius:6px;
+  color:var(--texto-suave);cursor:pointer;font-size:18px;
   display:flex;align-items:center;justify-content:center;
   transition:all .2s ease;flex-shrink:0;
 }
 .modal-close:hover{
-  background:var(--rojo);
-  border-color:var(--rojo-brillante);
-  color:white;
-  transform:rotate(90deg);
-  box-shadow:0 0 16px var(--rojo-glow);
+  background:var(--rojo);border-color:var(--rojo-brillante);color:white;
+  transform:rotate(90deg);box-shadow:0 0 16px var(--rojo-glow);
 }
 .modal-body{padding:22px 24px;overflow-y:auto;flex:1;min-height:200px;}
 
 /* ============================================================
-   [11] BOTONES DE ACCIÓN
+   [11] BOTONES ACCIÓN
    ============================================================ */
 .btn-nav{
   display:inline-flex;align-items:center;gap:8px;
   background:linear-gradient(180deg, var(--gris-metal-claro), var(--gris-metal));
-  color:var(--texto);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
-  padding:10px 18px;
-  font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;font-weight:700;
-  transition:all .15s ease;
-  margin-bottom:16px;
+  color:var(--texto);border:1px solid var(--borde-fuerte);border-radius:6px;
+  padding:10px 18px;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;font-weight:700;transition:all .15s ease;margin-bottom:16px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.25);
 }
 .btn-nav:hover{
   background:linear-gradient(180deg, var(--ambar), #c68a1a);
-  color:var(--bg-terminal);
-  transform:translateY(-1px);
+  color:var(--bg-terminal);transform:translateY(-1px);
   box-shadow:0 4px 12px var(--ambar-glow);
 }
 .btn-nav:active{transform:translateY(1px);}
-
 .btn-imprimir{
   background:linear-gradient(180deg, var(--verde-brillante), var(--verde));
-  color:var(--bg-terminal);
-  border:none;
-  border-radius:6px;
-  padding:12px 22px;
-  font-size:11px;font-weight:800;letter-spacing:2px;
-  cursor:pointer;
-  display:inline-flex;align-items:center;gap:8px;
-  transition:all .15s ease;
-  text-transform:uppercase;
-  margin-bottom:16px;
+  color:var(--bg-terminal);border:none;border-radius:6px;
+  padding:12px 22px;font-size:11px;font-weight:800;letter-spacing:2px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  transition:all .15s ease;text-transform:uppercase;margin-bottom:16px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.25);
 }
 .btn-imprimir:hover{
@@ -692,50 +501,34 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px var(--verde-glow);
 }
 .btn-imprimir:active{transform:translateY(0);}
-
 .modal-titulo-seccion{
-  text-align:center;padding:10px 0 18px;
-  font-size:10px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--texto-suave);font-weight:700;
-  border-bottom:1px solid var(--borde);margin-bottom:18px;
+  text-align:center;padding:10px 0 18px;font-size:10px;
+  letter-spacing:3px;text-transform:uppercase;color:var(--texto-suave);
+  font-weight:700;border-bottom:1px solid var(--borde);margin-bottom:18px;
 }
 
 /* ============================================================
-   [12] TARJETAS DE OFICINA
+   [12] OFICINAS
    ============================================================ */
 .oficina-card{
   display:flex;justify-content:space-between;align-items:center;gap:12px;
   background:linear-gradient(180deg, var(--bg-card), var(--bg-panel));
-  border:1px solid var(--borde);
-  border-left:4px solid var(--azul);
-  border-radius:6px;
-  padding:16px 18px;margin-bottom:12px;
+  border:1px solid var(--borde);border-left:4px solid var(--azul);
+  border-radius:6px;padding:16px 18px;margin-bottom:12px;
   cursor:pointer;transition:all .2s ease;
 }
 .oficina-card:hover{
-  border-color:var(--azul);
-  border-left-color:var(--ambar);
-  background:var(--bg-hover);
-  box-shadow:var(--sombra-panel), 0 0 20px var(--azul-glow);
+  border-color:var(--azul);border-left-color:var(--ambar);
+  background:var(--bg-hover);box-shadow:var(--sombra-panel), 0 0 20px var(--azul-glow);
   transform:translateX(4px);
 }
 .oficina-card-info{flex:1;min-width:0;}
-.oficina-card-nombre{
-  font-size:13px;font-weight:700;color:var(--texto);
-  letter-spacing:.3px;margin-bottom:5px;
-}
-.oficina-card-id{
-  font-family:var(--mono);
-  font-size:10px;color:var(--azul);letter-spacing:1.5px;
-}
+.oficina-card-nombre{font-size:13px;font-weight:700;color:var(--texto);letter-spacing:.3px;margin-bottom:5px;}
+.oficina-card-id{font-family:var(--mono);font-size:10px;color:var(--azul);letter-spacing:1.5px;}
 .oficina-card-count{
-  background:var(--bg-terminal);
-  border:1px solid var(--azul);
-  color:var(--azul);
-  border-radius:4px;
-  padding:8px 16px;
-  font-size:14px;font-weight:800;
-  flex-shrink:0;
+  background:var(--bg-terminal);border:1px solid var(--azul);
+  color:var(--azul);border-radius:4px;padding:8px 16px;
+  font-size:14px;font-weight:800;flex-shrink:0;
   box-shadow:inset 0 0 8px rgba(74,158,255,.15);
 }
 
@@ -743,10 +536,8 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
    [13] FORMULARIO
    ============================================================ */
 .form-persona{
-  background:var(--bg-elevado);
-  border:1px solid var(--borde);
-  border-left:4px solid var(--ambar);
-  border-radius:6px;
+  background:var(--bg-elevado);border:1px solid var(--borde);
+  border-left:4px solid var(--ambar);border-radius:6px;
   padding:14px 16px;margin-bottom:14px;
 }
 .form-persona-titulo{
@@ -755,32 +546,23 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   display:flex;justify-content:space-between;align-items:center;
 }
 .form-persona-titulo .num{
-  background:var(--ambar);
-  color:var(--bg-terminal);
-  width:22px;height:22px;
-  border-radius:50%;
+  background:var(--ambar);color:var(--bg-terminal);
+  width:22px;height:22px;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:900;
-  box-shadow:0 0 12px var(--ambar-glow);
+  font-size:11px;font-weight:900;box-shadow:0 0 12px var(--ambar-glow);
 }
 .form-grid{display:grid;grid-template-columns:1fr 2fr 1.2fr 1.2fr;gap:10px;margin-bottom:10px;}
 .form-grid .form-group{margin-bottom:0;}
 .form-group label{
-  display:block;
-  font-family:var(--mono);
-  font-size:9px;letter-spacing:1.8px;
-  text-transform:uppercase;color:var(--texto-suave);
-  font-weight:700;margin-bottom:6px;
+  display:block;font-family:var(--mono);font-size:9px;
+  letter-spacing:1.8px;text-transform:uppercase;
+  color:var(--texto-suave);font-weight:700;margin-bottom:6px;
 }
 .form-group input{
-  width:100%;padding:10px 12px;
-  background:var(--bg-terminal);
-  border:1px solid var(--borde-fuerte);
-  border-radius:4px;
-  color:var(--texto);
-  font-family:var(--mono);font-size:13px;
-  outline:none;
-  transition:all .2s ease;
+  width:100%;padding:10px 12px;background:var(--bg-terminal);
+  border:1px solid var(--borde-fuerte);border-radius:4px;
+  color:var(--texto);font-family:var(--mono);font-size:13px;
+  outline:none;transition:all .2s ease;
   box-shadow:inset 0 2px 4px rgba(0,0,0,.25);
 }
 .form-group input:focus{
@@ -789,36 +571,22 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
 }
 .form-group input::placeholder{color:var(--texto-muy-suave);}
 .form-persona .form-grid{grid-template-columns:1fr 1.5fr 1fr 1fr;}
-
 .form-actions{
   display:flex;gap:12px;justify-content:flex-end;
-  margin-top:22px;padding-top:18px;
-  border-top:1px solid var(--borde);
+  margin-top:22px;padding-top:18px;border-top:1px solid var(--borde);
 }
 .btn-cancelar{
-  background:transparent;
-  color:var(--texto-suave);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
-  padding:11px 20px;
-  font-size:11px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;
-  transition:all .2s ease;
+  background:transparent;color:var(--texto-suave);
+  border:1px solid var(--borde-fuerte);border-radius:6px;
+  padding:11px 20px;font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:all .2s ease;
 }
-.btn-cancelar:hover{
-  background:var(--gris-metal);
-  color:var(--texto);
-  border-color:var(--texto-suave);
-}
+.btn-cancelar:hover{background:var(--gris-metal);color:var(--texto);border-color:var(--texto-suave);}
 .btn-confirmar{
   background:linear-gradient(180deg, var(--ambar-brillante), var(--ambar));
-  color:var(--bg-terminal);
-  border:none;
-  border-radius:6px;
-  padding:11px 24px;
-  font-size:11px;font-weight:900;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;
-  transition:all .15s ease;
+  color:var(--bg-terminal);border:none;border-radius:6px;
+  padding:11px 24px;font-size:11px;font-weight:900;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:all .15s ease;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.25);
 }
 .btn-confirmar:hover{
@@ -826,7 +594,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 6px 16px var(--ambar-glow);
 }
 .btn-confirmar:active{transform:translateY(0);}
-
 @media (max-width:600px){
   .form-grid, .form-persona .form-grid{grid-template-columns:1fr 1fr;}
   .form-grid .form-group.ancho-completo{grid-column:1 / -1;}
@@ -836,58 +603,42 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
    [14] TABLAS EN APP
    ============================================================ */
 .tabla-section{
-  margin-bottom:22px;
-  background:var(--bg-panel);
-  border:1px solid var(--borde);
-  border-radius:8px;
-  overflow:hidden;
-  box-shadow:var(--sombra-panel);
+  margin-bottom:22px;background:var(--bg-panel);
+  border:1px solid var(--borde);border-radius:8px;
+  overflow:hidden;box-shadow:var(--sombra-panel);
 }
 .tabla-header{
-  padding:12px 18px;
-  background:linear-gradient(180deg, var(--bg-elevado), var(--bg-panel));
+  padding:12px 18px;background:linear-gradient(180deg, var(--bg-elevado), var(--bg-panel));
   border-bottom:2px solid var(--borde);
   display:flex;justify-content:space-between;align-items:center;gap:12px;
 }
 .tabla-header-titulo{
-  display:flex;align-items:center;gap:10px;
-  font-size:11px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--texto);font-weight:700;
+  display:flex;align-items:center;gap:10px;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--texto);font-weight:700;
 }
 .tabla-header-titulo .dot{
   width:8px;height:8px;border-radius:50%;
-  background:var(--color,var(--ambar));
-  box-shadow:0 0 10px var(--color,var(--ambar));
+  background:var(--color,var(--ambar));box-shadow:0 0 10px var(--color,var(--ambar));
 }
 .tabla-header[data-color="verde"]{--color:var(--verde);}
 .tabla-header[data-color="azul"]{--color:var(--azul);}
 .tabla-header[data-color="marron"]{--color:var(--ambar);}
 .tabla-header[data-color="vino"]{--color:var(--rojo);}
 .tabla-header-count{
-  font-family:var(--mono);
-  font-size:12px;color:var(--ambar);
-  font-weight:800;
-  background:var(--bg-terminal);
-  border:1px solid var(--ambar);
-  border-radius:4px;
-  padding:3px 12px;
+  font-family:var(--mono);font-size:12px;color:var(--ambar);font-weight:800;
+  background:var(--bg-terminal);border:1px solid var(--ambar);
+  border-radius:4px;padding:3px 12px;
 }
 .tabla-scroll{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:11px;font-family:Arial,sans-serif;min-width:400px;}
 thead th{
-  background:var(--bg-terminal);
-  color:var(--texto-suave);
-  text-align:left;
-  padding:11px 12px;
-  font-size:9px;letter-spacing:2px;
-  text-transform:uppercase;font-weight:700;
-  border-bottom:2px solid var(--borde-fuerte);
+  background:var(--bg-terminal);color:var(--texto-suave);text-align:left;
+  padding:11px 12px;font-size:9px;letter-spacing:2px;
+  text-transform:uppercase;font-weight:700;border-bottom:2px solid var(--borde-fuerte);
 }
 tbody td{
-  padding:11px 12px;
-  border-bottom:1px solid var(--borde);
-  color:var(--texto);vertical-align:top;
-  word-break:break-word;
+  padding:11px 12px;border-bottom:1px solid var(--borde);
+  color:var(--texto);vertical-align:top;word-break:break-word;
   font-family:Arial,sans-serif;font-size:11px;
 }
 tbody tr{cursor:pointer;transition:all .15s ease;}
@@ -897,15 +648,12 @@ tbody tr:hover{background:var(--bg-hover);}
 tbody tr:active{background:var(--gris-metal);}
 
 /* ============================================================
-   [15] BADGES DE ESTADO
+   [15] BADGES
    ============================================================ */
 .estado-badge{
-  display:inline-block;padding:4px 12px;
-  font-family:var(--mono);
+  display:inline-block;padding:4px 12px;font-family:var(--mono);
   font-size:10px;font-weight:800;letter-spacing:1.2px;
-  text-transform:uppercase;
-  border-radius:3px;
-  border:1px solid;
+  text-transform:uppercase;border-radius:3px;border:1px solid;
 }
 .estado-regular{color:var(--ambar);border-color:var(--ambar);background:rgba(232,169,58,.08);}
 .estado-malo{color:var(--rojo);border-color:var(--rojo);background:rgba(214,69,69,.08);}
@@ -916,83 +664,49 @@ tbody tr:active{background:var(--gris-metal);}
 }
 
 /* ============================================================
-   [16] ENCABEZADO DE OFICINA
+   [16] ENCABEZADO OFICINA
    ============================================================ */
 .oficina-encabezado{
   background:linear-gradient(135deg, var(--bg-elevado), var(--bg-panel));
-  border:1px solid var(--borde);
-  border-left:4px solid var(--ambar);
-  border-radius:6px;
-  padding:16px 18px;margin-bottom:20px;
+  border:1px solid var(--borde);border-left:4px solid var(--ambar);
+  border-radius:6px;padding:16px 18px;margin-bottom:20px;
   display:flex;justify-content:space-between;align-items:center;gap:12px;
   box-shadow:var(--sombra-panel);
 }
-.oficina-encabezado-nombre{
-  font-size:14px;font-weight:800;color:var(--texto);margin-bottom:5px;
-}
-.oficina-encabezado-sub{
-  font-family:var(--mono);
-  font-size:10px;color:var(--ambar-brillante);
-  letter-spacing:1.5px;text-transform:uppercase;
-}
+.oficina-encabezado-nombre{font-size:14px;font-weight:800;color:var(--texto);margin-bottom:5px;}
+.oficina-encabezado-sub{font-family:var(--mono);font-size:10px;color:var(--ambar-brillante);letter-spacing:1.5px;text-transform:uppercase;}
 .oficina-encabezado-count{
-  background:var(--bg-terminal);
-  border:1px solid var(--ambar);
-  color:var(--ambar);
-  border-radius:4px;
-  padding:8px 16px;
-  font-size:14px;font-weight:800;
-  flex-shrink:0;
+  background:var(--bg-terminal);border:1px solid var(--ambar);
+  color:var(--ambar);border-radius:4px;padding:8px 16px;
+  font-size:14px;font-weight:800;flex-shrink:0;
   box-shadow:inset 0 0 8px rgba(232,169,58,.15);
 }
 
 /* ============================================================
-   [17] DETALLE DEL BIEN
+   [17] DETALLE BIEN
    ============================================================ */
 .bien-detalle{
-  background:var(--bg-panel);
-  border:1px solid var(--borde);
-  border-radius:10px;
-  overflow:hidden;
-  box-shadow:var(--sombra-panel);
+  background:var(--bg-panel);border:1px solid var(--borde);
+  border-radius:10px;overflow:hidden;box-shadow:var(--sombra-panel);
 }
 .bien-detalle-header{
-  padding:22px;
-  background:linear-gradient(135deg, var(--bg-elevado), var(--bg-panel));
-  border-bottom:3px solid var(--ambar);
-  display:flex;gap:18px;align-items:flex-start;
+  padding:22px;background:linear-gradient(135deg, var(--bg-elevado), var(--bg-panel));
+  border-bottom:3px solid var(--ambar);display:flex;gap:18px;align-items:flex-start;
 }
 .bien-detalle-foto{
-  width:92px;height:92px;
-  background:var(--bg-terminal);
-  border:2px solid var(--ambar);
-  border-radius:8px;
+  width:92px;height:92px;background:var(--bg-terminal);
+  border:2px solid var(--ambar);border-radius:8px;
   display:flex;align-items:center;justify-content:center;
-  font-size:34px;color:var(--ambar);
-  flex-shrink:0;overflow:hidden;cursor:pointer;
-  transition:all .3s ease;
-  box-shadow:0 0 20px var(--ambar-glow);
+  font-size:34px;color:var(--ambar);flex-shrink:0;overflow:hidden;cursor:pointer;
+  transition:all .3s ease;box-shadow:0 0 20px var(--ambar-glow);
 }
-.bien-detalle-foto:hover{
-  box-shadow:0 0 30px var(--ambar-glow);
-  transform:scale(1.03);
-}
+.bien-detalle-foto:hover{box-shadow:0 0 30px var(--ambar-glow);transform:scale(1.03);}
 .bien-detalle-foto img{width:100%;height:100%;object-fit:cover;}
-.bien-detalle-codigo{
-  font-family:var(--mono);
-  font-size:11px;color:var(--ambar);
-  letter-spacing:2px;font-weight:800;text-transform:uppercase;
-  margin-bottom:8px;
-}
-.bien-detalle-nombre{
-  font-size:15px;font-weight:700;color:var(--texto);
-  line-height:1.35;margin-bottom:10px;
-}
+.bien-detalle-codigo{font-family:var(--mono);font-size:11px;color:var(--ambar);letter-spacing:2px;font-weight:800;text-transform:uppercase;margin-bottom:8px;}
+.bien-detalle-nombre{font-size:15px;font-weight:700;color:var(--texto);line-height:1.35;margin-bottom:10px;}
 .bien-detalle-tipo-badge{
-  display:inline-block;padding:4px 12px;
-  font-size:9px;font-weight:800;letter-spacing:1.8px;
-  text-transform:uppercase;
-  border-radius:3px;
+  display:inline-block;padding:4px 12px;font-size:9px;font-weight:800;
+  letter-spacing:1.8px;text-transform:uppercase;border-radius:3px;
 }
 .bien-detalle-tipo-badge.fijos{color:var(--verde);background:rgba(124,179,66,.1);border:1px solid var(--verde);}
 .bien-detalle-tipo-badge.fungibles{color:var(--azul);background:rgba(74,158,255,.1);border:1px solid var(--azul);}
@@ -1000,50 +714,32 @@ tbody tr:active{background:var(--gris-metal);}
 .bien-detalle-tipo-badge.prestados{color:var(--rojo);background:rgba(214,69,69,.1);border:1px solid var(--rojo);}
 .bien-detalle-campos{padding:0;}
 .bien-detalle-campo{
-  display:flex;gap:16px;align-items:flex-start;
-  padding:14px 22px;
+  display:flex;gap:16px;align-items:flex-start;padding:14px 22px;
   border-bottom:1px solid var(--borde);
 }
 .bien-detalle-campo:last-child{border-bottom:none;}
 .bien-detalle-campo:nth-child(even){background:rgba(255,255,255,.02);}
 body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 .bien-detalle-label{
-  flex:0 0 38%;
-  font-family:var(--mono);
-  font-size:10px;letter-spacing:1.5px;text-transform:uppercase;
-  font-weight:700;color:var(--texto-suave);
-  padding-top:2px;
+  flex:0 0 38%;font-family:var(--mono);font-size:10px;
+  letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
+  color:var(--texto-suave);padding-top:2px;
 }
-.bien-detalle-valor{
-  flex:1;font-size:12px;color:var(--texto);
-  line-height:1.4;word-break:break-word;
-}
+.bien-detalle-valor{flex:1;font-size:12px;color:var(--texto);line-height:1.4;word-break:break-word;}
 .bien-detalle-valor.vacio{color:var(--texto-muy-suave);font-style:italic;}
 .bien-detalle-valor.pendiente{color:var(--rojo);font-weight:800;text-transform:uppercase;}
 
 /* ============================================================
-   [18] ESTADOS VACÍOS / LOADING
+   [18] EMPTY / LOADING
    ============================================================ */
-.empty-state{
-  text-align:center;padding:70px 20px;
-  color:var(--texto-suave);
-  animation:fadeIn .6s ease both;
-}
+.empty-state{text-align:center;padding:70px 20px;color:var(--texto-suave);animation:fadeIn .6s ease both;}
 .empty-state-icon{
-  font-size:70px;margin-bottom:18px;opacity:.3;
-  color:var(--ambar);
+  font-size:70px;margin-bottom:18px;opacity:.3;color:var(--ambar);
   filter:drop-shadow(0 0 16px var(--ambar-glow));
 }
-.empty-state-title{
-  font-size:13px;letter-spacing:3px;text-transform:uppercase;
-  color:var(--texto);margin-bottom:10px;font-weight:700;
-}
+.empty-state-title{font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--texto);margin-bottom:10px;font-weight:700;}
 .empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
-.loading,.error{
-  text-align:center;padding:40px;
-  font-size:12px;letter-spacing:3px;text-transform:uppercase;
-  font-weight:700;
-}
+.loading,.error{text-align:center;padding:40px;font-size:12px;letter-spacing:3px;text-transform:uppercase;font-weight:700;}
 .loading{color:var(--ambar);}
 .error{color:var(--rojo);}
 
@@ -1051,60 +747,45 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
    [19] FOOTER
    ============================================================ */
 .footer{
-  text-align:center;padding:24px 22px;
-  border-top:2px solid var(--borde);
+  text-align:center;padding:24px 22px;border-top:2px solid var(--borde);
   font-size:9px;letter-spacing:4px;text-transform:uppercase;
-  color:var(--texto-muy-suave);font-weight:700;
-  margin-top:auto;
+  color:var(--texto-muy-suave);font-weight:700;margin-top:auto;
   background:linear-gradient(0deg, var(--bg-terminal), transparent);
   position:relative;
 }
 .footer::before{
-  content:"";
-  position:absolute;top:0;left:50%;
-  transform:translateX(-50%);
-  width:80px;height:2px;
-  background:var(--ambar);
-  box-shadow:0 0 12px var(--ambar-glow);
+  content:"";position:absolute;top:0;left:50%;
+  transform:translateX(-50%);width:80px;height:2px;
+  background:var(--ambar);box-shadow:0 0 12px var(--ambar-glow);
 }
 
 /* ============================================================
    [20] LIGHTBOX / TOAST
    ============================================================ */
 .lightbox{
-  position:fixed;inset:0;
-  background:rgba(0,0,0,.96);
-  backdrop-filter:blur(10px);
-  z-index:200;
+  position:fixed;inset:0;background:rgba(0,0,0,.96);
+  backdrop-filter:blur(10px);z-index:200;
   display:none;align-items:center;justify-content:center;
   padding:30px;cursor:zoom-out;
 }
 .lightbox.visible{display:flex;}
 .lightbox img{
-  max-width:100%;max-height:100%;
-  border-radius:6px;
-  box-shadow:0 0 60px var(--ambar-glow);
-  border:2px solid var(--ambar);
+  max-width:100%;max-height:100%;border-radius:6px;
+  box-shadow:0 0 60px var(--ambar-glow);border:2px solid var(--ambar);
   animation:lightboxIn .3s ease;
 }
 @keyframes lightboxIn{from{transform:scale(.9);opacity:0;}to{transform:scale(1);opacity:1;}}
-
 .toast{
   position:fixed;top:90px;left:50%;
   transform:translateX(-50%) translateY(-20px);
-  background:var(--bg-panel);
-  color:var(--texto);
-  border:2px solid var(--ambar);
-  border-radius:8px;
-  padding:14px 24px;
-  z-index:300;
-  font-family:var(--mono);
+  background:var(--bg-panel);color:var(--texto);
+  border:2px solid var(--ambar);border-radius:8px;
+  padding:14px 24px;z-index:300;font-family:var(--mono);
   font-size:12px;letter-spacing:1.5px;font-weight:700;
   box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--ambar-glow);
   opacity:0;pointer-events:none;
   transition:all .35s cubic-bezier(.34,1.56,.64,1);
-  display:flex;align-items:center;gap:12px;
-  max-width:90vw;
+  display:flex;align-items:center;gap:12px;max-width:90vw;
 }
 .toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.success{border-color:var(--verde);box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--verde-glow);}
@@ -1116,57 +797,42 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
    [21] VISTA PREVIA DEL ACTA
    ============================================================ */
 .preview-acta-wrap{
-  background:#fff;color:#000;
-  padding:30px 40px;
-  font-family:Arial, sans-serif;
-  font-size:11pt;line-height:1.0;
-  box-shadow:0 0 0 1px #ccc inset;
-  max-height:65vh;overflow-y:auto;
+  background:#fff;color:#000;padding:30px 40px;
+  font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
+  box-shadow:0 0 0 1px #ccc inset;max-height:65vh;overflow-y:auto;
 }
 .preview-acta-wrap, .preview-acta-wrap *{color:#000;}
-
 .preview-actions{
-  padding:16px 22px;
-  border-top:2px solid var(--borde);
+  padding:16px 22px;border-top:2px solid var(--borde);
   display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;
   background:var(--bg-panel);
 }
 .btn-preview{
   background:linear-gradient(180deg, var(--gris-metal-claro), var(--gris-metal));
-  color:var(--texto);
-  border:1px solid var(--borde-fuerte);
-  border-radius:6px;
-  padding:11px 18px;
-  font-size:11px;font-weight:700;letter-spacing:2px;
-  text-transform:uppercase;cursor:pointer;
-  transition:all .15s ease;
+  color:var(--texto);border:1px solid var(--borde-fuerte);border-radius:6px;
+  padding:11px 18px;font-size:11px;font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;cursor:pointer;transition:all .15s ease;
   display:inline-flex;align-items:center;gap:8px;
   box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.25);
 }
 .btn-preview:hover{
   background:linear-gradient(180deg, var(--ambar), #c68a1a);
-  color:var(--bg-terminal);
-  transform:translateY(-1px);
+  color:var(--bg-terminal);transform:translateY(-1px);
   box-shadow:0 4px 12px var(--ambar-glow);
 }
 .btn-preview:active{transform:translateY(1px);}
 .btn-preview.primary{
   background:linear-gradient(180deg, var(--ambar-brillante), var(--ambar));
-  color:var(--bg-terminal);
-  border-color:transparent;
-  font-weight:900;
+  color:var(--bg-terminal);border-color:transparent;font-weight:900;
 }
-.btn-preview.primary:hover{
-  box-shadow:0 6px 16px var(--ambar-glow);
-}
+.btn-preview.primary:hover{box-shadow:0 6px 16px var(--ambar-glow);}
 .btn-preview.green{
   background:linear-gradient(180deg, var(--verde-brillante), var(--verde));
-  color:var(--bg-terminal);
-  border-color:transparent;
-  font-weight:900;
+  color:var(--bg-terminal);border-color:transparent;font-weight:900;
 }
-.btn-preview.green:hover{
-  box-shadow:0 6px 16px var(--verde-glow);
+.btn-preview.green:hover{box-shadow:0 6px 16px var(--verde-glow);}
+.btn-preview:disabled{
+  opacity:.5;cursor:not-allowed;transform:none;
 }
 
 /* ============================================================
@@ -1181,11 +847,11 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 }
 
 /* ============================================================
-   [23] ACTA — ESTILOS COMPARTIDOS (medición + preview + print)
+   [23] ACTA — ESTILOS COMPARTIDOS
    ============================================================ */
 .acta-medicion .acta-membrete,
 .preview-acta-wrap .acta-membrete,
-.acta-print .acta-membrete{
+.acta-render .acta-membrete{
   font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;
   line-height:1.0;margin:0 0 10pt 0;text-transform:uppercase;text-align:left;
 }
@@ -1195,7 +861,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 
 .acta-medicion .acta-titulo,
 .preview-acta-wrap .acta-titulo,
-.acta-print .acta-titulo{
+.acta-render .acta-titulo{
   font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;
   text-align:center;text-transform:uppercase;
   margin:0 0 10pt 0;line-height:1.1;
@@ -1205,11 +871,11 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 
 .acta-medicion .acta-seccion,
 .preview-acta-wrap .acta-seccion,
-.acta-print .acta-seccion{margin-top:6pt;}
+.acta-render .acta-seccion{margin-top:6pt;}
 
 .acta-medicion .acta-seccion-titulo,
 .preview-acta-wrap .acta-seccion-titulo,
-.acta-print .acta-seccion-titulo{
+.acta-render .acta-seccion-titulo{
   font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;
   text-transform:uppercase;margin:0 0 4pt 0;line-height:1.0;
 }
@@ -1217,7 +883,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 
 .acta-medicion .acta-tabla,
 .preview-acta-wrap .acta-tabla,
-.acta-print .acta-tabla{
+.acta-render .acta-tabla{
   width:100%;border-collapse:collapse;
   font-family:Arial,sans-serif;font-size:9pt;
   margin-bottom:6pt;border:1px solid #000;
@@ -1240,16 +906,16 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 }
 .acta-medicion .acta-bloque-firmas,
 .preview-acta-wrap .acta-bloque-firmas,
-.acta-print .acta-bloque-firmas{margin-top:24pt;}
+.acta-render .acta-bloque-firmas{margin-top:24pt;}
 .acta-medicion .acta-fecha-firmas,
 .preview-acta-wrap .acta-fecha-firmas,
-.acta-print .acta-fecha-firmas{
+.acta-render .acta-fecha-firmas{
   font-family:Arial,sans-serif;font-size:12pt;
   text-align:right;margin:0 0 20pt 0;line-height:1.0;
 }
 .acta-medicion .acta-firmas,
 .preview-acta-wrap .acta-firmas,
-.acta-print .acta-firmas{
+.acta-render .acta-firmas{
   font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;
 }
 .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
@@ -1264,7 +930,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
 .acta-medicion .acta-continuacion,
 .preview-acta-wrap .acta-continuacion,
-.acta-print .acta-continuacion{
+.acta-render .acta-continuacion{
   font-family:Arial,sans-serif;font-size:8pt;
   font-style:italic;font-weight:normal;text-align:center;
   text-transform:uppercase;margin:20pt 0 4pt 0;
@@ -1272,54 +938,31 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 }
 .acta-medicion .acta-continuacion-resumen,
 .preview-acta-wrap .acta-continuacion-resumen,
-.acta-print .acta-continuacion-resumen{
+.acta-render .acta-continuacion-resumen{
   font-family:Arial,sans-serif;font-size:8pt;
   font-style:italic;font-weight:normal;text-align:center;
   text-transform:uppercase;margin:0 0 20pt 0;
   padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;
 }
 
-/* ============================================================
-   [24] PÁGINAS EXPLÍCITAS DEL ACTA (V7.0)
-   ============================================================ */
-.pagina-acta{
-  position:relative;
-  width:100%;
-  page-break-after:always;
-  break-after:page;
-}
-.pagina-acta:last-child{
-  page-break-after:auto;
-  break-after:auto;
-}
-
-/* ============================================================
-   [25] IMPRESIÓN
-   ============================================================ */
-.acta-print{display:none;}
-@media print{
-  .bg-layer,.app,.modal-overlay,.no-print,.toast,.lightbox,.acta-medicion{display:none !important;}
-  body{background:#fff !important;color:#000 !important;}
-  .acta-print{display:block !important;}
-  .acta-print, .acta-print *{color:#000 !important;}
-  @page{size:letter portrait;margin:2cm 2cm 2cm 3cm;}
-  .acta-print{font-family:Arial, Helvetica, sans-serif;font-size:11pt;line-height:1.0;}
-
-  /* Las páginas se separan por page-break-after, no por saltar-pagina */
-  .pagina-acta{
-    page-break-after:always;
-    break-after:page;
-    page-break-inside:avoid;
-    break-inside:avoid;
-  }
-  .pagina-acta:last-child{
-    page-break-after:auto;
-    break-after:auto;
-  }
+/* Contenedor de render para jsPDF */
+.acta-render{
+  position:fixed;
+  left:-99999px;
+  top:0;
+  width:215.9mm;
+  min-height:279.4mm;
+  padding:20mm 20mm 20mm 30mm;
+  background:#fff;
+  font-family:Arial, sans-serif;
+  font-size:11pt;
+  line-height:1.0;
+  color:#000;
+  box-sizing:border-box;
 }
 
 /* ============================================================
-   [26] RESPONSIVE
+   [24] RESPONSIVE
    ============================================================ */
 @media (max-width:600px){
   .header-text h1{font-size:13px;letter-spacing:1.5px;}
@@ -1358,22 +1001,15 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 }
 
 /* ============================================================
-   [27] EFECTOS DE CLICK
+   [25] EFECTOS DE CLICK
    ============================================================ */
 .click-ripple{
-  position:absolute;
-  border-radius:50%;
-  pointer-events:none;
-  transform:scale(0);
-  animation:rippleAnim .6s cubic-bezier(.34,1.56,.64,1);
-  z-index:1;
+  position:absolute;border-radius:50%;pointer-events:none;
+  transform:scale(0);animation:rippleAnim .6s cubic-bezier(.34,1.56,.64,1);z-index:1;
 }
 .click-ripple.cian{background:radial-gradient(circle,rgba(232,169,58,.6),rgba(232,169,58,0) 70%);}
 .click-ripple.magenta{background:radial-gradient(circle,rgba(124,179,66,.5),rgba(124,179,66,0) 70%);}
-@keyframes rippleAnim{
-  0%{transform:scale(0);opacity:1;}
-  100%{transform:scale(4);opacity:0;}
-}
+@keyframes rippleAnim{0%{transform:scale(0);opacity:1;}100%{transform:scale(4);opacity:0;}}
 .click-flash{animation:clickFlash .45s ease-out;}
 @keyframes clickFlash{
   0%{box-shadow:0 0 0 0 var(--ambar-glow);}
@@ -1386,6 +1022,22 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   25%{transform:translateX(-3px);}
   75%{transform:translateX(3px);}
 }
+
+/* Spinner de generación de PDF */
+.pdf-overlay{
+  position:fixed;inset:0;background:rgba(10,16,12,.92);
+  z-index:500;display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:20px;color:var(--texto);
+  font-family:var(--mono);letter-spacing:2px;
+}
+.pdf-overlay.visible{display:flex;}
+.pdf-spinner{
+  width:60px;height:60px;border:3px solid var(--borde-fuerte);
+  border-top-color:var(--ambar);border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+.pdf-overlay-text{font-size:12px;text-transform:uppercase;}
+.pdf-overlay-sub{font-size:10px;color:var(--texto-suave);letter-spacing:3px;}
 </style>
 </head>
 <body>
@@ -1416,7 +1068,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ SISTEMA DE CONTROL DIV-10 · V7.0 ◈</footer>
+  <footer class="footer">◈ SISTEMA DE CONTROL DIV-10 · V8.0 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -1507,7 +1159,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
     </div>
     <div class="preview-actions">
       <button class="btn-preview" onclick="cerrarModalVistaPrevia()">Cerrar</button>
-      <button class="btn-preview primary" onclick="guardarPDF()">💾 Guardar PDF</button>
+      <button class="btn-preview primary" id="btnGuardarPDF" onclick="guardarPDF()">💾 Descargar PDF</button>
       <button class="btn-preview green" onclick="imprimirActaDirecta()">🖨 Imprimir</button>
     </div>
   </div>
@@ -1522,7 +1174,12 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   <span id="toastMsg">Mensaje</span>
 </div>
 
-<div class="acta-print" id="actaPrint"></div>
+<div class="pdf-overlay" id="pdfOverlay">
+  <div class="pdf-spinner"></div>
+  <div class="pdf-overlay-text" id="pdfOverlayText">Generando PDF...</div>
+  <div class="pdf-overlay-sub" id="pdfOverlaySub">Preparando página 1 de 1</div>
+</div>
+
 <div class="acta-medicion" id="actaMedicion"></div>
 
 <script>
@@ -1533,7 +1190,10 @@ const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1Z
 const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
-const ALTURA_UTIL_HOJA = 890;
+/* Medidas de hoja carta en píxeles a 96 DPI (para medición interna) */
+const ALTURA_UTIL_HOJA_PX = 830;  /* 279.4mm - 40mm de márgenes = 239.4mm ≈ 905px, con margen seguridad = 830px */
+const ANCHO_UTIL_HOJA_MM = 165.9; /* 215.9mm - 50mm = 165.9mm (margen izq 30 + der 20) */
+const ALTO_UTIL_HOJA_MM = 239.4;  /* 279.4mm - 40mm */
 
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
@@ -1547,10 +1207,10 @@ let estado = {
   oficinaFiltroActual: null
 };
 
-let actaEnProceso = { responsable: null, oficina: null, datos: null, html: null };
+let actaEnProceso = { responsable: null, oficina: null, datos: null, paginas: null };
 
 /* ============================================================
-   [S02] TEMA CLARO / OSCURO
+   [S02] TEMA
    ============================================================ */
 function cargarTema(){
   const guardado = localStorage.getItem("tema");
@@ -1568,7 +1228,7 @@ function toggleTheme(){
 cargarTema();
 
 /* ============================================================
-   [S03] NOTIFICACIONES TOAST
+   [S03] TOAST
    ============================================================ */
 let toastTimer = null;
 function mostrarToast(msg, tipo = "info", icono = null){
@@ -1586,7 +1246,7 @@ function mostrarToast(msg, tipo = "info", icono = null){
 }
 
 /* ============================================================
-   [S04] UTILIDADES GENERALES
+   [S04] UTILIDADES
    ============================================================ */
 function norm(s){
   return (s || "").toString().toUpperCase()
@@ -1776,7 +1436,7 @@ function ordinalHoja(n){
 }
 
 /* ============================================================
-   [S08] RESUMEN DE BIENES
+   [S08] RESUMEN
    ============================================================ */
 function generarResumenBienes(cantFijos, cantFungibles, cantInternos, cantPrestados){
   const partes = [];
@@ -2632,48 +2292,44 @@ function generarVistaPrevia(){
     }
   };
   actaEnProceso.datos = datos;
-  actaEnProceso.html = generarHTMLActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
+  const paginas = generarPaginasActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
+  actaEnProceso.paginas = paginas;
   cerrarModalEntrante();
-  document.getElementById("previewActa").innerHTML = actaEnProceso.html;
+
+  /* La vista previa muestra las páginas separadas con un marcador */
+  let htmlPreview = "";
+  paginas.forEach((p, i) => {
+    if(i > 0){
+      htmlPreview += `<div style="height:24px;background:repeating-linear-gradient(90deg,#d0d0d0 0px,#d0d0d0 8px,transparent 8px,transparent 16px);margin:12px -40px;text-align:center;line-height:24px;font-size:8pt;color:#666;font-weight:bold;">▲ PÁGINA ${i+1} ▲</div>`;
+    }
+    htmlPreview += p.html;
+  });
+  document.getElementById("previewActa").innerHTML = htmlPreview;
   document.getElementById("modalVistaPrevia").classList.add("visible");
   pushEstado("modalVistaPrevia");
 }
 function cerrarModalVistaPrevia(){
   document.getElementById("modalVistaPrevia").classList.remove("visible");
 }
-function guardarPDF(){
-  document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
-  mostrarToast("Elija 'Guardar como PDF' en el diálogo", "info", "💾");
-  setTimeout(() => window.print(), 400);
-}
-function imprimirActaDirecta(){
-  document.getElementById("actaPrint").innerHTML = actaEnProceso.html;
-  setTimeout(() => window.print(), 300);
-}
 
 /* ============================================================
-   [S18] GENERAR HTML DEL ACTA — PAGINACIÓN EXPLÍCITA v7.0
+   [S18] GENERAR PÁGINAS DEL ACTA — v8.0
    ------------------------------------------------------------
-   FILOSOFÍA:
-     En lugar de confiar en page-break-before CSS (que el navegador
-     desobedece), generamos PÁGINAS EXPLÍCITAS en JS. Cada página
-     es un <div class="pagina-acta"> autónomo con su contenido
-     completo (título + tabla o continuación).
-     
-     Al imprimir, cada .pagina-acta tiene page-break-after:always,
-     así que el navegador respeta las páginas tal cual.
-   
-   REGLAS ESTRICTAS:
-     1. Una sección NUNCA se corta entre el título y su tabla.
-     2. Si la sección NO cabe entera en la página actual, se pasa
-        a la siguiente página COMPLETA (con título).
-     3. Si la sección NO cabe entera en una página VACÍA, se
-        divide en trozos: el primero lleva título, los siguientes
-        son "continuación" (solo tabla, sin título, con thead).
-     4. Las firmas van en su propia página si no caben.
-     5. Si las firmas caben al final de la última página, se ponen.
+   Devuelve un array de páginas. Cada página es un objeto:
+   { html: string } — contenido HTML COMPLETO de una hoja.
+
+   Reglas:
+     1. Hoja 1: Header + Sección I + Sección II (parcial con título)
+     2. Hojas siguientes: continuación de secciones SIN título si
+        son continuación, CON título si son nueva sección.
+     3. Encabezado "2DA HOJA..." SOLO si las firmas van solas.
+     4. Si una sección nueva no cabe en el espacio restante de la
+        hoja actual, se pasa completa a la siguiente hoja.
+     5. Si una sección es tan grande que no cabe entera en una hoja
+        vacía, se divide: el primer trozo lleva título, los
+        siguientes son "continuación" (solo tabla, con thead).
    ============================================================ */
-function generarHTMLActa(r, oficina, datos){
+function generarPaginasActa(r, oficina, datos){
   const idAsignacion = oficina.id;
   const fijos = DATA.fijos.filter(b => obtenerIdAsig(b) === idAsignacion);
   const fungibles = DATA.fungibles.filter(b => obtenerIdAsig(b) === idAsignacion);
@@ -2708,8 +2364,19 @@ function generarHTMLActa(r, oficina, datos){
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
+  const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
+
+  function generarEncabezadoContinuacion(numHoja){
+    const texto = `${ordinalHoja(numHoja)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
+    let h = `<div class="acta-continuacion">${esc(texto)}</div>`;
+    if(resumenBienes){
+      h += `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>`;
+    }
+    return h;
+  }
+
   /* ============================================================
-     [S18.1] MEDICIÓN
+     MEDICIÓN
      ============================================================ */
   const contMed = document.getElementById("actaMedicion");
   function medirHTML(html){
@@ -2738,20 +2405,41 @@ function generarHTMLActa(r, oficina, datos){
   });
   const firmasAltura = medirHTML(firmasHTML);
 
-  const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
-
-  function generarEncabezadoContinuacion(numHoja){
-    const texto = `${ordinalHoja(numHoja)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
-    let h = `<div class="acta-continuacion">${esc(texto)}</div>`;
-    if(resumenBienes){
-      h += `<div class="acta-continuacion-resumen">${esc(resumenBienes)}</div>`;
-    }
-    return h;
+  /* Helper: construir HTML de una sección completa */
+  function htmlSeccionCompleta(sec, filas){
+    const filasHTML = filas.map(f => f.html).join("");
+    return `<div class="acta-seccion">
+      <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
+      <table class="acta-tabla">
+        <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
+        <tbody>${filasHTML}</tbody>
+      </table>
+    </div>`;
   }
 
-  /* ============================================================
-     [S18.2] CONSTRUCCIÓN DE BLOQUES ATÓMICOS
-     ============================================================ */
+  /* Helper: construir HTML de continuación (solo tabla) */
+  function htmlContinuacion(sec, filas){
+    const filasHTML = filas.map(f => f.html).join("");
+    return `<table class="acta-tabla">
+      <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
+      <tbody>${filasHTML}</tbody>
+    </table>`;
+  }
+
+  /* Helper: medir thead */
+  function medirThead(tipo){
+    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody></tbody></table>`;
+    return medirHTML(html);
+  }
+
+  /* Helper: medir fila incremental */
+  function medirFilaIncremental(filaHTML, tipo, alturaThead){
+    const htmlCon = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
+    const totalCon = medirHTML(htmlCon);
+    return Math.max(totalCon - alturaThead, 14);
+  }
+
+  /* Construir secciones con sus filas medidas */
   const seccionesDef = [
     { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
     { nombre: "FUNGIBLES", num: "II.- ",  titulo: "INVENTARIO DE ACTIVOS FUNGIBLES",     lista: fungibles, tipo: "fungibles" },
@@ -2759,46 +2447,8 @@ function generarHTMLActa(r, oficina, datos){
     { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
   ];
 
-  /* Medir thead */
-  function medirThead(tipo){
-    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody></tbody></table>`;
-    return medirHTML(html);
-  }
-
-  /* Medir fila incremental (delta respecto al thead) */
-  function medirFilaIncremental(filaHTML, tipo, alturaThead){
-    const htmlCon = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
-    const totalCon = medirHTML(htmlCon);
-    return Math.max(totalCon - alturaThead, 14);
-  }
-
-  /* Medir bloque "título + tabla con N filas" completo */
-  function medirBloqueSeccion(num, titulo, filas, tipo){
-    const filasHTML = filas.map(f => f.html).join("");
-    const html = `<div class="acta-seccion">
-      <div class="acta-seccion-titulo">${num}<span class="subrayado">${esc(titulo)}</span>.</div>
-      <table class="acta-tabla">
-        <thead><tr>${columnasDeTipo(tipo)}</tr></thead>
-        <tbody>${filasHTML}</tbody>
-      </table>
-    </div>`;
-    return medirHTML(html);
-  }
-
-  /* Medir bloque "solo tabla (continuación) con N filas" */
-  function medirBloqueContinuacion(filas, tipo){
-    const filasHTML = filas.map(f => f.html).join("");
-    const html = `<table class="acta-tabla">
-      <thead><tr>${columnasDeTipo(tipo)}</tr></thead>
-      <tbody>${filasHTML}</tbody>
-    </table>`;
-    return medirHTML(html);
-  }
-
-  /* Construir estructura por sección */
   const secciones = seccionesDef.map(sec => {
     const alturaThead = medirThead(sec.tipo);
-
     if(!sec.lista.length){
       const filaVacia = `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
       const alturaFila = medirFilaIncremental(filaVacia, sec.tipo, alturaThead);
@@ -2809,268 +2459,196 @@ function generarHTMLActa(r, oficina, datos){
         vacia: true
       };
     }
-
     const filas = sec.lista.map((b, i) => {
       const filaStr = generarFilaTabla(b, i, sec.tipo);
       const altura = medirFilaIncremental(filaStr, sec.tipo, alturaThead);
       return { html: filaStr, altura };
     });
-
-    return {
-      ...sec,
-      alturaThead,
-      filas,
-      vacia: false
-    };
+    return { ...sec, alturaThead, filas, vacia: false };
   });
 
   /* ============================================================
-     [S18.3] GENERADOR DE PÁGINAS EXPLÍCITAS
-     ------------------------------------------------------------
-     En lugar de construir un solo HTML con page-breaks, construimos
-     un ARRAY DE PÁGINAS. Cada página es un <div class="pagina-acta">
-     con contenido COMPLETO (título + tabla cerrada).
+     EMPAQUETADOR — construye array de páginas
      ============================================================ */
-  const paginas = [];  /* Array de { html: string, altura: number } */
+  const paginas = [];
 
-  /* --- Página 1: header + primeras secciones que quepan --- */
+  /* Trabajamos con una "página en construcción" */
   let paginaActual = {
     html: "",
-    altura: 0,
-    contenido: []  /* track de bloques para poder insertar saltos */
+    altura: 0
   };
 
-  /* Iniciar página 1 con el header */
+  /* Colocar el header en la página 1 */
   paginaActual.html = headerHTML;
   paginaActual.altura = headerAltura;
-  paginaActual.contenido.push({ tipo: "header" });
 
-  /* Cola de secciones pendientes (copias) */
-  const colaSecciones = secciones.map(s => ({ ...s }));
+  /* Cola de secciones */
+  const cola = secciones.map(s => ({
+    ...s,
+    filasRestantes: [...s.filas],
+    yaSeMostroTitulo: false
+  }));
 
-  /* Función: empaqueta filas de una sección para que quepan en espacio dado.
-     Devuelve { filasQueCaben, filasRestantes }. */
-  function empaquetarFilas(filas, espacioDisponible, alturaThead, esPrimeraVez){
-    /* Si es la primera vez que se coloca la sección en esta página,
-       el espacio incluye el título. Si no, solo thead. */
-    let espacio = espacioDisponible - alturaThead;
-    if(esPrimeraVez){
-      /* Reservar espacio del título: lo medimos aparte */
-      /* (asumimos que el llamador ya reservó título) */
-    }
-    const queCaben = [];
-    const restantes = [];
-    let acumulado = 0;
-    let corte = false;
-    for(const f of filas){
-      if(!corte && acumulado + f.altura <= espacio){
-        queCaben.push(f);
-        acumulado += f.altura;
-      } else {
-        corte = true;
-        restantes.push(f);
-      }
-    }
-    return { queCaben, restantes };
-  }
-
-  /* Recorrer secciones y empaquetarlas */
-  for(let s = 0; s < colaSecciones.length; s++){
-    const sec = colaSecciones[s];
+  /* Procesar secciones */
+  for(let i = 0; i < cola.length; i++){
+    const sec = cola[i];
+    if(sec.filasRestantes.length === 0 && sec.vacia === false) continue;
 
     /* Espacio restante en la página actual */
-    const espacioRestante = ALTURA_UTIL_HOJA - paginaActual.altura;
+    const espacioRestante = ALTURA_UTIL_HOJA_PX - paginaActual.altura;
 
-    /* Altura mínima que ocupa la sección con su título + thead + 1ra fila */
-    const alturaMinimaSeccion = (() => {
-      const primeraFila = sec.filas[0];
-      const html = `<div class="acta-seccion">
-        <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-        <table class="acta-tabla">
-          <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-          <tbody>${primeraFila.html}</tbody>
-        </table>
-      </div>`;
-      return medirHTML(html);
-    })();
+    /* ¿Cabe el inicio completo (título + thead + 1ra fila)? */
+    const primeraFila = sec.filasRestantes[0];
+    const htmlInicio = htmlSeccionCompleta(sec, [primeraFila]);
+    const alturaInicio = medirHTML(htmlInicio);
 
-    /* ¿Cabe la sección completa con TODAS sus filas? */
-    const htmlSeccionCompleta = (() => {
-      const filasHTML = sec.filas.map(f => f.html).join("");
-      return `<div class="acta-seccion">
-        <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-        <table class="acta-tabla">
-          <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-          <tbody>${filasHTML}</tbody>
-        </table>
-      </div>`;
-    })();
-    const alturaSeccionCompleta = medirHTML(htmlSeccionCompleta);
+    if(alturaInicio <= espacioRestante && paginaActual.altura > 0){
+      /* Colocar título + thead + tantas filas como quepan */
+      const alturaThead = medirThead(sec.tipo);
+      const alturaTituloThead = alturaInicio - primeraFila.altura;
 
-    if(alturaSeccionCompleta <= espacioRestante){
-      /* Cabe completa en la página actual */
-      paginaActual.html += htmlSeccionCompleta;
-      paginaActual.altura += alturaSeccionCompleta;
-      paginaActual.contenido.push({ tipo: "seccion", nombre: sec.nombre });
-      continue;
-    }
+      const filasQueCaben = [primeraFila];
+      let alturaFilasAcum = primeraFila.altura;
+      let idx = 1;
 
-    /* NO cabe completa. */
-    /* Estrategia:
-       1. Si cabe al menos el bloque mínimo (título + thead + 1ra fila)
-          y ya hay contenido en la página actual, se coloca el inicio
-          aquí y se continúa en la siguiente.
-       2. Si NO cabe el bloque mínimo o la página está vacía,
-          nueva página y reintentar. */
-    if(alturaMinimaSeccion <= espacioRestante && paginaActual.altura > headerAltura){
-      /* Colocar título + thead + las filas que quepan en esta página */
-      const espacioParaTituloYThead = espacioRestante;
-      /* Reservar título */
-      const htmlTituloSolo = `<div class="acta-seccion">
-        <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-        <table class="acta-tabla">
-          <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>`;
-      const alturaTituloYThead = medirHTML(htmlTituloSolo);
-
-      const espacioParaFilas = espacioParaTituloYThead - alturaTituloYThead;
-      const { queCaben, restantes } = empaquetarFilas(sec.filas, espacioParaFilas, 0, true);
-
-      if(queCaben.length > 0){
-        const filasHTML = queCaben.map(f => f.html).join("");
-        const htmlParcial = `<div class="acta-seccion">
-          <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-          <table class="acta-tabla">
-            <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
-            <tbody>${filasHTML}</tbody>
-          </table>
-        </div>`;
-        paginaActual.html += htmlParcial;
-        paginaActual.altura += alturaTituloYThead + queCaben.reduce((a, f) => a + f.altura, 0);
-        paginaActual.contenido.push({ tipo: "seccion-parcial", nombre: sec.nombre });
-
-        /* Actualizar la sección para siguiente iteración */
-        colaSecciones[s] = { ...sec, filas: restantes, yaTieneTitulo: true };
-      } else {
-        /* No cabe ni 1 fila: la sección completa va a la siguiente página */
-        /* NO hacer nada: se procesará en la siguiente iteración de página */
+      while(idx < sec.filasRestantes.length){
+        const siguienteFila = sec.filasRestantes[idx];
+        const alturaTest = alturaTituloThead + alturaFilasAcum + siguienteFila.altura;
+        if(alturaTest <= espacioRestante){
+          filasQueCaben.push(siguienteFila);
+          alturaFilasAcum += siguienteFila.altura;
+          idx++;
+        } else {
+          break;
+        }
       }
-    } else if(paginaActual.altura > 0){
-      /* La página tiene contenido pero no cabe ni el bloque mínimo.
-         No se puede colocar nada de esta sección aquí: pasar a nueva página
-         SIN colocar la sección. */
-      /* Dejamos la sección pendiente para siguiente página */
-    }
 
-    /* Verificar si hay más contenido para colocar de esta sección en la página actual */
-    /* Si quedan filas o no se colocó nada, crear nueva página y reintentar */
-    if(colaSecciones[s].filas.length > 0 || paginaActual.altura === 0){
-      /* Crear nueva página */
-      paginas.push(paginaActual);
-      paginaActual = {
-        html: "",
-        altura: 0,
-        contenido: []
-      };
+      /* Colocar esta sección (parcial o completa) en la página actual */
+      paginaActual.html += htmlSeccionCompleta(sec, filasQueCaben);
+      paginaActual.altura += alturaTituloThead + alturaFilasAcum;
 
-      /* En la nueva página, colocar la sección desde el inicio */
-      const secPendiente = colaSecciones[s];
+      /* Actualizar cola */
+      sec.filasRestantes = sec.filasRestantes.slice(idx);
+      sec.yaSeMostroTitulo = true;
 
-      /* ¿Cabe en la nueva página? (siempre cabe si es menor a ALTURA_UTIL_HOJA) */
-      const espacioNuevaPagina = ALTURA_UTIL_HOJA;
+      /* Si quedan filas, pasar a la siguiente página y reabrir con continuación */
+      if(sec.filasRestantes.length > 0){
+        /* Nueva página */
+        paginas.push({ html: paginaActual.html });
+        paginaActual = { html: "", altura: 0 };
 
-      /* Calcular cuántas filas caben en la página nueva */
-      const htmlTituloSolo = `<div class="acta-seccion">
-        <div class="acta-seccion-titulo">${secPendiente.num}<span class="subrayado">${esc(secPendiente.titulo)}</span>.</div>
-        <table class="acta-tabla">
-          <thead><tr>${columnasDeTipo(secPendiente.tipo)}</tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>`;
-      const alturaTituloYThead = medirHTML(htmlTituloSolo);
-      const espacioParaFilas = espacioNuevaPagina - alturaTituloYThead;
-      const { queCaben, restantes } = empaquetarFilas(secPendiente.filas, espacioParaFilas, 0, true);
+        /* Colocar continuación (sin título) con tantas filas como quepan */
+        const alturaTheadCont = medirThead(sec.tipo);
+        const alturaDisponibleCont = ALTURA_UTIL_HOJA_PX - alturaTheadCont;
 
-      const filasHTML = queCaben.map(f => f.html).join("");
-      const htmlColocar = `<div class="acta-seccion">
-        <div class="acta-seccion-titulo">${secPendiente.num}<span class="subrayado">${esc(secPendiente.titulo)}</span>.</div>
-        <table class="acta-tabla">
-          <thead><tr>${columnasDeTipo(secPendiente.tipo)}</tr></thead>
-          <tbody>${filasHTML}</tbody>
-        </table>
-      </div>`;
-      paginaActual.html = htmlColocar;
-      paginaActual.altura = alturaTituloYThead + queCaben.reduce((a, f) => a + f.altura, 0);
-      paginaActual.contenido.push({ tipo: "seccion", nombre: secPendiente.nombre });
+        const filasCont = [];
+        let alturaContAcum = 0;
+        for(const f of sec.filasRestantes){
+          if(alturaContAcum + f.altura <= alturaDisponibleCont){
+            filasCont.push(f);
+            alturaContAcum += f.altura;
+          } else {
+            break;
+          }
+        }
 
-      /* Actualizar cola con las filas restantes */
-      colaSecciones[s] = { ...secPendiente, filas: restantes };
+        paginaActual.html = htmlContinuacion(sec, filasCont);
+        paginaActual.altura = alturaTheadCont + alturaContAcum;
+        sec.filasRestantes = sec.filasRestantes.slice(filasCont.length);
 
-      /* Si la sección no terminó, seguimos con la misma sección en nueva página */
-      if(restantes.length > 0){
-        s--; /* repetir esta sección */
-        continue;
+        /* Si quedan más filas, seguir procesando esta sección */
+        if(sec.filasRestantes.length > 0){
+          i--; /* repetir la misma sección */
+          continue;
+        }
+      }
+    } else {
+      /* No cabe el inicio en la página actual (o está vacía) */
+      /* Cerrar página actual si tiene contenido */
+      if(paginaActual.altura > 0){
+        paginas.push({ html: paginaActual.html });
+        paginaActual = { html: "", altura: 0 };
+      }
+
+      /* Nueva página: colocar el inicio */
+      const espacioNueva = ALTURA_UTIL_HOJA_PX;
+
+      /* ¿Cabe el inicio completo? */
+      if(alturaInicio <= espacioNueva){
+        const alturaThead = medirThead(sec.tipo);
+        const alturaTituloThead = alturaInicio - primeraFila.altura;
+
+        const filasQueCaben = [primeraFila];
+        let alturaFilasAcum = primeraFila.altura;
+        let idx = 1;
+
+        while(idx < sec.filasRestantes.length){
+          const siguienteFila = sec.filasRestantes[idx];
+          const alturaTest = alturaTituloThead + alturaFilasAcum + siguienteFila.altura;
+          if(alturaTest <= espacioNueva){
+            filasQueCaben.push(siguienteFila);
+            alturaFilasAcum += siguienteFila.altura;
+            idx++;
+          } else {
+            break;
+          }
+        }
+
+        paginaActual.html = htmlSeccionCompleta(sec, filasQueCaben);
+        paginaActual.altura = alturaTituloThead + alturaFilasAcum;
+
+        sec.filasRestantes = sec.filasRestantes.slice(idx);
+        sec.yaSeMostroTitulo = true;
+
+        if(sec.filasRestantes.length > 0){
+          i--;
+          continue;
+        }
+      } else {
+        /* No cabe ni una fila — caso anómalo, colocar toda la sección igual */
+        paginaActual.html = htmlSeccionCompleta(sec, sec.filasRestantes);
+        paginaActual.altura = medirHTML(paginaActual.html);
+        sec.filasRestantes = [];
       }
     }
   }
 
   /* ============================================================
-     [S18.4] COLOCAR FIRMAS
+     FIRMAS
      ============================================================ */
   /* Cerrar la última página si tiene contenido */
-  if(paginaActual.altura > 0 || paginaActual.html){
-    paginas.push(paginaActual);
-    paginaActual = null;
+  if(paginaActual.altura > 0){
+    paginas.push({ html: paginaActual.html });
+    paginaActual = { html: "", altura: 0 };
   }
 
-  /* ¿Cabe firmas en la última página? */
+  /* ¿Caben las firmas en la última página? */
   const ultimaPagina = paginas[paginas.length - 1];
-  const espacioUltimaPagina = ALTURA_UTIL_HOJA - ultimaPagina.altura;
+  const alturaUltimaPagina = medirHTML(ultimaPagina.html);
+  const espacioUltima = ALTURA_UTIL_HOJA_PX - alturaUltimaPagina;
 
-  if(firmasAltura <= espacioUltimaPagina){
+  if(firmasAltura <= espacioUltima){
     ultimaPagina.html += firmasHTML;
-    ultimaPagina.altura += firmasAltura;
   } else {
-    /* Firmas en página propia con encabezado de continuación */
-    const numHojaNueva = paginas.length + 1;
-    const enc = generarEncabezadoContinuacion(numHojaNueva);
-    const encAltura = medirHTML(enc);
-    paginas.push({
-      html: enc + firmasHTML,
-      altura: encAltura + firmasAltura,
-      contenido: [{ tipo: "firmas" }]
-    });
+    /* Firmas en página propia */
+    const numHoja = paginas.length + 1;
+    const enc = generarEncabezadoContinuacion(numHoja);
+    paginas.push({ html: enc + firmasHTML });
   }
 
   /* ============================================================
-     [S18.5] UNIR PÁGINAS CON page-break-after
+     APLICAR ENCABEZADOS DE CONTINUACIÓN
+     ------------------------------------------------------------
+     Regla: encabezado SOLO en la última página si es de firmas solas.
+     En las demás páginas NO se añade nada.
      ============================================================ */
-  let htmlFinal = "";
-  paginas.forEach((p, i) => {
-    /* Añadir encabezado de continuación a páginas > 1 que no sean la de firmas */
-    let contenidoPagina = p.html;
-    /* Detectar si esta página es la primera */
-    const esPrimeraPagina = i === 0;
-    /* Detectar si esta página solo tiene firmas (ya tienen encabezado) */
-    const soloFirmas = p.contenido.length === 1 && p.contenido[0].tipo === "firmas";
+  /* El encabezado ya se añadió solo cuando se creó la página de firmas solas. */
 
-    if(!esPrimeraPagina && !soloFirmas){
-      /* Añadir encabezado de continuación al inicio de la página */
-      const numHoja = i + 1;
-      const enc = generarEncabezadoContinuacion(numHoja);
-      contenidoPagina = enc + contenidoPagina;
-    }
-
-    htmlFinal += `<div class="pagina-acta">${contenidoPagina}</div>`;
-  });
-
-  return htmlFinal;
+  return paginas;
 }
 
 /* ============================================================
-   [S19] HELPERS DE TABLA DEL ACTA
+   [S19] HELPERS DE TABLA
    ============================================================ */
 function columnasDeTipo(tipo){
   if(tipo === "fijos"){
@@ -3163,7 +2741,180 @@ function abrirLightbox(url){
 function cerrarLightbox(){ document.getElementById("lightbox").classList.remove("visible"); }
 
 /* ============================================================
-   [S23] ATAJOS
+   [S23] GENERAR PDF CON jsPDF + html2canvas
+   ============================================================ */
+async function guardarPDF(){
+  if(!actaEnProceso.paginas || !actaEnProceso.paginas.length){
+    mostrarToast("No hay acta generada", "error", "⚠");
+    return;
+  }
+
+  const btnPDF = document.getElementById("btnGuardarPDF");
+  const overlay = document.getElementById("pdfOverlay");
+  const overlaySub = document.getElementById("pdfOverlaySub");
+
+  btnPDF.disabled = true;
+  overlay.classList.add("visible");
+  overlaySub.textContent = `Preparando página 1 de ${actaEnProceso.paginas.length}`;
+
+  try{
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({
+      unit: "mm",
+      format: "letter",
+      orientation: "portrait"
+    });
+
+    const paginas = actaEnProceso.paginas;
+
+    for(let i = 0; i < paginas.length; i++){
+      overlaySub.textContent = `Procesando página ${i+1} de ${paginas.length}`;
+
+      /* Crear contenedor con el tamaño exacto de la hoja */
+      const contenedor = document.createElement("div");
+      contenedor.className = "acta-render";
+      contenedor.innerHTML = paginas[i].html;
+      document.body.appendChild(contenedor);
+
+      /* Esperar un frame para que se renderice */
+      await new Promise(r => setTimeout(r, 50));
+
+      /* Renderizar a canvas */
+      const canvas = await html2canvas(contenedor, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+        logging: false,
+        width: contenedor.scrollWidth,
+        height: contenedor.scrollHeight,
+        windowWidth: contenedor.scrollWidth,
+        windowHeight: contenedor.scrollHeight
+      });
+
+      /* Añadir al PDF */
+      if(i > 0) pdf.addPage();
+      const imgData = canvas.toDataURL("image/jpeg", 0.95);
+      /* La imagen ocupa toda la hoja (márgenes incluidos en el contenedor) */
+      const imgWidth = 215.9;  /* Letter ancho */
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "JPEG", 0, 0, imgWidth, Math.min(imgHeight, 279.4));
+
+      /* Limpiar */
+      document.body.removeChild(contenedor);
+
+      /* Yield al navegador para no bloquear el UI */
+      await new Promise(r => setTimeout(r, 10));
+    }
+
+    /* Guardar */
+    const nombreArchivo = `Acta_${oficinaConArticulo(actaEnProceso.oficina.oficina).replace(/[^a-zA-Z0-9]/g, "_")}_${Date.now()}.pdf`;
+    pdf.save(nombreArchivo);
+
+    mostrarToast("PDF generado correctamente", "success", "✔");
+  }catch(err){
+    console.error(err);
+    mostrarToast(`Error al generar PDF: ${err.message}`, "error", "⚠");
+  }finally{
+    overlay.classList.remove("visible");
+    btnPDF.disabled = false;
+  }
+}
+
+/* ============================================================
+   [S24] IMPRIMIR (alternativa con window.print)
+   ============================================================ */
+function imprimirActaDirecta(){
+  if(!actaEnProceso.paginas || !actaEnProceso.paginas.length){
+    mostrarToast("No hay acta generada", "error", "⚠");
+    return;
+  }
+
+  /* Crear iframe temporal para imprimir sin afectar la página */
+  const iframe = document.createElement("iframe");
+  iframe.style.cssText = "position:fixed;right:0;bottom:0;width:0;height:0;border:0;";
+  document.body.appendChild(iframe);
+
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Acta</title>
+      <style>
+        @page{size:letter portrait;margin:0;}
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#fff;font-family:Arial,sans-serif;color:#000;}
+        .pagina{
+          width:215.9mm;
+          min-height:279.4mm;
+          padding:20mm 20mm 20mm 30mm;
+          page-break-after:always;
+          break-after:page;
+          position:relative;
+          background:#fff;
+          box-sizing:border-box;
+        }
+        .pagina:last-child{page-break-after:auto;break-after:auto;}
+        ${document.getElementById("previewActa").style.cssText ? "" : ""}
+      </style>
+      <style>${getEstilosActaParaImpresion()}</style>
+    </head>
+    <body>
+      ${actaEnProceso.paginas.map(p => `<div class="pagina">${p.html}</div>`).join("")}
+    </body>
+    </html>
+  `);
+  doc.close();
+
+  setTimeout(() => {
+    try{
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }catch(e){
+      console.error(e);
+    }
+    setTimeout(() => document.body.removeChild(iframe), 1000);
+  }, 300);
+}
+
+/* Extrae los estilos del acta para la impresión */
+function getEstilosActaParaImpresion(){
+  return `
+    .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 10pt 0;text-transform:uppercase;text-align:left;}
+    .acta-membrete .linea1{padding-left:0;}
+    .acta-membrete .linea2{padding-left:9pt;}
+    .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
+    .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.1;}
+    .acta-titulo .titulo-linea1{display:block;}
+    .acta-titulo .titulo-linea2{display:block;}
+    .acta-seccion{margin-top:6pt;}
+    .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;line-height:1.0;}
+    .acta-seccion-titulo .subrayado{text-decoration:underline;}
+    .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;border:1px solid #000;}
+    .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;}
+    .acta-tabla td{border:1px solid #000;padding:3pt 4pt;font-size:9pt;vertical-align:top;line-height:1.15;}
+    .acta-tabla td.center{text-align:center;}
+    .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
+    .acta-tabla td.vacia{text-align:center;padding:8pt 4pt;font-style:italic;text-transform:uppercase;}
+    .acta-bloque-firmas{margin-top:24pt;}
+    .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;}
+    .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
+    .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
+    .acta-firma-bloque-lado{flex:1;text-align:center;}
+    .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
+    .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;line-height:1.0;}
+    .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;line-height:1.2;}
+    .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;line-height:1.0;}
+    .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
+    .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
+    .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
+  `;
+}
+
+/* ============================================================
+   [S25] ATAJOS
    ============================================================ */
 document.addEventListener("keydown", e => {
   if((e.ctrlKey || e.metaKey) && e.key === "k"){
@@ -3181,7 +2932,7 @@ document.addEventListener("keydown", e => {
 });
 
 /* ============================================================
-   [S24] INICIALIZACIÓN
+   [S26] INICIALIZACIÓN
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   try{
