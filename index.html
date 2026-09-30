@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V4.8</title>
+<title>Sistema de Control DIV-10 V4.9</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -244,6 +244,7 @@
   .acta-medicion .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 8pt 0;line-height:1.1;}
   .acta-medicion .acta-titulo .titulo-linea1{display:block;}
   .acta-medicion .acta-titulo .titulo-linea2{display:block;}
+  .acta-medicion .acta-titulo .titulo-linea3{display:block;}
   .acta-medicion .acta-seccion{margin-top:8pt;}
   .acta-medicion .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 3pt 0;line-height:1.0;}
   .acta-medicion .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:4pt;border:1px solid #000;}
@@ -252,6 +253,11 @@
   .acta-medicion .acta-tabla td.center{text-align:center;}
   .acta-medicion .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
   .acta-medicion .acta-tabla td.vacia{text-align:center;padding:8pt 4pt;font-style:italic;text-transform:uppercase;}
+  .acta-medicion .acta-seccion-continuacion{margin:0;}
+  .acta-medicion .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;}
+  .acta-medicion .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
+  .acta-medicion .acta-tabla-continuacion td.center{text-align:center;}
+  .acta-medicion .acta-tabla-continuacion td.descripcion{text-align:justify;text-transform:uppercase;}
   .acta-medicion .acta-bloque-firmas{margin-top:24pt;}
   .acta-medicion .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;}
   .acta-medicion .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
@@ -264,10 +270,6 @@
   .acta-medicion .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
   .acta-medicion .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
   .acta-medicion .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
-  .acta-medicion .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;}
-  .acta-medicion .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
-  .acta-medicion .acta-tabla-continuacion td.center{text-align:center;}
-  .acta-medicion .acta-tabla-continuacion td.descripcion{text-align:justify;text-transform:uppercase;}
 
   .preview-acta-wrap{
     background:#fff;color:#000;padding:30px 40px;
@@ -282,6 +284,7 @@
   .preview-acta-wrap .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.1;}
   .preview-acta-wrap .acta-titulo .titulo-linea1{display:block;}
   .preview-acta-wrap .acta-titulo .titulo-linea2{display:block;}
+  .preview-acta-wrap .acta-titulo .titulo-linea3{display:block;}
   .preview-acta-wrap .acta-seccion{margin-top:10pt;}
   .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;color:#000;}
   .preview-acta-wrap .acta-seccion-titulo .subrayado{text-decoration:underline;}
@@ -291,6 +294,7 @@
   .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
   .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
   .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
+  .preview-acta-wrap .acta-seccion-continuacion{margin:0;}
   .preview-acta-wrap .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;color:#000;}
   .preview-acta-wrap .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;}
   .preview-acta-wrap .acta-tabla-continuacion td.center{text-align:center;color:#000;}
@@ -356,6 +360,7 @@
     .acta-titulo{font-family: Arial, sans-serif;font-size: 16pt;font-weight: bold;text-align: center;text-transform: uppercase;margin: 0 0 8pt 0;line-height: 1.1;color:#000;}
     .acta-titulo .titulo-linea1{display: block;}
     .acta-titulo .titulo-linea2{display: block;}
+    .acta-titulo .titulo-linea3{display: block;}
 
     .acta-seccion{margin-top: 8pt;}
     .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;}
@@ -368,13 +373,47 @@
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
     .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
 
-    .acta-tabla-continuacion{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 9pt;margin: 0;border: none;color:#000;}
-    .acta-tabla-continuacion td{border-left: 1px solid #000;border-right: 1px solid #000;border-bottom: 1px solid #000;padding: 2pt 4pt;font-size: 9pt;vertical-align: top;line-height: 1.0;color:#000;}
+    /* ⭐ V4.9: Continuación con wrapper + estructura garantizada */
+    .acta-seccion-continuacion{
+      display: block;
+      page-break-inside: auto;
+      break-inside: auto;
+      margin: 0;
+    }
+    .acta-tabla-continuacion{
+      width: 100%;
+      border-collapse: collapse;
+      font-family: Arial, sans-serif;
+      font-size: 9pt;
+      margin: 0;
+      border: none;
+      color: #000;
+      display: table;
+      table-layout: fixed;
+    }
+    .acta-tabla-continuacion tbody{display: table-row-group;}
+    .acta-tabla-continuacion tr{
+      display: table-row;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .acta-tabla-continuacion td{
+      display: table-cell;
+      border-left: 1px solid #000;
+      border-right: 1px solid #000;
+      border-bottom: 1px solid #000;
+      padding: 2pt 4pt;
+      font-size: 9pt;
+      vertical-align: top;
+      line-height: 1.0;
+      color: #000;
+    }
     .acta-tabla-continuacion td.center{text-align: center;color:#000;}
     .acta-tabla-continuacion td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
 
-    /* ⭐ FIX V4.8: NO repetir thead automáticamente */
+    /* ⭐ V4.9: thead no se repite automáticamente */
     .acta-tabla thead{display: table-row-group;}
+    .acta-tabla tr{page-break-inside: avoid;break-inside: avoid;}
 
     .saltar-pagina{
       page-break-before: always;
@@ -443,7 +482,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v4.8 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v4.9 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -569,8 +608,7 @@ const ALTURA_UTIL_HOJA = Math.floor(
   ((ALTURA_LETTER_CM - MARGENES_CM) * PX_POR_CM) - MARGEN_SEGURIDAD_PX
 ); // ≈ 879px
 
-/* Factor de seguridad para filas que caben (5% menos) */
-const FACTOR_SEGURIDAD_FILAS = 0.95;
+const FACTOR_SEGURIDAD_FILAS = 0.97;
 
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
@@ -613,7 +651,6 @@ function norm(s){
     .replace(/\s+/g," ").trim();
 }
 function limpiarTexto(s){
-  /* Elimina caracteres de control invisibles (NO los visibles del Sheet) */
   return (s || "").toString()
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
     .trim();
@@ -1670,14 +1707,17 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   ⭐ V4.8 — GENERADOR DEL ACTA CON PAGINACIÓN ROBUSTA
+   ⭐ V4.9 — GENERADOR DEL ACTA
    ------------------------------------------------------------
-   FIXES:
-   - Continuación SIEMPRE en <table class="acta-tabla-continuacion"><tbody>
-   - Verificación: bloque continuación tiene ≥ 1 fila
-   - Recalcular altura midiendo HTML real
-   - Factor de seguridad del 5%
-   - thead no se repite (CSS)
+   Estrategia:
+   1. Medir componentes base (header, firmas, subtítulo, thead)
+   2. Procesar cada sección con BÚSQUEDA BINARIA
+      para encontrar exactamente N filas que caben
+   3. Emitir bloques autocontenidos:
+      - Primera página: <div class="acta-seccion"><subtítulo><table con thead>
+      - Continuación: <div class="acta-seccion-continuacion"><table sin thead>
+   4. Firmas bloque atómico
+   5. Ordinal contado desde HTML final real
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -1712,10 +1752,37 @@ function generarHTMLActa(r, oficina, datos){
   const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
   const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
 
+  /* ============================================================
+     TÍTULO CON SALTO INTELIGENTE
+     ------------------------------------------------------------
+     Si el título excede 3 líneas, forzar corte antes de "DE LA DIV-10"
+     ============================================================ */
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
-  const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
+  const textoL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()}`;
+  const textoSufijo = `DE LA DIV-10`;
 
-  /* Medidor */
+  /* Decidir si el título tiene 2 o 3 líneas.
+     Si "textoL2 DE LA DIV-10" supera ~75 caracteres, se separa. */
+  const anchoCompleto = (textoL2 + " " + textoSufijo).length;
+  const requiereTresLineas = anchoCompleto > 75;
+
+  let tituloHTML;
+  if(requiereTresLineas){
+    tituloHTML = `
+      <span class="titulo-linea1">${esc(tituloL1)}</span>
+      <span class="titulo-linea2">${esc(textoL2)}</span>
+      <span class="titulo-linea3">${esc(textoSufijo)}</span>
+    `;
+  } else {
+    tituloHTML = `
+      <span class="titulo-linea1">${esc(tituloL1)}</span>
+      <span class="titulo-linea2">${esc(textoL2)} <span style="white-space:nowrap">${esc(textoSufijo)}</span></span>
+    `;
+  }
+
+  /* ============================================================
+     MEDIDOR
+     ============================================================ */
   const medidor = document.getElementById("actaMedicion");
   function medirHTML(html){
     medidor.innerHTML = html;
@@ -1732,10 +1799,7 @@ function generarHTMLActa(r, oficina, datos){
       <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
       <div class="linea3">BOLIVIA</div>
     </div>
-    <div class="acta-titulo">
-      <span class="titulo-linea1">${esc(tituloL1)}</span>
-      <span class="titulo-linea2">${tituloL2}</span>
-    </div>
+    <div class="acta-titulo">${tituloHTML}</div>
   `;
   const alturaHeader = medirHTML(headerHTML);
 
@@ -1747,7 +1811,7 @@ function generarHTMLActa(r, oficina, datos){
   const alturaFirmas = medirHTML(firmasHTML);
 
   /* ============================================================
-     MEDIR SECCIONES
+     PREPARAR SECCIONES
      ============================================================ */
   const seccionesMeta = [
     { num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
@@ -1757,40 +1821,93 @@ function generarHTMLActa(r, oficina, datos){
   ];
 
   seccionesMeta.forEach(sec => {
-    const columnasHTML = (sec.tipo === "fijos")
+    sec._columnasHTML = (sec.tipo === "fijos")
       ? `<th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`
       : `<th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
-
-    const subtituloHTML = `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
-
-    const alturaSubtitulo = medirHTML(`<div class="acta-seccion">${subtituloHTML}</div>`);
-
-    const tablaVacia = `<div class="acta-seccion">${subtituloHTML}
-      <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead><tbody></tbody></table></div>`;
-    const alturaSubtituloThead = medirHTML(tablaVacia);
-    const alturaThead = alturaSubtituloThead - alturaSubtitulo;
-
-    const alturaNoCuenta = medirHTML(`<div class="acta-seccion">${subtituloHTML}
-      <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead>
-      <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table></div>`);
-
-    /* Medir cada fila individualmente */
-    const alturasFilas = [];
-    sec.lista.forEach((it) => {
-      const filaHTML = filaTablaHTML(it, 1, sec.tipo);
-      const h = medirHTML(`<div class="acta-seccion">${subtituloHTML}
-        <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead><tbody>${filaHTML}</tbody></table></div>`);
-      alturasFilas.push(h - alturaSubtituloThead);
-    });
-
-    sec._columnasHTML = columnasHTML;
-    sec._subtituloHTML = subtituloHTML;
-    sec._alturaSubtitulo = alturaSubtitulo;
-    sec._alturaThead = alturaThead;
-    sec._alturaSubtituloThead = alturaSubtituloThead;
-    sec._alturaNoCuenta = alturaNoCuenta;
-    sec._alturasFilas = alturasFilas;
+    sec._subtituloHTML = `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
   });
+
+  /* ============================================================
+     HELPERS DE EMISIÓN
+     ============================================================ */
+
+  /* Emite bloque completo (subtítulo + tabla con thead) */
+  function emitirBloqueCompleto(sec, items){
+    if(items.length === 0) return "";
+    const filasHTML = items.map(f => filaTablaHTML(f.item, f.num, sec.tipo)).join("");
+    return `<div class="acta-seccion">${sec._subtituloHTML}
+      <table class="acta-tabla">
+        <thead><tr>${sec._columnasHTML}</tr></thead>
+        <tbody>${filasHTML}</tbody>
+      </table>
+    </div>`;
+  }
+
+  /* Emite bloque de continuación (SIN subtítulo, SIN thead, CON wrapper) */
+  function emitirBloqueContinuacion(sec, items){
+    if(items.length === 0) return "";
+    const filasHTML = items.map(f => filaTablaHTML(f.item, f.num, sec.tipo)).join("");
+    return `<div class="acta-seccion-continuacion">
+      <table class="acta-tabla-continuacion">
+        <tbody>${filasHTML}</tbody>
+      </table>
+    </div>`;
+  }
+
+  /* Emite bloque "NO CUENTA" */
+  function emitirBloqueNoCuenta(sec){
+    return `<div class="acta-seccion">${sec._subtituloHTML}
+      <table class="acta-tabla">
+        <thead><tr>${sec._columnasHTML}</tr></thead>
+        <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody>
+      </table>
+    </div>`;
+  }
+
+  /* Prepara items con numeración consecutiva desde un índice base */
+  function prepararItems(listaSlice, numeroInicial){
+    let n = numeroInicial;
+    return listaSlice.map(item => ({ item, num: n++ }));
+  }
+
+  /* ============================================================
+     BÚSQUEDA BINARIA: cuántas filas caben en el espacio disponible
+     ============================================================ */
+  function maxFilasQueCaben(sec, listaSlice, esPrimera, espacioDisponible, numeroInicial){
+    if(listaSlice.length === 0) return 0;
+
+    /* Caso rápido: si todas caben, retornar todas */
+    const itemsTodos = prepararItems(listaSlice, numeroInicial);
+    const bloqueTodos = esPrimera
+      ? emitirBloqueCompleto(sec, itemsTodos)
+      : emitirBloqueContinuacion(sec, itemsTodos);
+    const alturaTodos = medirHTML(bloqueTodos);
+    if(alturaTodos <= espacioDisponible){
+      return listaSlice.length;
+    }
+
+    /* Búsqueda binaria */
+    let low = 0;
+    let high = listaSlice.length;
+    let mejor = 0;
+
+    while(low <= high){
+      const mid = Math.floor((low + high) / 2);
+      if(mid === 0){ low = 1; continue; }
+      const itemsMid = prepararItems(listaSlice.slice(0, mid), numeroInicial);
+      const bloqueMid = esPrimera
+        ? emitirBloqueCompleto(sec, itemsMid)
+        : emitirBloqueContinuacion(sec, itemsMid);
+      const alturaMid = medirHTML(bloqueMid);
+      if(alturaMid <= espacioDisponible){
+        mejor = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    return mejor;
+  }
 
   /* ============================================================
      EMPAQUETAR EN HOJAS
@@ -1807,57 +1924,25 @@ function generarHTMLActa(r, oficina, datos){
   }
 
   /* ============================================================
-     Helper: emite bloque de sección completa (con subtítulo + thead)
-     ============================================================ */
-  function emitirBloqueCompleto(sec, items){
-    const filasHTML = items.map(f => filaTablaHTML(f.item, f.num, sec.tipo)).join("");
-    return `<div class="acta-seccion">${sec._subtituloHTML}
-      <table class="acta-tabla">
-        <thead><tr>${sec._columnasHTML}</tr></thead>
-        <tbody>${filasHTML}</tbody>
-      </table>
-    </div>`;
-  }
-
-  /* Helper: emite bloque de continuación (sin subtítulo ni thead) */
-  function emitirBloqueContinuacion(sec, items){
-    if(items.length === 0) return "";  /* ⭐ FIX: NUNCA emitir continuación vacía */
-    const filasHTML = items.map(f => filaTablaHTML(f.item, f.num, sec.tipo)).join("");
-    return `<table class="acta-tabla-continuacion">
-      <tbody>${filasHTML}</tbody>
-    </table>`;
-  }
-
-  /* Helper: emite bloque "NO CUENTA" */
-  function emitirBloqueNoCuenta(sec){
-    return `<div class="acta-seccion">${sec._subtituloHTML}
-      <table class="acta-tabla">
-        <thead><tr>${sec._columnasHTML}</tr></thead>
-        <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody>
-      </table>
-    </div>`;
-  }
-
-  /* ============================================================
      PROCESAR CADA SECCIÓN
      ============================================================ */
+  let contadorGlobalTotal = 1;  /* numeración continua entre páginas */
+
   seccionesMeta.forEach(sec => {
     const lista = sec.lista;
-    const alturas = sec._alturasFilas;
-    const alturaSubtituloThead = sec._alturaSubtituloThead;
-    const alturaNoCuenta = sec._alturaNoCuenta;
 
     /* --- Caso: lista vacía --- */
     if(lista.length === 0){
       const bloqueHTML = emitirBloqueNoCuenta(sec);
+      const alturaBloque = medirHTML(bloqueHTML);
       const espacioRestante = ALTURA_UTIL_HOJA - hojaActual.altura;
-      if(alturaNoCuenta <= espacioRestante){
+      if(alturaBloque <= espacioRestante){
         hojaActual.bloques.push(bloqueHTML);
-        hojaActual.altura += alturaNoCuenta;
+        hojaActual.altura += alturaBloque;
       } else {
         cerrarHoja();
         hojaActual.bloques.push(bloqueHTML);
-        hojaActual.altura = alturaNoCuenta;
+        hojaActual.altura = alturaBloque;
       }
       return;
     }
@@ -1865,35 +1950,26 @@ function generarHTMLActa(r, oficina, datos){
     /* --- Caso: lista con filas --- */
     let idxFila = 0;
     let esPrimeraPaginaDeSeccion = true;
-    let contadorGlobal = 1;
 
-    /* Seguridad: máximo de iteraciones para evitar loops infinitos */
-    let iteraciones = 0;
-    const maxIteraciones = lista.length * 3 + 50;
-
-    while(idxFila < lista.length && iteraciones < maxIteraciones){
-      iteraciones++;
-
+    while(idxFila < lista.length){
       const espacioRestante = ALTURA_UTIL_HOJA - hojaActual.altura;
+      const espacioSeguro = espacioRestante * FACTOR_SEGURIDAD_FILAS;
 
-      /* Calcular encabezado de esta página */
-      const alturaEncabezado = esPrimeraPaginaDeSeccion ? alturaSubtituloThead : 0;
-      const espacioParaFilas = espacioRestante - alturaEncabezado;
+      /* ¿Cabe al menos 1 fila? */
+      const items1 = prepararItems([lista[idxFila]], contadorGlobalTotal);
+      const bloque1 = esPrimeraPaginaDeSeccion
+        ? emitirBloqueCompleto(sec, items1)
+        : emitirBloqueContinuacion(sec, items1);
+      const altura1Fila = medirHTML(bloque1);
 
-      /* ¿Cabe al menos la primera fila? */
-      const alturaPrimeraFila = alturas[idxFila];
-
-      if(espacioParaFilas < alturaPrimeraFila){
-        /* No cabe ni una fila → cerrar hoja y reintentar */
+      if(altura1Fila > espacioSeguro){
+        /* No cabe ni 1 fila → cerrar hoja y reintentar */
         if(hojaActual.bloques.length === 0){
-          /* Hoja vacía pero no cabe: forzar al menos 1 fila */
-          const items = [{ item: lista[idxFila], num: contadorGlobal++ }];
-          const bloque = esPrimeraPaginaDeSeccion
-            ? emitirBloqueCompleto(sec, items)
-            : emitirBloqueContinuacion(sec, items);
-          hojaActual.bloques.push(bloque);
-          hojaActual.altura = alturaEncabezado + alturaPrimeraFila;
+          /* Hoja vacía: forzar al menos 1 fila */
+          hojaActual.bloques.push(bloque1);
+          hojaActual.altura = altura1Fila;
           idxFila++;
+          contadorGlobalTotal++;
           esPrimeraPaginaDeSeccion = false;
         } else {
           cerrarHoja();
@@ -1901,42 +1977,30 @@ function generarHTMLActa(r, oficina, datos){
         continue;
       }
 
-      /* Acumular filas que caben (con factor de seguridad) */
-      const espacioSeguro = espacioParaFilas * FACTOR_SEGURIDAD_FILAS;
-      const itemsEnPagina = [];
-      let alturaAcumuladaFilas = 0;
-      let j = idxFila;
+      /* Búsqueda binaria para N filas que caben */
+      const listaRestante = lista.slice(idxFila);
+      const N = maxFilasQueCaben(
+        sec,
+        listaRestante,
+        esPrimeraPaginaDeSeccion,
+        espacioSeguro,
+        contadorGlobalTotal
+      );
 
-      while(j < lista.length){
-        const h = alturas[j];
-        if(alturaAcumuladaFilas + h <= espacioSeguro){
-          itemsEnPagina.push({ item: lista[j], num: contadorGlobal++ });
-          alturaAcumuladaFilas += h;
-          j++;
-        } else {
-          break;
-        }
-      }
+      /* Si N = 0 por algún motivo, forzar 1 */
+      const NFinal = Math.max(1, N);
 
-      /* Seguridad: al menos 1 fila si quedó vacío */
-      if(itemsEnPagina.length === 0){
-        itemsEnPagina.push({ item: lista[idxFila], num: contadorGlobal++ });
-        alturaAcumuladaFilas = alturas[idxFila];
-        j = idxFila + 1;
-      }
+      const itemsSeleccionados = prepararItems(listaRestante.slice(0, NFinal), contadorGlobalTotal);
+      const bloqueFinal = esPrimeraPaginaDeSeccion
+        ? emitirBloqueCompleto(sec, itemsSeleccionados)
+        : emitirBloqueContinuacion(sec, itemsSeleccionados);
 
-      /* ⭐ FIX: emitir bloque según tipo */
-      let bloqueHTML;
-      if(esPrimeraPaginaDeSeccion){
-        bloqueHTML = emitirBloqueCompleto(sec, itemsEnPagina);
-      } else {
-        bloqueHTML = emitirBloqueContinuacion(sec, itemsEnPagina);
-      }
+      hojaActual.bloques.push(bloqueFinal);
+      const alturaBloqueFinal = medirHTML(bloqueFinal);
+      hojaActual.altura += alturaBloqueFinal;
 
-      hojaActual.bloques.push(bloqueHTML);
-      hojaActual.altura += alturaEncabezado + alturaAcumuladaFilas;
-
-      idxFila = j;
+      idxFila += NFinal;
+      contadorGlobalTotal += NFinal;
       esPrimeraPaginaDeSeccion = false;
 
       if(idxFila < lista.length){
@@ -1965,7 +2029,6 @@ function generarHTMLActa(r, oficina, datos){
   /* ============================================================
      ENSAMBLAR HTML FINAL
      ============================================================ */
-  const totalHojas = hojas.length;
   let htmlFinal = "";
 
   hojas.forEach((hoja, idx) => {
@@ -1975,11 +2038,14 @@ function generarHTMLActa(r, oficina, datos){
     htmlFinal += hoja.bloques.join("");
   });
 
+  /* ⭐ FIX: contar hojas REALES desde el HTML final */
+  const totalHojasReales = 1 + (htmlFinal.match(/saltar-pagina/g) || []).length;
+
   /* Encabezado de continuación si las firmas van en hoja nueva
      y esa hoja empieza con firmas solas */
   if(firmasEnHojaNueva && hojaDeFirmasEmpiezaSola){
     const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
-    const ordinal = ordinalHoja(totalHojas);
+    const ordinal = ordinalHoja(totalHojasReales);
     const textoContinuacion = `${ordinal} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
 
     let bloqueContinuacion = `<div class="acta-continuacion">${esc(textoContinuacion)}</div>`;
