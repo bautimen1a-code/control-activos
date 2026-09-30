@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V4.5</title>
+<title>Sistema de Control DIV-10 V4.6</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -37,7 +37,6 @@
   @keyframes scanline{from{top:0;}to{top:100vh;}}
   .app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
 
-  /* HEADER */
   .header{position:sticky;top:0;z-index:50;background:linear-gradient(180deg,rgba(20,26,32,.95),rgba(10,14,18,.9));backdrop-filter:blur(12px);border-bottom:1px solid var(--borde);padding:16px 20px;overflow:hidden;}
   .header::after{content:"";position:absolute;bottom:0;left:0;height:2px;width:100%;background:linear-gradient(90deg,transparent,var(--dorado),var(--cian),var(--dorado),transparent);background-size:200% 100%;animation:borderFlow 3s linear infinite;}
   @keyframes borderFlow{from{background-position:200% 0;}to{background-position:-200% 0;}}
@@ -58,7 +57,6 @@
 
   .main{flex:1;padding:20px;max-width:1200px;margin:0 auto;width:100%;}
 
-  /* HOME */
   .home{display:flex;flex-direction:column;gap:14px;padding-top:20px;animation:fadeIn .5s ease both;}
   @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
   .home-buttons{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
@@ -76,7 +74,6 @@
   .home-btn.buscar .home-btn-icon{font-size:28px;}
   .home-btn.buscar .home-btn-label{font-size:14px;letter-spacing:3px;color:var(--dorado-brillante);}
 
-  /* MODO BÚSQUEDA */
   .modo-busqueda{animation:fadeIn .35s ease both;display:flex;flex-direction:column;gap:14px;min-height:60vh;}
   .modo-busqueda-top{display:flex;gap:10px;align-items:center;width:100%;min-width:0;}
   .btn-volver{display:inline-flex;align-items:center;gap:8px;background:var(--bg-elevado);color:var(--dorado);border:1px solid var(--borde);padding:12px 14px;font-size:12px;letter-spacing:1.2px;text-transform:uppercase;cursor:pointer;border-radius:10px;font-weight:800;font-family:var(--sans);flex-shrink:0;transition:all .3s ease;white-space:nowrap;}
@@ -91,7 +88,6 @@
   .btn-clear.visible{display:flex;}
   .btn-clear:hover{background:var(--rojo);color:#fff;transform:rotate(90deg) scale(1.1);box-shadow:0 0 15px var(--rojo-glow);}
 
-  /* LISTAS */
   .list-title{display:flex;justify-content:space-between;align-items:center;padding:12px 0;margin-bottom:12px;border-bottom:1px solid var(--borde);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--texto-suave);font-weight:700;animation:fadeIn .4s ease both;}
   .list-title .list-count{background:var(--bg-panel);border:1px solid var(--borde);color:var(--dorado);padding:3px 12px;border-radius:12px;font-family:var(--mono);font-weight:800;}
   .resp-card{position:relative;background:var(--bg-panel);border:1px solid var(--borde);border-radius:12px;padding:18px 20px;margin-bottom:10px;cursor:pointer;transition:all .4s ease;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:16px;}
@@ -119,7 +115,6 @@
   .bien-card-tipo.internos{color:#d4a060;}
   .bien-card-tipo.prestados{color:var(--vino);}
 
-  /* MODAL */
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;overflow-y:auto;}
   .modal-overlay.visible{display:flex;}
   .modal{background:var(--bg-panel);border:1px solid var(--dorado);border-radius:16px;max-width:720px;width:100%;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.7);}
@@ -146,7 +141,6 @@
   .btn-imprimir{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border:none;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:1.2px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all .2s ease;font-family:var(--sans);text-transform:uppercase;margin-bottom:16px;}
   .btn-imprimir:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
 
-  /* FORMULARIO */
   .form-persona{background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;padding:12px 14px;margin-bottom:12px;}
   .form-persona-titulo{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--cian-brillante);font-weight:800;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
   .form-persona-titulo .num{background:var(--cian);color:var(--bg);width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;}
@@ -169,7 +163,6 @@
     .form-grid .form-group.ancho-completo{grid-column:1 / -1;}
   }
 
-  /* TABLAS APP */
   .tabla-section{margin-bottom:20px;background:var(--bg-elevado);border:1px solid var(--borde);border-radius:10px;overflow:hidden;}
   .tabla-header{padding:12px 16px;background:linear-gradient(180deg,rgba(212,176,96,.08),transparent);border-bottom:1px solid var(--borde);display:flex;justify-content:space-between;align-items:center;gap:12px;}
   .tabla-header-titulo{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--texto);font-weight:800;}
@@ -198,7 +191,6 @@
   .oficina-encabezado-sub{font-size:10px;font-family:var(--mono);color:var(--cian-brillante);letter-spacing:1px;text-transform:uppercase;}
   .oficina-encabezado-count{background:rgba(38,198,218,.15);border:1px solid var(--cian);color:var(--cian-brillante);padding:6px 14px;border-radius:14px;font-size:13px;font-weight:800;font-family:var(--mono);flex-shrink:0;}
 
-  /* DETALLE DEL BIEN */
   .bien-detalle{background:var(--bg-elevado);border:1px solid var(--borde);border-radius:12px;overflow:hidden;}
   .bien-detalle-header{padding:20px;background:linear-gradient(135deg,rgba(212,176,96,.1),rgba(38,198,218,.05));border-bottom:2px solid var(--dorado);display:flex;gap:16px;align-items:flex-start;}
   .bien-detalle-foto{width:80px;height:80px;background:var(--bg);border:2px solid var(--dorado);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--dorado);flex-shrink:0;overflow:hidden;cursor:pointer;transition:all .3s ease;}
@@ -273,6 +265,11 @@
   .acta-medicion .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;line-height:1.0;}
   .acta-medicion .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
   .acta-medicion .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
+  /* Tabla de continuación (sin subtítulo, sin thead) */
+  .acta-medicion .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;}
+  .acta-medicion .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
+  .acta-medicion .acta-tabla-continuacion td.center{text-align:center;}
+  .acta-medicion .acta-tabla-continuacion td.descripcion{text-align:justify;text-transform:uppercase;}
 
   /* VISTA PREVIA */
   .preview-acta-wrap{
@@ -297,6 +294,10 @@
   .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
   .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
   .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
+  .preview-acta-wrap .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;color:#000;}
+  .preview-acta-wrap .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-tabla-continuacion td.center{text-align:center;color:#000;}
+  .preview-acta-wrap .acta-tabla-continuacion td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
   .preview-acta-wrap .acta-bloque-firmas{margin-top:24pt;}
   .preview-acta-wrap .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;color:#000;}
   .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
@@ -310,7 +311,6 @@
   .preview-acta-wrap .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;color:#000;line-height:1.2;}
   .preview-acta-wrap .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;color:#000;line-height:1.2;}
 
-  /* MARCADOR DE PÁGINA EN VISTA PREVIA */
   .preview-acta-wrap .page-break-indicator{
     display:block;
     height:24px;
@@ -339,7 +339,6 @@
   .btn-preview.green{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border-color:transparent;}
   .btn-preview.green:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
 
-  /* ACTA PARA IMPRIMIR */
   .acta-print{display:none;}
 
   @media print{
@@ -372,6 +371,15 @@
     .acta-tabla td.center{text-align: center;color:#000;}
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
     .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
+
+    /* ⭐ NUEVO: Tabla de continuación sin borde superior, sin thead */
+    .acta-tabla-continuacion{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 9pt;margin: 0;border: none;color:#000;}
+    .acta-tabla-continuacion td{border-left: 1px solid #000;border-right: 1px solid #000;border-bottom: 1px solid #000;padding: 2pt 4pt;font-size: 9pt;vertical-align: top;line-height: 1.0;color:#000;}
+    .acta-tabla-continuacion td.center{text-align: center;color:#000;}
+    .acta-tabla-continuacion td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
+
+    /* Evitar que el thead de la tabla principal se repita en cada página */
+    .acta-tabla thead{display: table-header-group;}
 
     .saltar-pagina{
       page-break-before: always;
@@ -440,10 +448,9 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v4.5 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v4.6 ◈</footer>
 </div>
 
-<!-- MODAL PRINCIPAL -->
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
   <div class="modal">
     <div class="modal-header">
@@ -454,7 +461,6 @@
   </div>
 </div>
 
-<!-- MODAL ENTRANTE -->
 <div class="modal-overlay" id="modalEntrante" onclick="if(event.target===this)cerrarModalEntrante()">
   <div class="modal modal-form">
     <div class="modal-header">
@@ -523,7 +529,6 @@
   </div>
 </div>
 
-<!-- MODAL VISTA PREVIA -->
 <div class="modal-overlay" id="modalVistaPrevia" onclick="if(event.target===this)cerrarModalVistaPrevia()">
   <div class="modal modal-vista">
     <div class="modal-header">
@@ -561,9 +566,21 @@ const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1Z
 const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
-/* Altura útil de una hoja letter con márgenes 2cm arriba/abajo:
-   letter = 27.94cm, márgenes = 4cm → altura útil = 23.94cm ≈ 905px */
-const ALTURA_UTIL_HOJA = 905;
+/* ⭐ V4.6: Altura útil calibrada + margen de seguridad
+   - Letter portrait: 27.94cm alto
+   - Márgenes: 2cm arriba + 2cm abajo = 4cm
+   - Útil: 23.94cm
+   - Conversión: 1cm = 37.7953px (a 96 DPI)
+   - Margen de seguridad: 20px (evita desbordes por redondeo)
+*/
+const PX_POR_CM = 96 / 2.54;                    // 37.7953
+const ALTURA_LETTER_CM = 27.94;
+const MARGENES_CM = 4;                          // 2 arriba + 2 abajo
+const MARGEN_SEGURIDAD_PX = 20;
+const ALTURA_UTIL_HOJA = Math.floor(
+  ((ALTURA_LETTER_CM - MARGENES_CM) * PX_POR_CM) - MARGEN_SEGURIDAD_PX
+);
+// ≈ Math.floor(904.6 - 20) = 884px
 
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
@@ -626,7 +643,6 @@ function getVal(obj, ...claves){
   }
   return "";
 }
-/* ⭐ FIX #3: comparación normalizada de IDs */
 function mismoId(a, b){
   return norm(a) === norm(b);
 }
@@ -1673,14 +1689,16 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   GENERADOR DEL ACTA (V4.5)
+   ⭐ V4.6 — GENERADOR DEL ACTA CON PAGINACIÓN OPTIMIZADA
    ------------------------------------------------------------
-   Layout inteligente:
-   1. Genera HTML de cada bloque por separado
-   2. Los mide en contenedor oculto (#actaMedicion)
-   3. Pagina tablas largas fila por fila
-   4. Decide si las firmas caben o van a hoja nueva
-   5. Devuelve HTML final con .saltar-pagina donde corresponde
+   Reglas aplicadas:
+   1. Aprovechar máximo el espacio disponible por hoja
+   2. Corte en cualquier fila si la tabla es larga
+   3. Continuación SIN subtítulo ni thead (visualmente continua)
+   4. Subtítulo + thead + 1 fila = bloque atómico (nunca huérfano)
+   5. Firmas siempre atómicas
+   6. NO CUENTA comparte hoja si cabe
+   7. Margen de seguridad de 20px
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -1695,7 +1713,7 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* Saliente */
+  /* Firmantes */
   const salienteGrado = r.grado || "";
   const salienteNombres = r.nombres || "";
   const salienteApPat = r.apPat || "";
@@ -1705,17 +1723,14 @@ function generarHTMLActa(r, oficina, datos){
   if(!nombreSaliente || nombreSaliente.trim() === "") nombreSaliente = "___________________________________";
   const cargoSaliente = (r.cargo || "").toUpperCase();
 
-  /* Entrante */
   const nombreEntrante = construirNombreFirmante(datos.entrante.grado, datos.entrante.nombres, datos.entrante.appat, datos.entrante.apmat);
   const cargoEntrante = (datos.entrante.cargo || "").toUpperCase() || "RESPONSABLE ENTRANTE";
 
-  /* Supervisores */
   const nombreSup1 = construirNombreFirmante(datos.sup1.grado, datos.sup1.nombres, datos.sup1.appat, datos.sup1.apmat);
   const cargoSup1 = (datos.sup1.cargo || "").toUpperCase();
   const nombreSup2 = construirNombreFirmante(datos.sup2.grado, datos.sup2.nombres, datos.sup2.appat, datos.sup2.apmat);
   const cargoSup2 = (datos.sup2.cargo || "").toUpperCase();
 
-  /* Vo.Bo. */
   const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
   const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
 
@@ -1723,27 +1738,55 @@ function generarHTMLActa(r, oficina, datos){
   const tituloL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()} DE LA <span style="white-space:nowrap">DIV-10</span>`;
 
   /* ============================================================
-     CONSTRUIR BLOQUES
+     MEDIDOR
      ============================================================ */
-  const bloques = [];
+  const medidor = document.getElementById("actaMedicion");
 
-  /* Bloque header */
-  bloques.push({
-    tipo: "header",
-    html: `
-      <div class="acta-membrete">
-        <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
-        <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
-        <div class="linea3">BOLIVIA</div>
-      </div>
-      <div class="acta-titulo">
-        <span class="titulo-linea1">${esc(tituloL1)}</span>
-        <span class="titulo-linea2">${tituloL2}</span>
-      </div>
-    `
+  function medirHTML(html){
+    medidor.innerHTML = html;
+    void medidor.offsetHeight;
+    return medidor.scrollHeight;
+  }
+
+  /* ============================================================
+     BLOQUE HEADER
+     ============================================================ */
+  const headerHTML = `
+    <div class="acta-membrete">
+      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
+      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
+      <div class="linea3">BOLIVIA</div>
+    </div>
+    <div class="acta-titulo">
+      <span class="titulo-linea1">${esc(tituloL1)}</span>
+      <span class="titulo-linea2">${tituloL2}</span>
+    </div>
+  `;
+  const alturaHeader = medirHTML(headerHTML);
+
+  /* ============================================================
+     BLOQUE FIRMAS (medición previa)
+     ============================================================ */
+  const firmasHTML = generarBloqueFirmas({
+    nombreSaliente, cargoSaliente, nombreEntrante, cargoEntrante,
+    nombreSup1, cargoSup1, nombreSup2, cargoSup2,
+    nombreVobo, cargoVobo, fechaLarga
   });
+  const alturaFirmas = medirHTML(firmasHTML);
 
-  /* ⭐ FIX #1: secciones paginadas fila por fila */
+  /* ============================================================
+     ENSAMBLADO DE HTML FINAL
+     ============================================================ */
+  let htmlFinal = "";
+  let alturaEnHoja = 0;
+  let hojaActual = 1;
+  let huboSaltoAntesDeFirmas = false;
+
+  /* 1) Header */
+  htmlFinal += headerHTML;
+  alturaEnHoja += alturaHeader;
+
+  /* 2) Secciones */
   const secciones = [
     { num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)",   lista: fijos,     tipo: "fijos" },
     { num: "II.- ",  titulo: "INVENTARIO DE ACTIVOS FUNGIBLES",         lista: fungibles, tipo: "fungibles" },
@@ -1751,100 +1794,29 @@ function generarHTMLActa(r, oficina, datos){
     { num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",          lista: prestados, tipo: "prestados" }
   ];
 
-  /* Primero medimos header para saber cuánto ocupa */
-  const medidor = document.getElementById("actaMedicion");
-
-  /* Medimos header */
-  medidor.innerHTML = bloques[0].html;
-  void medidor.offsetHeight;
-  const alturaHeader = medidor.scrollHeight;
-
-  /* Repartimos la primera sección considerando header */
-  let alturaAcumulada = alturaHeader;
-
-  secciones.forEach((sec, secIdx) => {
-    const bloquesSec = generarBloquesSeccionPaginada(
+  secciones.forEach(sec => {
+    const resultado = emitirSeccionPaginada(
       sec.num, sec.titulo, sec.lista, sec.tipo,
-      ALTURA_UTIL_HOJA - (secIdx === 0 ? alturaHeader : 0)
+      alturaEnHoja, medirHTML
     );
-
-    bloquesSec.forEach((b, idx) => {
-      /* Si es continuación de una sección paginada, se marca */
-      if(idx > 0) b.esContinuacion = true;
-      bloques.push(b);
-    });
-
-    /* Recalcular altura para la siguiente sección (no sabemos cuánto
-       ocupó exactamente sin medir; lo dejamos aproximado y el loop
-       principal de decisión de saltos hará el ajuste fino). */
+    htmlFinal += resultado.html;
+    alturaEnHoja = resultado.alturaFinal;
+    hojaActual = resultado.hojaFinal;
   });
 
-  /* Bloque firmas */
-  const firmasHTML = generarBloqueFirmas({
-    nombreSaliente, cargoSaliente, nombreEntrante, cargoEntrante,
-    nombreSup1, cargoSup1, nombreSup2, cargoSup2,
-    nombreVobo, cargoVobo, fechaLarga
-  });
-  bloques.push({ tipo: "firmas", html: firmasHTML });
-
-  /* ============================================================
-     MEDIR CADA BLOQUE Y DECIDIR SALTOS
-     ============================================================ */
-  bloques.forEach(b => {
-    medidor.innerHTML = b.html;
-    void medidor.offsetHeight;
-    b.altura = medidor.scrollHeight;
-  });
-
-  let alturaEnHoja = 0;
-  let hojaActual = 1;
-  let htmlFinal = "";
-  let huboSaltoAntesDeFirmas = false;
-  let firmasVanSolas = false;
-
-  for(let i = 0; i < bloques.length; i++){
-    const b = bloques[i];
-
-    /* Bloque firmas: decisión especial */
-    if(b.tipo === "firmas"){
-      const espacioRestante = ALTURA_UTIL_HOJA - alturaEnHoja;
-      const cabe = b.altura <= espacioRestante;
-
-      if(!cabe){
-        /* Forzar salto */
-        htmlFinal += `<div class="saltar-pagina"></div>`;
-        hojaActual++;
-        firmasVanSolas = (alturaEnHoja > 0);
-        huboSaltoAntesDeFirmas = true;
-      } else {
-        firmasVanSolas = false;
-      }
-
-      htmlFinal += b.html;
-      break;
-    }
-
-    /* Bloques normales */
-    const espacioRestante = ALTURA_UTIL_HOJA - alturaEnHoja;
-
-    if(b.altura <= espacioRestante){
-      htmlFinal += b.html;
-      alturaEnHoja += b.altura;
-    } else {
-      /* ¿Es un bloque de continuación? Si sí, ya debería caber porque
-         se calculó con altura disponible. Si no cabe aún, forzamos. */
-      htmlFinal += `<div class="saltar-pagina"></div>`;
-      hojaActual++;
-      alturaEnHoja = b.altura;
-      htmlFinal += b.html;
-    }
+  /* 3) Firmas: bloque atómico */
+  const espacioRestante = ALTURA_UTIL_HOJA - alturaEnHoja;
+  if(alturaFirmas > espacioRestante){
+    htmlFinal += `<div class="saltar-pagina"></div>`;
+    hojaActual++;
+    huboSaltoAntesDeFirmas = true;
   }
+  htmlFinal += firmasHTML;
 
-  /* Encabezado de continuación si las firmas van solas */
-  if(huboSaltoAntesDeFirmas && firmasVanSolas){
+  /* 4) Encabezado de continuación si las firmas van solas */
+  if(huboSaltoAntesDeFirmas){
     const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
-    const numHojaContinuacion = hojaActual;
-    const textoContinuacion = `${ordinalHoja(numHojaContinuacion)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
+    const textoContinuacion = `${ordinalHoja(hojaActual)} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
 
     let bloqueContinuacion = `<div class="acta-continuacion">${esc(textoContinuacion)}</div>`;
     if(resumenBienes){
@@ -1860,6 +1832,159 @@ function generarHTMLActa(r, oficina, datos){
   return htmlFinal;
 }
 
+/* ============================================================
+   EMITE UNA SECCIÓN COMPLETA CON PAGINACIÓN INTELIGENTE
+   ------------------------------------------------------------
+   Retorna { html, alturaFinal, hojaFinal }
+   ============================================================ */
+function emitirSeccionPaginada(numRomano, titulo, lista, tipoTabla, alturaEnHojaInicial, medirHTML){
+  const columnasHTML = (tipoTabla === "fijos")
+    ? `<th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`
+    : `<th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
+
+  const subtituloHTML = `<div class="acta-seccion-titulo">${numRomano}<span class="subrayado">${esc(titulo)}</span>.</div>`;
+
+  /* --- Medir componentes --- */
+  // Altura del subtítulo solo
+  const alturaSubtitulo = medirHTML(`<div class="acta-seccion">${subtituloHTML}</div>`);
+
+  // Altura del thead (dentro de una tabla con subtítulo)
+  const tablaVacia = `<div class="acta-seccion">${subtituloHTML}
+    <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead><tbody></tbody></table></div>`;
+  const alturaSubtituloThead = medirHTML(tablaVacia);
+  const alturaThead = alturaSubtituloThead - alturaSubtitulo;
+
+  // Altura de una fila de muestra (representativa: la más larga posible)
+  // Buscamos la fila más alta entre las primeras 5 para ser conservadores
+  const muestrasCandidatas = lista.slice(0, 5);
+  let alturaFilaMax = 0;
+  muestrasCandidatas.forEach(it => {
+    const fila = filaTablaHTML(it, 1, tipoTabla);
+    const h = medirHTML(`<div class="acta-seccion">${subtituloHTML}
+      <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead><tbody>${fila}</tbody></table></div>`);
+    const alturaFila = h - alturaSubtituloThead;
+    if(alturaFila > alturaFilaMax) alturaFilaMax = alturaFila;
+  });
+  if(alturaFilaMax <= 0) alturaFilaMax = 14; // fallback
+
+  // Altura de "NO CUENTA"
+  const alturaNoCuenta = medirHTML(`<div class="acta-seccion">${subtituloHTML}
+    <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead>
+    <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table></div>`);
+
+  /* --- Caso: lista vacía → bloque único atómico --- */
+  if(lista.length === 0){
+    const bloqueHTML = `<div class="acta-seccion">${subtituloHTML}
+      <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead>
+      <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table></div>`;
+
+    let html = "";
+    let altura = alturaEnHojaInicial;
+    let hoja = 1;
+
+    // ¿Cabe el bloque completo?
+    if(altura + alturaNoCuenta <= ALTURA_UTIL_HOJA){
+      html += bloqueHTML;
+      altura += alturaNoCuenta;
+    } else {
+      // Salta a nueva hoja
+      html += `<div class="saltar-pagina"></div>`;
+      html += bloqueHTML;
+      altura = alturaNoCuenta;
+      hoja++;
+    }
+
+    return { html, alturaFinal: altura, hojaFinal: hoja };
+  }
+
+  /* --- Caso normal: paginar filas --- */
+  let html = "";
+  let altura = alturaEnHojaInicial;
+  let hoja = 1;
+  let contadorGlobal = 1;
+  let filaActual = 0;
+  let primeraPagina = true;
+  let esContinuacion = false;
+
+  while(filaActual < lista.length){
+    const esPrimeraDeSeccion = primeraPagina;
+
+    // Altura mínima del bloque (subtítulo + thead + 1 fila) solo si es la primera página
+    const alturaMinimaBloque = esPrimeraDeSeccion
+      ? alturaSubtituloThead + alturaFilaMax
+      : alturaFilaMax;
+
+    // ¿Cabe el bloque mínimo en la hoja actual?
+    const espacioRestante = ALTURA_UTIL_HOJA - altura;
+    if(espacioRestante < alturaMinimaBloque){
+      // Salta de hoja
+      html += `<div class="saltar-pagina"></div>`;
+      hoja++;
+      altura = 0;
+    }
+
+    // Calcular cuántas filas caben
+    let alturaDisponibleParaFilas;
+    let alturaEncabezadoPagina = 0;
+
+    if(esPrimeraDeSeccion){
+      alturaDisponibleParaFilas = ALTURA_UTIL_HOJA - altura - alturaSubtituloThead;
+      alturaEncabezadoPagina = alturaSubtituloThead;
+    } else {
+      alturaDisponibleParaFilas = ALTURA_UTIL_HOJA - altura;
+      alturaEncabezadoPagina = 0;
+    }
+
+    let filasQueCaben = Math.floor(alturaDisponibleParaFilas / alturaFilaMax);
+    if(filasQueCaben < 1) filasQueCaben = 1;
+
+    const fin = Math.min(filaActual + filasQueCaben, lista.length);
+    const items = lista.slice(filaActual, fin);
+
+    // Generar filas
+    const filasHTML = items.map(it => {
+      const num = contadorGlobal++;
+      return filaTablaHTML(it, num, tipoTabla);
+    }).join("");
+
+    // Emitir HTML
+    if(esPrimeraDeSeccion){
+      // Primera página: subtítulo + tabla completa
+      html += `<div class="acta-seccion">${subtituloHTML}
+        <table class="acta-tabla">
+          <thead><tr>${columnasHTML}</tr></thead>
+          <tbody>${filasHTML}</tbody>
+        </table>
+      </div>`;
+    } else {
+      // Continuación: SOLO la tabla sin subtítulo, sin thead
+      html += `<table class="acta-tabla-continuacion">
+        <tbody>${filasHTML}</tbody>
+      </table>`;
+    }
+
+    // Actualizar altura en la hoja
+    const alturaRealBloque = esPrimeraDeSeccion
+      ? alturaSubtituloThead + (items.length * alturaFilaMax)
+      : (items.length * alturaFilaMax);
+    altura += alturaRealBloque;
+
+    // Preparar siguiente iteración
+    filaActual = fin;
+    primeraPagina = false;
+    esContinuacion = true;
+
+    // Si quedan filas, forzar salto de hoja
+    if(filaActual < lista.length){
+      html += `<div class="saltar-pagina"></div>`;
+      hoja++;
+      altura = 0;
+    }
+  }
+
+  return { html, alturaFinal: altura, hojaFinal: hoja };
+}
+
 /* Genera fila HTML de una sección */
 function filaTablaHTML(item, idx, tipoTabla){
   const codigo = getVal(item, "CODIGO");
@@ -1870,88 +1995,6 @@ function filaTablaHTML(item, idx, tipoTabla){
     return `<tr><td class="center">${idx}.-</td><td class="center">${esc(codigo)}</td><td class="descripcion">${esc(desc)}</td><td class="center">${esc(estado)}</td></tr>`;
   }
   return `<tr><td class="center">${idx}.-</td><td class="center">${esc(cant)}</td><td class="descripcion">${esc(desc)}</td><td class="center">${esc(estado)}</td></tr>`;
-}
-
-/* Genera bloque de sección paginado.
-   alturaDisponiblePrimera: px útiles en la primera hoja donde aparecerá la sección. */
-function generarBloquesSeccionPaginada(numRomano, titulo, lista, tipoTabla, alturaDisponiblePrimera){
-  const bloques = [];
-
-  const columnasHTML = (tipoTabla === "fijos")
-    ? `<th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`
-    : `<th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
-
-  const subtituloHTML = `<div class="acta-seccion-titulo">${numRomano}<span class="subrayado">${esc(titulo)}</span>.</div>`;
-
-  const medidor = document.getElementById("actaMedicion");
-
-  /* Medir header de la tabla (subtítulo + thead) */
-  medidor.innerHTML = `<div class="acta-seccion">${subtituloHTML}
-    <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead><tbody></tbody></table></div>`;
-  void medidor.offsetHeight;
-  const alturaEncabezado = medidor.scrollHeight;
-
-  /* Medir una fila de muestra representativa */
-  const muestra = filaTablaHTML(
-    lista[0] || { "DESCRIPCION DEL ACTIVO": "DESCRIPCIÓN DE MUESTRA PARA MEDICIÓN", "ESTADO": "BUENO" },
-    1, tipoTabla
-  );
-  medidor.innerHTML = `<div class="acta-seccion">${subtituloHTML}
-    <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead><tbody>${muestra}</tbody></table></div>`;
-  void medidor.offsetHeight;
-  const alturaUnaFila = Math.max(1, medidor.scrollHeight - alturaEncabezado);
-
-  /* Si no hay items → una sola página con "NO CUENTA" */
-  if(lista.length === 0){
-    bloques.push({
-      tipo: "seccion",
-      html: `<div class="acta-seccion">${subtituloHTML}
-        <table class="acta-tabla"><thead><tr>${columnasHTML}</tr></thead>
-        <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table></div>`,
-      nombre: titulo,
-      esContinuacion: false
-    });
-    return bloques;
-  }
-
-  /* Repartir filas en páginas */
-  let filaActual = 0;
-  let alturaDisponible = alturaDisponiblePrimera - alturaEncabezado;
-  let numPagina = 0;
-  const filasPorPagina = [];
-
-  while(filaActual < lista.length){
-    const filasQueCaben = Math.max(1, Math.floor(alturaDisponible / alturaUnaFila));
-    const fin = Math.min(filaActual + filasQueCaben, lista.length);
-    filasPorPagina.push({ inicio: filaActual, fin });
-    filaActual = fin;
-    alturaDisponible = ALTURA_UTIL_HOJA - alturaEncabezado;
-    numPagina++;
-  }
-
-  /* Construir bloques HTML */
-  let contadorGlobal = 1;
-  filasPorPagina.forEach((pag, idx) => {
-    const items = lista.slice(pag.inicio, pag.fin);
-    const filasHTML = items.map((it, i) => {
-      const num = contadorGlobal++;
-      return filaTablaHTML(it, num, tipoTabla);
-    }).join("");
-
-    bloques.push({
-      tipo: "seccion",
-      html: `<div class="acta-seccion">${subtituloHTML}
-        <table class="acta-tabla">
-          <thead><tr>${columnasHTML}</tr></thead>
-          <tbody>${filasHTML}</tbody>
-        </table>
-      </div>`,
-      nombre: titulo,
-      esContinuacion: idx > 0
-    });
-  });
-
-  return bloques;
 }
 
 /* Genera el bloque de firmas completo */
@@ -2075,8 +2118,7 @@ document.addEventListener("keydown", e => {
    ============================================================ */
 document.addEventListener("DOMContentLoaded", () => {
   try{
-    history.replaceState({ pantalla: "home" }, "");
-    history.pushState({ pantalla: "home" }, "");
+    history.replaceState({ pantalla: "home" }, "");    history.pushState({ pantalla: "home" }, "");
   }catch(e){}
   cargarDesdeNube(false);
 });
