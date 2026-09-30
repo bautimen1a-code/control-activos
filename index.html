@@ -2644,16 +2644,16 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v7
+   [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v8
    ------------------------------------------------------------
-   CAMBIOS V6.1:
-     1. El subtítulo NUNCA queda huérfano. Antes de escribir el
-        título, se verifica que el bloque MÍNIMO (gap + título +
-        thead + 1ra fila) quepa en el espacio restante.
-        Si NO cabe → page-break ANTES del título.
-     2. Se mide el gap real de .acta-seccion y se suma.
-     3. Se mide fila por fila para máximo aprovechamiento.
-     4. Encabezado de continuación SOLO si las firmas van solas.
+   FIX DEFINITIVO DEL SUBTÍTULO HUÉRFANO:
+     - Se mide el BLOQUE INICIO COMPLETO de cada sección como una
+       sola unidad HTML (idéntica a la que se va a renderizar).
+     - Esto captura TODOS los márgenes reales (gap .acta-seccion,
+       margin-bottom de .acta-tabla, gap entre título y tabla).
+     - Solo se escribe el subtítulo si el bloque inicio COMPLETO
+       (gap + título + thead + 1ra fila) cabe en el espacio actual.
+     - Si no cabe → page-break ANTES del subtítulo.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -2733,6 +2733,10 @@ function generarHTMLActa(r, oficina, datos){
 
   /* ============================================================
      [S18.2] CONSTRUCCIÓN DE SECCIONES CON ALTURA POR FILA
+     ------------------------------------------------------------
+     FIX CRÍTICO: la altura de inicio se mide como BLOQUE COMPLETO
+     (div.acta-seccion + título + tabla con thead + 1ra fila),
+     no como suma de partes separadas. Esto captura márgenes reales.
      ============================================================ */
   const seccionesDef = [
     { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
@@ -2741,42 +2745,49 @@ function generarHTMLActa(r, oficina, datos){
     { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
   ];
 
+  /* Helper: mide el thead solo (para saber cuánto resta de cada fila) */
   function medirThead(tipo){
-    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead></table>`;
+    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody></tbody></table>`;
     return medirHTML(html);
   }
 
+  /* Helper: mide UNA fila en contexto de tabla con thead y resta el thead */
   function medirFilaIncremental(filaHTML, tipo, alturaThead){
     const htmlCon = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
     const totalCon = medirHTML(htmlCon);
     return Math.max(totalCon - alturaThead, 14);
   }
 
-  function medirTituloSeccion(num, titulo){
-    const html = `<div class="acta-seccion"><div class="acta-seccion-titulo">${num}<span class="subrayado">${esc(titulo)}</span>.</div></div>`;
+  /* ═══ FIX PRINCIPAL ═══
+     Mide el bloque inicio completo de la sección (idéntico al
+     que se va a renderizar realmente). Captura TODOS los márgenes. */
+  function medirBloqueInicioSeccion(sec){
+    const fila1 = sec.filas.length > 0 ? sec.filas[0].html : "";
+    const html = `<div class="acta-seccion">
+      <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
+      <table class="acta-tabla">
+        <thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead>
+        <tbody>${fila1}</tbody>
+      </table>
+    </div>`;
     return medirHTML(html);
   }
 
-  function medirGapSeccion(){
-    const html = `<div class="acta-seccion"></div>`;
-    return medirHTML(html);
-  }
-  const gapSeccion = medirGapSeccion();
-
+  /* Construir estructura por sección */
   const secciones = seccionesDef.map(sec => {
     const alturaThead = medirThead(sec.tipo);
-    const alturaTitulo = medirTituloSeccion(sec.num, sec.titulo);
 
     if(!sec.lista.length){
       const filaVacia = `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
       const alturaFila = medirFilaIncremental(filaVacia, sec.tipo, alturaThead);
-      return {
+      const estructura = {
         ...sec,
-        alturaTitulo,
         alturaThead,
         filas: [{ html: filaVacia, altura: alturaFila }],
         vacia: true
       };
+      estructura.alturaBloqueInicio = medirBloqueInicioSeccion(estructura);
+      return estructura;
     }
 
     const filas = sec.lista.map((b, i) => {
@@ -2785,22 +2796,21 @@ function generarHTMLActa(r, oficina, datos){
       return { html: filaStr, altura };
     });
 
-    return {
+    const estructura = {
       ...sec,
-      alturaTitulo,
       alturaThead,
       filas,
       vacia: false
     };
+    estructura.alturaBloqueInicio = medirBloqueInicioSeccion(estructura);
+    return estructura;
   });
 
   /* ============================================================
      [S18.3] EMPAQUETADOR — LLENADO EXACTO POR FILA
      ------------------------------------------------------------
      Regla de oro: el subtítulo NUNCA queda huérfano.
-     Antes de escribir el título de la sección, se verifica que
-     el bloque mínimo (gap + título + thead + 1ra fila) quepa.
-     Si no cabe → page-break ANTES del título.
+     Se verifica con la medición del BLOQUE COMPLETO REAL.
      ============================================================ */
   let htmlFinal = "";
   let alturaAcumulada = 0;
@@ -2812,13 +2822,11 @@ function generarHTMLActa(r, oficina, datos){
   for(let s = 0; s < secciones.length; s++){
     const sec = secciones[s];
 
-    /* Espacio necesario para el INICIO COMPLETO de la sección */
-    const primeraFilaAltura = sec.filas.length > 0 ? sec.filas[0].altura : 0;
-    const espacioNecesarioInicio = gapSeccion + sec.alturaTitulo + sec.alturaThead + primeraFilaAltura;
+    /* ═══ FIX: usar la altura del BLOQUE INICIO completo ═══ */
     const espacioRestanteInicial = ALTURA_UTIL_HOJA - alturaAcumulada;
 
-    /* Si NO cabe el inicio completo Y ya hay contenido en la hoja → page-break */
-    if(espacioNecesarioInicio > espacioRestanteInicial && alturaAcumulada > 0){
+    /* Si NO cabe el bloque inicio completo Y ya hay contenido → page-break */
+    if(sec.alturaBloqueInicio > espacioRestanteInicial && alturaAcumulada > 0){
       htmlFinal += `<div class="saltar-pagina"></div>`;
       hojaActual++;
       alturaAcumulada = 0;
@@ -2828,7 +2836,15 @@ function generarHTMLActa(r, oficina, datos){
     htmlFinal += `<div class="acta-seccion">`;
     htmlFinal += `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
     htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
-    alturaAcumulada += gapSeccion + sec.alturaTitulo + sec.alturaThead;
+
+    /* Actualizar altura acumulada con el header del bloque real
+       (para el resto del cálculo de filas usamos incrementos) */
+    /* Nota: al haber medido el bloque inicio completo, ya sabemos
+       que el título + thead + 1ra fila caben. Recalculamos altura
+       acumulada restando la altura de la 1ra fila para luego sumarla
+       correctamente en el loop. */
+    const alturaHeaderBloque = sec.alturaBloqueInicio - (sec.filas.length > 0 ? sec.filas[0].altura : 0);
+    alturaAcumulada += alturaHeaderBloque;
 
     /* Colocar filas una por una */
     for(let f = 0; f < sec.filas.length; f++){
@@ -2839,15 +2855,16 @@ function generarHTMLActa(r, oficina, datos){
         htmlFinal += fila.html;
         alturaAcumulada += fila.altura;
       } else {
-        /* No cabe → cerrar tabla, page-break, reabrir con thead */
+        /* No cabe → cerrar tabla, page-break, reabrir con thead (sin título) */
         htmlFinal += `</tbody></table></div>`;
         htmlFinal += `<div class="saltar-pagina"></div>`;
         hojaActual++;
         alturaAcumulada = 0;
 
+        /* Reabrir con solo thead (es continuación, sin título) */
         htmlFinal += `<div class="acta-seccion">`;
         htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
-        alturaAcumulada += gapSeccion + sec.alturaThead;
+        alturaAcumulada += sec.alturaThead;
 
         htmlFinal += fila.html;
         alturaAcumulada += fila.altura;
