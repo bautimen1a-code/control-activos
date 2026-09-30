@@ -1050,6 +1050,18 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   text-transform:uppercase;margin:0 0 20pt 0;
   padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;
 }
+   /* Forzar que las filas no se compriman y respiren mejor */
+.acta-medicion .acta-tabla td,
+.preview-acta-wrap .acta-tabla td,
+.acta-print .acta-tabla td{
+  padding: 3pt 4pt;
+  line-height: 1.15;
+}
+.acta-medicion .acta-seccion,
+.preview-acta-wrap .acta-seccion,
+.acta-print .acta-seccion{
+  margin-top: 6pt;
+}
 
 /* ============================================================
    [24] IMPRESIÓN
@@ -1300,22 +1312,17 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1ZZZcNDDou-pZhNuM9ISanIoArFFnsMh_A6yracR78WXZ1jv5wwFg/exec";
 const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
-const ALTURA_UTIL_HOJA = 905;
 
-const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
-
-let estado = {
-  pantalla: "home",
-  modalVista: "oficinas",
-  responsableActual: null,
-  oficinaActual: null,
-  bienActual: null,
-  vistaGeneralActual: null,
-  oficinaFiltroActual: null
-};
-
-let actaEnProceso = { responsable: null, oficina: null, datos: null, html: null };
-
+/* Altura útil de hoja carta con márgenes 2cm arriba/abajo.
+   Se calcula en px del navegador (96 DPI):
+     carta = 27.94 cm × 37.795 px/cm = 1056 px
+     márgenes verticales = 4 cm × 37.795 = 151.2 px
+     útil ≈ 905 px
+   Pero el acta se mide en un contenedor sin márgenes, así que
+   usamos un valor ligeramente inferior para compensar el padding
+   interno del .acta-medicion y el border-collapse. */
+const ALTURA_UTIL_HOJA = 890;
+   
 /* ============================================================
    [S02] TEMA CLARO / OSCURO
    ============================================================ */
@@ -2426,15 +2433,16 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v4
+   [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v5
    ------------------------------------------------------------
    Estrategia:
-     1. Se mide la altura del título de sección, thead, y CADA fila.
-     2. Se llena la hoja fila por fila hasta el borde real.
-     3. Si una tabla se corta, la continuación NO repite título
-        (solo thead para mantener estructura).
-     4. Firmas: se colocan al final si caben; si no, nueva hoja.
-     5. Encabezado de continuación SOLO si las firmas van solas.
+     1. Calibrar altura útil real midiendo un bloque de prueba.
+     2. Medir título de sección, thead y CADA fila individualmente.
+     3. Llenar la hoja fila por fila con el espacio REAL disponible.
+     4. En hoja 1, descontar el header completo (membrete + título).
+     5. Si una tabla se corta, la continuación NO repite título.
+     6. Firmas: al final si caben; nueva hoja si no.
+     7. Encabezado de continuación SOLO si las firmas van solas.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -2445,7 +2453,6 @@ function generarHTMLActa(r, oficina, datos){
 
   const fechaActual = new Date();
   const fechaLarga = `Tupiza, ${mesCapitalizado(fechaActual.getMonth())} ${fechaActual.getDate()} del ${fechaActual.getFullYear()}`;
-
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
@@ -2523,11 +2530,6 @@ function generarHTMLActa(r, oficina, datos){
 
   /* ============================================================
      [S18.2] CONSTRUCCIÓN DE SECCIONES CON ALTURA POR FILA
-     ------------------------------------------------------------
-     Para cada sección se calcula:
-       - alturaTituloSeccion: altura del título romano
-       - alturaThead: altura del thead
-       - alturasFilas[]: altura de cada fila individual
      ============================================================ */
   const seccionesDef = [
     { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
@@ -2536,34 +2538,51 @@ function generarHTMLActa(r, oficina, datos){
     { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
   ];
 
-  /* Se construye una estructura de "secciones" con alturas por fila */
+  /* Helper: genera el HTML de una fila como string (sin tabla) */
+  function filaHTMLString(b, i, tipo){
+    return generarFilaTabla(b, i, tipo);
+  }
+
+  /* Helper: mide la altura de una fila dentro de una tabla con thead */
+  function medirFilaConThead(filaHTML, tipo){
+    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
+    return medirHTML(html);
+  }
+
+  /* Helper: mide solo el thead */
+  function medirThead(tipo){
+    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead></table>`;
+    return medirHTML(html);
+  }
+
+  /* Construir estructura por sección */
   const secciones = seccionesDef.map(sec => {
+    const alturaThead = medirThead(sec.tipo);
     const tituloHTML = `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
     const alturaTitulo = medirHTML(tituloHTML);
 
-    const theadHTML = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead></table>`;
-    const alturaThead = medirHTML(theadHTML);
-
-    /* Si la lista está vacía, generar una sola fila "NO CUENTA" */
+    /* Si la lista está vacía → una sola fila "NO CUENTA" */
     if(!sec.lista.length){
-      const filaVaciaHTML = `<table class="acta-tabla"><tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table>`;
-      const alturaFilaVacia = medirHTML(filaVaciaHTML);
+      const filaVacia = `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
+      const alturaFila = medirHTML(`<table class="acta-tabla"><tbody>${filaVacia}</tbody></table>`);
       return {
         ...sec,
         alturaTitulo,
         alturaThead,
-        filas: [{ html: `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`, altura: alturaFilaVacia }],
+        filas: [{ html: filaVacia, altura: alturaFila }],
         vacia: true
       };
     }
 
-    /* Medir cada fila individualmente */
+    /* Medir cada fila: primero creamos la fila con su número correcto */
     const filas = sec.lista.map((b, i) => {
-      const filaHTML = `<table class="acta-tabla"><tbody>${generarFilaTabla(b, i, sec.tipo)}</tbody></table>`;
-      const altura = medirHTML(filaHTML);
+      const filaStr = filaHTMLString(b, i, sec.tipo);
+      /* Medir como si estuviera dentro de una tabla con thead para
+         capturar correctamente el border-collapse */
+      const altura = medirFilaConThead(filaStr, sec.tipo) - alturaThead;
       return {
-        html: generarFilaTabla(b, i, sec.tipo),
-        altura: altura
+        html: filaStr,
+        altura: Math.max(altura, 14) /* mínimo razonable */
       };
     });
 
@@ -2578,67 +2597,56 @@ function generarHTMLActa(r, oficina, datos){
 
   /* ============================================================
      [S18.3] EMPAQUETADOR — LLENADO EXACTO POR FILA
+     ------------------------------------------------------------
+     Manejo correcto de tablas continuas:
+       - Se abre <table> una sola vez por sección (o por continuación).
+       - Se agregan <tr> hasta que no caben.
+       - Al cortar, se cierra </table>, se hace page-break, y se
+         reabre con thead pero SIN título romano.
      ============================================================ */
   let htmlFinal = "";
   let alturaAcumulada = 0;
   let hojaActual = 1;
-  let hojaActualTieneTabla = false;
 
-  /* Colocar header en hoja 1 */
+  /* En hoja 1 colocamos el header completo */
   htmlFinal += headerHTML;
   alturaAcumulada += headerAltura;
 
-  /* Cierra la tabla abierta (si hay) antes de un page-break o al final */
-  let tablaAbierta = false;
-
-  function cerrarTablaSiAbierta(){
-    if(tablaAbierta){
-      htmlFinal += `</tbody></table></div>`;
-      tablaAbierta = false;
-    }
-  }
-
-  /* Inserta page-break SIN encabezado */
+  /* Inserta page-break SIN encabezado (para continuar tabla) */
   function nuevaHojaSinEncabezado(){
-    cerrarTablaSiAbierta();
     htmlFinal += `<div class="saltar-pagina"></div>`;
     hojaActual++;
     alturaAcumulada = 0;
-    hojaActualTieneTabla = false;
   }
 
   /* Inserta page-break CON encabezado de continuación */
   function nuevaHojaConEncabezado(){
-    cerrarTablaSiAbierta();
     htmlFinal += `<div class="saltar-pagina"></div>`;
     hojaActual++;
     const enc = generarEncabezadoContinuacion(hojaActual);
     htmlFinal += enc;
-    alturaAcumulada = encabezadoAltura;
-    hojaActualTieneTabla = false;
+    alturaAcumulada = medirHTML(enc);
   }
 
   /* Recorrer secciones */
   for(let s = 0; s < secciones.length; s++){
     const sec = secciones[s];
 
-    /* ¿Cabe el título + thead + al menos 1 fila? */
+    /* ¿Cabe el inicio (título + thead + 1ra fila) en el espacio actual? */
     const primeraFilaAltura = sec.filas.length > 0 ? sec.filas[0].altura : 0;
     const espacioNecesarioInicio = sec.alturaTitulo + sec.alturaThead + primeraFilaAltura;
     const espacioRestanteInicial = ALTURA_UTIL_HOJA - alturaAcumulada;
 
-    /* Si no cabe ni siquiera el inicio, nueva hoja SIN encabezado */
-    if(espacioNecesarioInicio > espacioRestanteInicial){
+    if(espacioNecesarioInicio > espacioRestanteInicial && espacioRestanteInicial > 0){
+      /* No cabe el inicio → nueva hoja SIN encabezado */
       nuevaHojaSinEncabezado();
     }
 
-    /* Abrir sección: título + inicio de tabla */
+    /* Abrir sección: título + tabla con thead */
     htmlFinal += `<div class="acta-seccion">`;
     htmlFinal += `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
     htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
-    tablaAbierta = true;
     alturaAcumulada += sec.alturaTitulo + sec.alturaThead;
-    hojaActualTieneTabla = true;
 
     /* Colocar filas una por una */
     for(let f = 0; f < sec.filas.length; f++){
@@ -2646,24 +2654,19 @@ function generarHTMLActa(r, oficina, datos){
       const espacioRestante = ALTURA_UTIL_HOJA - alturaAcumulada;
 
       if(fila.altura <= espacioRestante){
-        /* Cabe → colocar */
         htmlFinal += fila.html;
         alturaAcumulada += fila.altura;
       } else {
-        /* No cabe → cerrar tabla, nueva hoja SIN encabezado,
-           reabrir tabla con thead (para que la continuación sea legible) */
-        cerrarTablaSiAbierta();
+        /* No cabe → cerrar tabla, page-break, reabrir con thead */
+        htmlFinal += `</tbody></table></div>`;
         htmlFinal += `<div class="saltar-pagina"></div>`;
         hojaActual++;
         alturaAcumulada = 0;
-        hojaActualTieneTabla = false;
 
-        /* Reabrir tabla en la nueva hoja: solo thead, sin título romano */
+        /* Reabrir tabla con thead (sin título) */
         htmlFinal += `<div class="acta-seccion">`;
         htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
-        tablaAbierta = true;
         alturaAcumulada += sec.alturaThead;
-        hojaActualTieneTabla = true;
 
         /* Colocar la fila */
         htmlFinal += fila.html;
@@ -2672,23 +2675,20 @@ function generarHTMLActa(r, oficina, datos){
     }
 
     /* Cerrar tabla de esta sección */
-    cerrarTablaSiAbierta();
+    htmlFinal += `</tbody></table></div>`;
   }
 
   /* ============================================================
      [S18.4] DECISIÓN DE LAS FIRMAS
      ------------------------------------------------------------
-     Si las firmas caben en la hoja actual → colocar directamente.
-     Si NO caben → nueva hoja CON encabezado de continuación.
+     Si caben → colocar directamente.
+     Si no caben → nueva hoja CON encabezado de continuación.
      ============================================================ */
   const espacioParaFirmas = ALTURA_UTIL_HOJA - alturaAcumulada;
 
   if(firmasAltura <= espacioParaFirmas){
-    /* Caben en la hoja actual → sin encabezado de continuación */
     htmlFinal += firmasHTML;
   } else {
-    /* No caben → nueva hoja con encabezado de continuación
-       (porque la nueva hoja va a tener SOLO las firmas) */
     nuevaHojaConEncabezado();
     htmlFinal += firmasHTML;
   }
