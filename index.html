@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V5.1</title>
+<title>Sistema de Control DIV-10 V5.2</title>
 
 <!-- jsPDF + autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,7 +11,6 @@
 
 <style>
   :root{
-    /* ⭐ V5.1 — Tema Marfil claro */
     --bg:#faf8f3;
     --bg-panel:#ffffff;
     --bg-elevado:#f5f2ea;
@@ -251,40 +250,21 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
-  /* VISTA PREVIA */
-  .preview-acta-wrap{
-    background:#fff;color:#000;padding:30px 40px;
-    font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
-    box-shadow:0 0 0 1px #ccc inset;max-height:65vh;overflow-y:auto;
+  /* ⭐ V5.2 — VISTA PREVIA con iframe embebido */
+  .pdf-viewer{
+    display:block;
+    width:100%;
+    height:70vh;
+    min-height:500px;
+    border:none;
+    background:#ebe6d9;
   }
-  .preview-acta-wrap, .preview-acta-wrap *{color:#000;}
-  .preview-acta-wrap .acta-membrete{font-family:Arial,sans-serif;font-size:10pt;font-weight:bold;line-height:1.0;margin:0 0 10pt 0;text-transform:uppercase;text-align:left;}
-  .preview-acta-wrap .acta-membrete .linea1{padding-left:0;}
-  .preview-acta-wrap .acta-membrete .linea2{padding-left:9pt;}
-  .preview-acta-wrap .acta-membrete .linea3{padding-left:75pt;text-decoration:underline;}
-  .preview-acta-wrap .acta-titulo{font-family:Arial,sans-serif;font-size:16pt;font-weight:bold;text-align:center;text-transform:uppercase;margin:0 0 10pt 0;line-height:1.1;}
-  .preview-acta-wrap .acta-titulo .titulo-linea1{display:block;}
-  .preview-acta-wrap .acta-titulo .titulo-linea2{display:block;}
-  .preview-acta-wrap .acta-titulo .titulo-linea3{display:block;}
-  .preview-acta-wrap .acta-seccion{margin-top:10pt;}
-  .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 6pt 0;color:#000;}
-  .preview-acta-wrap .acta-seccion-titulo .subrayado{text-decoration:underline;}
-  .preview-acta-wrap .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;color:#000;table-layout:fixed;}
-  .preview-acta-wrap .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;color:#000;}
-  .preview-acta-wrap .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;word-wrap:break-word;}
-  .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
-  .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
-  .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
-  .preview-acta-wrap .acta-bloque-firmas{margin-top:24pt;}
-  .preview-acta-wrap .acta-fecha-firmas{font-family:Arial,sans-serif;font-size:12pt;text-align:right;margin:0 0 20pt 0;line-height:1.0;color:#000;}
-  .preview-acta-wrap .acta-firmas{font-family:Arial,sans-serif;font-size:12pt;line-height:1.0;}
-  .preview-acta-wrap .acta-firmas-fila{display:flex;justify-content:space-between;gap:20pt;margin-bottom:26pt;}
-  .preview-acta-wrap .acta-firma-bloque-lado{flex:1;text-align:center;}
-  .preview-acta-wrap .acta-firma-bloque{text-align:center;margin-bottom:26pt;}
-  .preview-acta-wrap .acta-firma-rol{font-weight:bold;text-transform:uppercase;margin-bottom:32pt;font-size:12pt;text-align:center;color:#000;}
-  .preview-acta-wrap .acta-firma-nombre{font-weight:normal;text-transform:none;font-size:12pt;margin-top:4pt;color:#000;}
-  .preview-acta-wrap .acta-firma-cargo{font-weight:bold;text-transform:uppercase;font-size:12pt;margin-top:2pt;color:#000;}
-  .preview-acta-wrap .acta-vobo{font-weight:bold;margin-bottom:32pt;text-align:center;font-size:12pt;color:#000;}
+  @media (max-width:600px){
+    .pdf-viewer{
+      height:75vh;
+      min-height:400px;
+    }
+  }
 
   .preview-actions{padding:14px 20px;border-top:1px solid var(--borde);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--bg-panel);}
   .btn-preview{background:var(--bg-elevado);color:var(--texto);border:1px solid var(--borde);padding:10px 16px;border-radius:8px;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;font-family:var(--sans);transition:all .2s ease;display:inline-flex;align-items:center;gap:6px;}
@@ -308,7 +288,6 @@
     .search-input{font-size:14px;padding:12px 0;}
     .search-box{padding:4px 10px;}
     .search-icon{font-size:16px;margin-right:8px;}
-    .preview-acta-wrap{padding:20px 20px;font-size:10pt;}
     .preview-actions{flex-direction:column;}
     .btn-preview{width:100%;justify-content:center;}
   }
@@ -338,7 +317,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v5.1 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v5.2 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -425,12 +404,12 @@
       <h2>Vista Previa del Acta</h2>
       <button class="modal-close" onclick="cerrarModalVistaPrevia()">×</button>
     </div>
-    <div class="modal-body" style="padding:0;background:#ebe6d9;">
-      <div class="preview-acta-wrap" id="previewActa"></div>
+    <div class="modal-body" style="padding:0;background:#ebe6d9;min-height:70vh;">
+      <iframe id="pdfViewer" class="pdf-viewer" title="Vista previa del PDF"></iframe>
     </div>
     <div class="preview-actions">
       <button class="btn-preview" onclick="cerrarModalVistaPrevia()">Cerrar</button>
-      <button class="btn-preview primary" onclick="descargarPDF()">💾 Guardar PDF</button>
+      <button class="btn-preview primary" onclick="descargarPDF()">💾 Descargar</button>
       <button class="btn-preview green" onclick="imprimirPDF()">🖨 Imprimir</button>
     </div>
   </div>
@@ -1523,6 +1502,7 @@ function generarVistaPrevia(){
   };
   actaEnProceso.datos = datos;
 
+  /* Generar el PDF */
   try{
     actaEnProceso.pdfDoc = generarPDFActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
   }catch(err){
@@ -1531,24 +1511,32 @@ function generarVistaPrevia(){
     return;
   }
 
-  const htmlPreview = generarHTMLPreview(actaEnProceso.responsable, actaEnProceso.oficina, datos);
-
+  /* ⭐ V5.2 — Mostrar PDF embebido en iframe */
   cerrarModalEntrante();
-  document.getElementById("previewActa").innerHTML = htmlPreview;
+  const blobURL = actaEnProceso.pdfDoc.output("bloburl");
+  const iframe = document.getElementById("pdfViewer");
+  if(iframe){
+    iframe.src = blobURL;
+  }
   document.getElementById("modalVistaPrevia").classList.add("visible");
   pushEstado("modalVistaPrevia");
 }
 
 function cerrarModalVistaPrevia(){
   document.getElementById("modalVistaPrevia").classList.remove("visible");
+  /* ⭐ V5.2 — Limpiar iframe para liberar memoria */
+  const iframe = document.getElementById("pdfViewer");
+  if(iframe){
+    iframe.src = "about:blank";
+  }
 }
 
 /* ============================================================
-   ⭐ V5.1 — GENERACIÓN DE PDF CON jsPDF
+   ⭐ V5.2 — GENERACIÓN DE PDF CON jsPDF
    ------------------------------------------------------------
-   Cambios V5.1:
-   - Espacio entre subtítulo y tabla (yCursor += 4 después del subtítulo)
-   - Tablas SIN color de fondo (blanco en head y body)
+   Cambios V5.2:
+   - Espacio 5mm antes y 5mm después del subtítulo
+   - Todas las columnas centradas excepto Descripción (justificada)
    ============================================================ */
 
 const PDF_LAYOUT = {
@@ -1642,9 +1630,12 @@ function generarPDFActa(r, oficina, datos){
     const esUltimaNoVacia = (idxSec === ultimaSeccionNoVaciaIdx);
     const reservaFirmas = esUltimaNoVacia ? alturaFirmasMM : 0;
 
-    /* Verificar espacio para subtítulo + 1 fila */
+    /* ⭐ V5.2 — Espacio ANTES del subtítulo (5mm respecto a lo anterior) */
+    yCursor += 5;
+
+    /* Verificar espacio para subtítulo + 1 fila + espacio después */
     const espacioRestanteInicial = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor - reservaFirmas;
-    if(espacioRestanteInicial < 25 && sec.lista.length > 0){
+    if(espacioRestanteInicial < 30 && sec.lista.length > 0){
       doc.addPage();
       yCursor = PDF_LAYOUT.marginTop;
     }
@@ -1660,8 +1651,8 @@ function generarPDFActa(r, oficina, datos){
     doc.setLineWidth(0.2);
     doc.line(xInicioSubrayado, yCursor + 0.5, xLeft + anchoSubtitulo, yCursor + 0.5);
 
-    /* ⭐ V5.1 — Espacio entre subtítulo y tabla (antes: yCursor += 4) */
-    yCursor += 7;
+    /* ⭐ V5.2 — Espacio después del subtítulo (5mm antes de la tabla) */
+    yCursor += 5;
 
     /* Preparar filas */
     let head, body, columnStyles;
@@ -1671,7 +1662,7 @@ function generarPDFActa(r, oficina, datos){
       columnStyles = {
         0: { cellWidth: 15, halign: "center" },
         1: { cellWidth: 45, halign: "center" },
-        2: { cellWidth: "auto", halign: "justify" },
+        2: { cellWidth: "auto", halign: "justify" },   /* Descripción justificada */
         3: { cellWidth: 25, halign: "center" }
       };
       body = sec.lista.map((item, i) => [
@@ -1685,7 +1676,7 @@ function generarPDFActa(r, oficina, datos){
       columnStyles = {
         0: { cellWidth: 15, halign: "center" },
         1: { cellWidth: 20, halign: "center" },
-        2: { cellWidth: "auto", halign: "justify" },
+        2: { cellWidth: "auto", halign: "justify" },   /* Descripción justificada */
         3: { cellWidth: 25, halign: "center" }
       };
       body = sec.lista.map((item, i) => [
@@ -1700,7 +1691,7 @@ function generarPDFActa(r, oficina, datos){
       body = [["", "", "NO CUENTA", ""]];
     }
 
-    /* ⭐ V5.1 — Tablas SIN color (todo blanco) */
+    /* Tablas SIN color */
     const opciones = {
       head: head,
       body: body,
@@ -1719,26 +1710,26 @@ function generarPDFActa(r, oficina, datos){
         lineColor: [0, 0, 0],
         lineWidth: 0.15,
         textColor: [0, 0, 0],
-        fillColor: [255, 255, 255],   /* ⭐ blanco */
+        fillColor: [255, 255, 255],
         overflow: "linebreak",
         valign: "top"
       },
       headStyles: {
         fontStyle: "bold",
-        fillColor: [255, 255, 255],   /* ⭐ blanco */
+        fillColor: [255, 255, 255],
         textColor: [0, 0, 0],
         halign: "center",
         lineWidth: 0.15,
         lineColor: [0, 0, 0]
       },
       bodyStyles: {
-        fillColor: [255, 255, 255],   /* ⭐ blanco */
+        fillColor: [255, 255, 255],
         lineWidth: 0.15,
         lineColor: [0, 0, 0],
         textColor: [0, 0, 0]
       },
       alternateRowStyles: {
-        fillColor: [255, 255, 255]    /* ⭐ sin alternancia */
+        fillColor: [255, 255, 255]
       },
       columnStyles: columnStyles,
       showHead: "firstPage",
@@ -1887,87 +1878,6 @@ function dibujarBloqueFirmasPDF(doc, datos, r, yInicio){
 }
 
 /* ============================================================
-   GENERAR HTML de vista previa
-   ============================================================ */
-function generarHTMLPreview(r, oficina, datos){
-  const idAsignacion = oficina.id;
-  const fijos = DATA.fijos.filter(b => mismoId(obtenerIdAsig(b), idAsignacion));
-  const fungibles = DATA.fungibles.filter(b => mismoId(obtenerIdAsig(b), idAsignacion));
-  const internos = DATA.internos.filter(b => mismoId(obtenerIdAsig(b), idAsignacion));
-  const prestados = DATA.prestados.filter(b => mismoId(obtenerIdAsig(b), idAsignacion));
-
-  const nombreOficina = oficina.oficina;
-  const oficinaConArt = oficinaConArticulo(nombreOficina);
-
-  const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
-  const textoL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()}`;
-  const textoSufijo = `DE LA DIV-10`;
-  const anchoCompleto = (textoL2 + " " + textoSufijo).length;
-  const requiereTresLineas = anchoCompleto > 75;
-
-  let tituloHTML;
-  if(requiereTresLineas){
-    tituloHTML = `
-      <span class="titulo-linea1">${esc(tituloL1)}</span>
-      <span class="titulo-linea2">${esc(textoL2)}</span>
-      <span class="titulo-linea3">${esc(textoSufijo)}</span>
-    `;
-  } else {
-    tituloHTML = `
-      <span class="titulo-linea1">${esc(tituloL1)}</span>
-      <span class="titulo-linea2">${esc(textoL2)} <span style="white-space:nowrap">${esc(textoSufijo)}</span></span>
-    `;
-  }
-
-  function tablaPreview(sec, lista){
-    const colgroupHTML = (sec.tipo === "fijos")
-      ? `<colgroup><col style="width:8%;"><col style="width:22%;"><col style="width:55%;"><col style="width:15%;"></colgroup>`
-      : `<colgroup><col style="width:8%;"><col style="width:10%;"><col style="width:67%;"><col style="width:15%;"></colgroup>`;
-
-    const columnasHTML = (sec.tipo === "fijos")
-      ? `<th>N°</th><th>CÓDIGO (VSIAF.)</th><th>DESCRIPCIÓN</th><th>ESTADO</th>`
-      : `<th>N°</th><th>CANTIDAD</th><th>DESCRIPCIÓN</th><th>ESTADO</th>`;
-
-    let filasHTML;
-    if(lista.length === 0){
-      filasHTML = `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
-    } else {
-      filasHTML = lista.map((item, i) => {
-        if(sec.tipo === "fijos"){
-          return `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(item, "CODIGO"))}</td><td class="descripcion">${esc(getVal(item, "DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(item, "ESTADO"))}</td></tr>`;
-        }
-        return `<tr><td class="center">${i+1}.-</td><td class="center">${esc(getVal(item, "CANTIDAD"))}</td><td class="descripcion">${esc(getVal(item, "DESCRIPCION DEL ACTIVO"))}</td><td class="center">${esc(getVal(item, "ESTADO"))}</td></tr>`;
-      }).join("");
-    }
-
-    return `<div class="acta-seccion">
-      <div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>
-      <table class="acta-tabla">
-        ${colgroupHTML}
-        <thead><tr>${columnasHTML}</tr></thead>
-        <tbody>${filasHTML}</tbody>
-      </table>
-    </div>`;
-  }
-
-  let html = `
-    <div class="acta-membrete">
-      <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
-      <div class="linea2">DÉCIMA DIVISIÓN DEL EJÉRCITO</div>
-      <div class="linea3">BOLIVIA</div>
-    </div>
-    <div class="acta-titulo">${tituloHTML}</div>
-  `;
-
-  html += tablaPreview({ num: "I.- ", titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", tipo: "fijos" }, fijos);
-  html += tablaPreview({ num: "II.- ", titulo: "INVENTARIO DE ACTIVOS FUNGIBLES", tipo: "fungibles" }, fungibles);
-  html += tablaPreview({ num: "III.- ", titulo: "INVENTARIO INTERNO", tipo: "internos" }, internos);
-  html += tablaPreview({ num: "IV.- ", titulo: "INVENTARIO DE BIENES PRESTADOS", tipo: "prestados" }, prestados);
-
-  return html;
-}
-
-/* ============================================================
    ACCIONES DE LOS BOTONES PDF
    ============================================================ */
 function descargarPDF(){
@@ -1985,8 +1895,21 @@ function imprimirPDF(){
     mostrarToast("No hay PDF generado", "error", "⚠");
     return;
   }
-  const blobURL = actaEnProceso.pdfDoc.output("bloburl");
-  window.open(blobURL, "_blank");
+  /* ⭐ V5.2 — Imprimir el PDF desde el mismo iframe */
+  const iframe = document.getElementById("pdfViewer");
+  if(iframe && iframe.contentWindow){
+    try{
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    }catch(err){
+      /* Fallback: abrir en nueva pestaña */
+      const blobURL = actaEnProceso.pdfDoc.output("bloburl");
+      window.open(blobURL, "_blank");
+    }
+  } else {
+    const blobURL = actaEnProceso.pdfDoc.output("bloburl");
+    window.open(blobURL, "_blank");
+  }
 }
 
 /* ============================================================
