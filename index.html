@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control DIV-10 · V5.1</title>
+<title>Control DIV-10 · V5.2</title>
 <style>
 /* ============================================================
    [01] VARIABLES Y TEMA
@@ -187,8 +187,6 @@ body{
   color:var(--texto-suave);margin-top:2px;text-transform:uppercase;
 }
 .header-actions{display:flex;align-items:center;gap:10px;}
-
-/* Botones icono */
 .btn-icon{
   width:42px;height:42px;
   background:var(--bg-elevado);
@@ -215,8 +213,6 @@ body{
 }
 .btn-icon.spinning{animation:spin 1s linear infinite;}
 @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
-
-/* ═══ NUEVO: Efecto "presión" en botones ═══ */
 .btn-icon:active,
 .btn-volver:active,
 .btn-nav:active,
@@ -228,7 +224,6 @@ body{
   transform:scale(.95) !important;
   transition:transform .08s ease !important;
 }
-
 .header-status{
   display:flex;align-items:center;gap:8px;
   padding:8px 14px;
@@ -977,7 +972,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 
 .acta-medicion .acta-seccion,
 .preview-acta-wrap .acta-seccion,
-.acta-print .acta-seccion{margin-top:10pt;}
+.acta-print .acta-seccion{margin-top:6pt;}
 
 .acta-medicion .acta-seccion-titulo,
 .preview-acta-wrap .acta-seccion-titulo,
@@ -1001,8 +996,8 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   font-size:9pt;line-height:1.0;
 }
 .acta-tabla td{
-  border:1px solid #000;padding:2pt 4pt;
-  font-size:9pt;vertical-align:top;line-height:1.0;
+  border:1px solid #000;padding:3pt 4pt;
+  font-size:9pt;vertical-align:top;line-height:1.15;
 }
 .acta-tabla td.center{text-align:center;}
 .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
@@ -1049,18 +1044,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   font-style:italic;font-weight:normal;text-align:center;
   text-transform:uppercase;margin:0 0 20pt 0;
   padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;
-}
-   /* Forzar que las filas no se compriman y respiren mejor */
-.acta-medicion .acta-tabla td,
-.preview-acta-wrap .acta-tabla td,
-.acta-print .acta-tabla td{
-  padding: 3pt 4pt;
-  line-height: 1.15;
-}
-.acta-medicion .acta-seccion,
-.preview-acta-wrap .acta-seccion,
-.acta-print .acta-seccion{
-  margin-top: 6pt;
 }
 
 /* ============================================================
@@ -1122,9 +1105,8 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 }
 
 /* ============================================================
-   [26] EFECTOS DE CLICK (RIPPLE + SHAKE + FLASH)
+   [26] EFECTOS DE CLICK
    ============================================================ */
-/* Ripple universal inyectado por JS */
 .click-ripple{
   position:absolute;
   border-radius:50%;
@@ -1139,28 +1121,19 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
   0%{transform:scale(0);opacity:1;}
   100%{transform:scale(4);opacity:0;}
 }
-/* Flash momentáneo del borde */
-.click-flash{
-  animation:clickFlash .5s ease-out;
-}
+.click-flash{animation:clickFlash .5s ease-out;}
 @keyframes clickFlash{
   0%{box-shadow:0 0 0 0 var(--cian-glow),0 0 0 0 var(--magenta-glow);}
   50%{box-shadow:0 0 25px 4px var(--cian-glow),0 0 40px 8px rgba(255,43,214,.3);}
   100%{box-shadow:0 0 0 0 transparent,0 0 0 0 transparent;}
 }
-/* Micro shake para tarjetas */
-.click-shake{
-  animation:clickShake .35s ease-out;
-}
+.click-shake{animation:clickShake .35s ease-out;}
 @keyframes clickShake{
   0%,100%{transform:translateX(0);}
   25%{transform:translateX(-3px);}
   75%{transform:translateX(3px);}
 }
-/* Pulse para botones de acción */
-.click-pulse{
-  animation:clickPulse .4s ease-out;
-}
+.click-pulse{animation:clickPulse .4s ease-out;}
 @keyframes clickPulse{
   0%{transform:scale(1);}
   50%{transform:scale(.96);}
@@ -1180,7 +1153,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
         <div class="header-logo-icon">◈</div>
         <div class="header-text">
           <h1>Control DIV-10</h1>
-          <div class="subtitle">Inventory Management System · V5.1</div>
+          <div class="subtitle">Inventory Management System · V5.2</div>
         </div>
       </div>
       <div class="header-actions">
@@ -1196,7 +1169,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,100,140,.02);}
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ SYSTEM ONLINE · CONTROL DIV-10 · V5.1 ◈</footer>
+  <footer class="footer">◈ SYSTEM ONLINE · CONTROL DIV-10 · V5.2 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -1314,15 +1287,26 @@ const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
 /* Altura útil de hoja carta con márgenes 2cm arriba/abajo.
-   Se calcula en px del navegador (96 DPI):
-     carta = 27.94 cm × 37.795 px/cm = 1056 px
-     márgenes verticales = 4 cm × 37.795 = 151.2 px
-     útil ≈ 905 px
-   Pero el acta se mide en un contenedor sin márgenes, así que
-   usamos un valor ligeramente inferior para compensar el padding
-   interno del .acta-medicion y el border-collapse. */
+   carta = 27.94 cm × 37.795 px/cm = 1056 px
+   márgenes verticales = 4 cm × 37.795 = 151.2 px
+   útil ≈ 905 px. Se usa 890 como margen de seguridad para
+   compensar border-collapse, padding y redondeos. */
 const ALTURA_UTIL_HOJA = 890;
-   
+
+const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
+
+let estado = {
+  pantalla: "home",
+  modalVista: "oficinas",
+  responsableActual: null,
+  oficinaActual: null,
+  bienActual: null,
+  vistaGeneralActual: null,
+  oficinaFiltroActual: null
+};
+
+let actaEnProceso = { responsable: null, oficina: null, datos: null, html: null };
+
 /* ============================================================
    [S02] TEMA CLARO / OSCURO
    ============================================================ */
@@ -1430,17 +1414,13 @@ function aplicarEfectoClick(el, x, y){
   if(!el) return;
   const rect = el.getBoundingClientRect();
   const size = Math.max(rect.width, rect.height) * 1.4;
-
-  /* Coordenadas relativas al elemento */
   const clickX = (x !== undefined ? x : rect.left + rect.width / 2) - rect.left;
   const clickY = (y !== undefined ? y : rect.top + rect.height / 2) - rect.top;
 
-  /* Asegurar posición relativa */
   const posOriginal = getComputedStyle(el).position;
   if(posOriginal === "static") el.style.position = "relative";
   if(getComputedStyle(el).overflow === "visible") el.style.overflow = "hidden";
 
-  /* Ripple cian */
   const r1 = document.createElement("span");
   r1.className = "click-ripple cian";
   r1.style.width = size + "px";
@@ -1449,7 +1429,6 @@ function aplicarEfectoClick(el, x, y){
   r1.style.top = (clickY - size / 2) + "px";
   el.appendChild(r1);
 
-  /* Ripple magenta retardado */
   setTimeout(() => {
     const r2 = document.createElement("span");
     r2.className = "click-ripple magenta";
@@ -1461,13 +1440,11 @@ function aplicarEfectoClick(el, x, y){
     setTimeout(() => r2.remove(), 700);
   }, 80);
 
-  /* Flash del borde */
   el.classList.remove("click-flash");
   void el.offsetWidth;
   el.classList.add("click-flash");
   setTimeout(() => el.classList.remove("click-flash"), 500);
 
-  /* Micro shake (solo tarjetas) */
   if(el.classList.contains("resp-card") ||
      el.classList.contains("bien-card") ||
      el.classList.contains("oficina-card")){
@@ -1478,12 +1455,11 @@ function aplicarEfectoClick(el, x, y){
   setTimeout(() => r1.remove(), 700);
 }
 
-/* Delegación global: cualquier click en elementos interactivos dispara el efecto */
 document.addEventListener("click", (e) => {
   const target = e.target.closest(
     ".home-btn, .resp-card, .bien-card, .oficina-card, .btn-icon, .btn-volver, " +
     ".btn-nav, .btn-imprimir, .btn-confirmar, .btn-cancelar, .btn-preview, " +
-    ".btn-clear, .modal-close, .btn-clear"
+    ".btn-clear, .modal-close"
   );
   if(target) aplicarEfectoClick(target, e.clientX, e.clientY);
 }, true);
@@ -1804,27 +1780,27 @@ function mostrarHome(){
   cont.innerHTML = `
     <div class="home">
       <div class="home-buttons">
-        <button class="home-btn" data-color="verde" onclick="irVistaGeneral('fijos', event, this)">
+        <button class="home-btn" data-color="verde" onclick="irVistaGeneral('fijos')">
           <span class="home-btn-icon">◈</span>
           <span class="home-btn-label">Fijos</span>
           <span class="home-btn-count" id="count-fijos">0</span>
         </button>
-        <button class="home-btn" data-color="azul" onclick="irVistaGeneral('fungibles', event, this)">
+        <button class="home-btn" data-color="azul" onclick="irVistaGeneral('fungibles')">
           <span class="home-btn-icon">◈</span>
           <span class="home-btn-label">Fungibles</span>
           <span class="home-btn-count" id="count-fungibles">0</span>
         </button>
-        <button class="home-btn" data-color="marron" onclick="irVistaGeneral('internos', event, this)">
+        <button class="home-btn" data-color="marron" onclick="irVistaGeneral('internos')">
           <span class="home-btn-icon">◈</span>
           <span class="home-btn-label">Internos</span>
           <span class="home-btn-count" id="count-internos">0</span>
         </button>
-        <button class="home-btn" data-color="vino" onclick="irVistaGeneral('prestados', event, this)">
+        <button class="home-btn" data-color="vino" onclick="irVistaGeneral('prestados')">
           <span class="home-btn-icon">◈</span>
           <span class="home-btn-label">Prestados</span>
           <span class="home-btn-count" id="count-prestados">0</span>
         </button>
-        <button class="home-btn buscar" data-color="buscar" onclick="irBusqueda(event, this)">
+        <button class="home-btn buscar" data-color="buscar" onclick="irBusqueda()">
           <span class="home-btn-icon">🔍</span>
           <span class="home-btn-label">Buscar</span>
         </button>
@@ -1850,7 +1826,7 @@ function actualizarContadores(){
 /* ============================================================
    [S14] BÚSQUEDA
    ============================================================ */
-function irBusqueda(ev, btn){
+function irBusqueda(){
   estado.pantalla = "busqueda";
   pushEstado("busqueda");
   mostrarModoBusqueda();
@@ -2436,13 +2412,12 @@ function imprimirActaDirecta(){
    [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v5
    ------------------------------------------------------------
    Estrategia:
-     1. Calibrar altura útil real midiendo un bloque de prueba.
-     2. Medir título de sección, thead y CADA fila individualmente.
-     3. Llenar la hoja fila por fila con el espacio REAL disponible.
-     4. En hoja 1, descontar el header completo (membrete + título).
-     5. Si una tabla se corta, la continuación NO repite título.
-     6. Firmas: al final si caben; nueva hoja si no.
-     7. Encabezado de continuación SOLO si las firmas van solas.
+     1. Se mide la altura del header, thead y CADA fila.
+     2. Se llena la hoja fila por fila con el espacio REAL.
+     3. En hoja 1, se descuenta el header (membrete + título).
+     4. Si una tabla se corta, la continuación NO repite título.
+     5. Firmas: al final si caben; nueva hoja si no.
+     6. Encabezado de continuación SOLO si las firmas van solas.
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -2538,21 +2513,17 @@ function generarHTMLActa(r, oficina, datos){
     { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
   ];
 
-  /* Helper: genera el HTML de una fila como string (sin tabla) */
-  function filaHTMLString(b, i, tipo){
-    return generarFilaTabla(b, i, tipo);
-  }
-
-  /* Helper: mide la altura de una fila dentro de una tabla con thead */
-  function medirFilaConThead(filaHTML, tipo){
-    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
-    return medirHTML(html);
-  }
-
-  /* Helper: mide solo el thead */
+  /* Helper: mide el thead de un tipo */
   function medirThead(tipo){
     const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead></table>`;
     return medirHTML(html);
+  }
+
+  /* Helper: mide una fila individual con thead y resta la altura del thead */
+  function medirFila(filaHTML, tipo, alturaThead){
+    const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
+    const total = medirHTML(html);
+    return Math.max(total - alturaThead, 14);
   }
 
   /* Construir estructura por sección */
@@ -2561,7 +2532,6 @@ function generarHTMLActa(r, oficina, datos){
     const tituloHTML = `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
     const alturaTitulo = medirHTML(tituloHTML);
 
-    /* Si la lista está vacía → una sola fila "NO CUENTA" */
     if(!sec.lista.length){
       const filaVacia = `<tr><td class="vacia" colspan="4">NO CUENTA</td></tr>`;
       const alturaFila = medirHTML(`<table class="acta-tabla"><tbody>${filaVacia}</tbody></table>`);
@@ -2574,16 +2544,10 @@ function generarHTMLActa(r, oficina, datos){
       };
     }
 
-    /* Medir cada fila: primero creamos la fila con su número correcto */
     const filas = sec.lista.map((b, i) => {
-      const filaStr = filaHTMLString(b, i, sec.tipo);
-      /* Medir como si estuviera dentro de una tabla con thead para
-         capturar correctamente el border-collapse */
-      const altura = medirFilaConThead(filaStr, sec.tipo) - alturaThead;
-      return {
-        html: filaStr,
-        altura: Math.max(altura, 14) /* mínimo razonable */
-      };
+      const filaStr = generarFilaTabla(b, i, sec.tipo);
+      const altura = medirFila(filaStr, sec.tipo, alturaThead);
+      return { html: filaStr, altura };
     });
 
     return {
@@ -2598,48 +2562,33 @@ function generarHTMLActa(r, oficina, datos){
   /* ============================================================
      [S18.3] EMPAQUETADOR — LLENADO EXACTO POR FILA
      ------------------------------------------------------------
-     Manejo correcto de tablas continuas:
-       - Se abre <table> una sola vez por sección (o por continuación).
-       - Se agregan <tr> hasta que no caben.
-       - Al cortar, se cierra </table>, se hace page-break, y se
-         reabre con thead pero SIN título romano.
+     Se abre <table> una sola vez por sección (o por continuación).
+     Se agregan <tr> hasta que no caben. Al cortar, se cierra,
+     se hace page-break sin encabezado, y se reabre con thead
+     pero SIN título romano.
      ============================================================ */
   let htmlFinal = "";
   let alturaAcumulada = 0;
   let hojaActual = 1;
 
-  /* En hoja 1 colocamos el header completo */
+  /* Colocar header en hoja 1 */
   htmlFinal += headerHTML;
   alturaAcumulada += headerAltura;
-
-  /* Inserta page-break SIN encabezado (para continuar tabla) */
-  function nuevaHojaSinEncabezado(){
-    htmlFinal += `<div class="saltar-pagina"></div>`;
-    hojaActual++;
-    alturaAcumulada = 0;
-  }
-
-  /* Inserta page-break CON encabezado de continuación */
-  function nuevaHojaConEncabezado(){
-    htmlFinal += `<div class="saltar-pagina"></div>`;
-    hojaActual++;
-    const enc = generarEncabezadoContinuacion(hojaActual);
-    htmlFinal += enc;
-    alturaAcumulada = medirHTML(enc);
-  }
 
   /* Recorrer secciones */
   for(let s = 0; s < secciones.length; s++){
     const sec = secciones[s];
 
-    /* ¿Cabe el inicio (título + thead + 1ra fila) en el espacio actual? */
+    /* ¿Cabe el inicio (título + thead + 1ra fila)? */
     const primeraFilaAltura = sec.filas.length > 0 ? sec.filas[0].altura : 0;
     const espacioNecesarioInicio = sec.alturaTitulo + sec.alturaThead + primeraFilaAltura;
     const espacioRestanteInicial = ALTURA_UTIL_HOJA - alturaAcumulada;
 
     if(espacioNecesarioInicio > espacioRestanteInicial && espacioRestanteInicial > 0){
       /* No cabe el inicio → nueva hoja SIN encabezado */
-      nuevaHojaSinEncabezado();
+      htmlFinal += `<div class="saltar-pagina"></div>`;
+      hojaActual++;
+      alturaAcumulada = 0;
     }
 
     /* Abrir sección: título + tabla con thead */
@@ -2663,7 +2612,7 @@ function generarHTMLActa(r, oficina, datos){
         hojaActual++;
         alturaAcumulada = 0;
 
-        /* Reabrir tabla con thead (sin título) */
+        /* Reabrir tabla con thead (sin título romano) */
         htmlFinal += `<div class="acta-seccion">`;
         htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
         alturaAcumulada += sec.alturaThead;
@@ -2689,12 +2638,17 @@ function generarHTMLActa(r, oficina, datos){
   if(firmasAltura <= espacioParaFirmas){
     htmlFinal += firmasHTML;
   } else {
-    nuevaHojaConEncabezado();
+    /* Nueva hoja con encabezado de continuación (firmas van solas) */
+    htmlFinal += `<div class="saltar-pagina"></div>`;
+    hojaActual++;
+    const enc = generarEncabezadoContinuacion(hojaActual);
+    htmlFinal += enc;
     htmlFinal += firmasHTML;
   }
 
   return htmlFinal;
 }
+
 /* ============================================================
    [S19] HELPERS DE TABLA DEL ACTA
    ============================================================ */
