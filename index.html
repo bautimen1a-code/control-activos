@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V5.2</title>
+<title>Sistema de Control DIV-10 V5.3</title>
 
 <!-- jsPDF + autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -250,7 +250,7 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
-  /* ⭐ V5.2 — VISTA PREVIA con iframe embebido */
+  /* ⭐ V5.3 — VISTA PREVIA */
   .pdf-viewer{
     display:block;
     width:100%;
@@ -259,11 +259,34 @@
     border:none;
     background:#ebe6d9;
   }
-  @media (max-width:600px){
-    .pdf-viewer{
-      height:75vh;
-      min-height:400px;
-    }
+  /* Contenedor alternativo para móvil */
+  .pdf-movil-container{
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:20px;
+    padding:40px 20px;
+    min-height:50vh;
+    text-align:center;
+  }
+  .pdf-movil-container.visible{display:flex;}
+  .pdf-movil-icon{font-size:64px;color:var(--dorado);opacity:.6;}
+  .pdf-movil-titulo{font-size:16px;font-weight:800;color:var(--texto);letter-spacing:1px;text-transform:uppercase;}
+  .pdf-movil-sub{font-size:12px;color:var(--texto-suave);max-width:340px;line-height:1.5;}
+  .pdf-movil-btn{
+    display:inline-flex;align-items:center;gap:10px;
+    background:linear-gradient(135deg,var(--dorado),#6b5522);
+    color:#fff;border:none;padding:14px 26px;border-radius:10px;
+    font-size:13px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+    cursor:pointer;font-family:var(--sans);
+    box-shadow:0 6px 16px var(--dorado-glow);
+    transition:all .2s ease;
+  }
+  .pdf-movil-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px var(--dorado-glow);}
+
+  @media (max-width:768px){
+    .pdf-viewer{display:none;}
   }
 
   .preview-actions{padding:14px 20px;border-top:1px solid var(--borde);display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;background:var(--bg-panel);}
@@ -317,7 +340,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v5.2 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v5.3 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -404,8 +427,18 @@
       <h2>Vista Previa del Acta</h2>
       <button class="modal-close" onclick="cerrarModalVistaPrevia()">×</button>
     </div>
-    <div class="modal-body" style="padding:0;background:#ebe6d9;min-height:70vh;">
+    <div class="modal-body" style="padding:0;background:#ebe6d9;min-height:70vh;position:relative;">
+      <!-- iframe (desktop) -->
       <iframe id="pdfViewer" class="pdf-viewer" title="Vista previa del PDF"></iframe>
+      <!-- Contenedor alternativo (móvil) -->
+      <div id="pdfMovilContainer" class="pdf-movil-container">
+        <div class="pdf-movil-icon">📄</div>
+        <div class="pdf-movil-titulo">PDF generado correctamente</div>
+        <div class="pdf-movil-sub">La vista previa embebida no está disponible en este dispositivo. Abre el PDF en una nueva pestaña para verlo.</div>
+        <button class="pdf-movil-btn" onclick="abrirPDFNuevaPestana()">
+          <span>📄</span> Abrir PDF
+        </button>
+      </div>
     </div>
     <div class="preview-actions">
       <button class="btn-preview" onclick="cerrarModalVistaPrevia()">Cerrar</button>
@@ -444,7 +477,17 @@ let estado = {
   oficinaFiltroActual: null
 };
 
-let actaEnProceso = { responsable: null, oficina: null, datos: null, pdfDoc: null };
+let actaEnProceso = { responsable: null, oficina: null, datos: null, pdfDoc: null, pdfBlobURL: null };
+
+/* ============================================================
+   DETECCIÓN DE MÓVIL
+   ============================================================ */
+function esDispositivoMovil(){
+  const ua = navigator.userAgent || navigator.vendor || window.opera || "";
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop|webOS|BlackBerry/i.test(ua)
+    || (window.innerWidth <= 768 && /Mobi|Tablet|Touch/i.test(ua))
+    || (window.innerWidth <= 480);
+}
 
 /* ============================================================
    TOAST
@@ -1505,38 +1548,63 @@ function generarVistaPrevia(){
   /* Generar el PDF */
   try{
     actaEnProceso.pdfDoc = generarPDFActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
+    actaEnProceso.pdfBlobURL = actaEnProceso.pdfDoc.output("bloburl");
   }catch(err){
     console.error("Error al generar PDF:", err);
     mostrarToast("Error al generar PDF: " + err.message, "error", "⚠");
     return;
   }
 
-  /* ⭐ V5.2 — Mostrar PDF embebido en iframe */
   cerrarModalEntrante();
-  const blobURL = actaEnProceso.pdfDoc.output("bloburl");
+
+  /* ⭐ V5.3 — Detectar móvil para alternar entre iframe y botón */
+  const esMovil = esDispositivoMovil();
   const iframe = document.getElementById("pdfViewer");
-  if(iframe){
-    iframe.src = blobURL;
+  const movilCont = document.getElementById("pdfMovilContainer");
+
+  if(esMovil){
+    if(iframe) iframe.style.display = "none";
+    if(movilCont) movilCont.classList.add("visible");
+  } else {
+    if(iframe){
+      iframe.style.display = "block";
+      iframe.src = actaEnProceso.pdfBlobURL;
+    }
+    if(movilCont) movilCont.classList.remove("visible");
   }
+
   document.getElementById("modalVistaPrevia").classList.add("visible");
   pushEstado("modalVistaPrevia");
 }
 
+function abrirPDFNuevaPestana(){
+  if(!actaEnProceso.pdfBlobURL){
+    mostrarToast("No hay PDF generado", "error", "⚠");
+    return;
+  }
+  window.open(actaEnProceso.pdfBlobURL, "_blank");
+}
+
 function cerrarModalVistaPrevia(){
   document.getElementById("modalVistaPrevia").classList.remove("visible");
-  /* ⭐ V5.2 — Limpiar iframe para liberar memoria */
+  /* ⭐ V5.3 — Limpiar iframe y contenedor móvil */
   const iframe = document.getElementById("pdfViewer");
   if(iframe){
     iframe.src = "about:blank";
+    iframe.style.display = "block";
   }
+  const movilCont = document.getElementById("pdfMovilContainer");
+  if(movilCont) movilCont.classList.remove("visible");
 }
 
 /* ============================================================
-   ⭐ V5.2 — GENERACIÓN DE PDF CON jsPDF
+   ⭐ V5.3 — GENERACIÓN DE PDF CON jsPDF
    ------------------------------------------------------------
-   Cambios V5.2:
-   - Espacio 5mm antes y 5mm después del subtítulo
-   - Todas las columnas centradas excepto Descripción (justificada)
+   Cambios V5.3:
+   - "NO CUENTA" con colSpan=4 centrado en cursiva
+   - Números de página centrados al pie
+   - Sin espacio antes del PRIMER subtítulo (5mm en el resto)
+   - Espacio para firmas aumentado a 30mm
    ============================================================ */
 
 const PDF_LAYOUT = {
@@ -1630,10 +1698,11 @@ function generarPDFActa(r, oficina, datos){
     const esUltimaNoVacia = (idxSec === ultimaSeccionNoVaciaIdx);
     const reservaFirmas = esUltimaNoVacia ? alturaFirmasMM : 0;
 
-    /* ⭐ V5.2 — Espacio ANTES del subtítulo (5mm respecto a lo anterior) */
-    yCursor += 5;
+    /* ⭐ V5.3 — Sin espacio antes del PRIMER subtítulo (solo desde el segundo) */
+    if(idxSec > 0){
+      yCursor += 5;
+    }
 
-    /* Verificar espacio para subtítulo + 1 fila + espacio después */
     const espacioRestanteInicial = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor - reservaFirmas;
     if(espacioRestanteInicial < 30 && sec.lista.length > 0){
       doc.addPage();
@@ -1651,7 +1720,7 @@ function generarPDFActa(r, oficina, datos){
     doc.setLineWidth(0.2);
     doc.line(xInicioSubrayado, yCursor + 0.5, xLeft + anchoSubtitulo, yCursor + 0.5);
 
-    /* ⭐ V5.2 — Espacio después del subtítulo (5mm antes de la tabla) */
+    /* Espacio después del subtítulo */
     yCursor += 5;
 
     /* Preparar filas */
@@ -1662,7 +1731,7 @@ function generarPDFActa(r, oficina, datos){
       columnStyles = {
         0: { cellWidth: 15, halign: "center" },
         1: { cellWidth: 45, halign: "center" },
-        2: { cellWidth: "auto", halign: "justify" },   /* Descripción justificada */
+        2: { cellWidth: "auto", halign: "justify" },
         3: { cellWidth: 25, halign: "center" }
       };
       body = sec.lista.map((item, i) => [
@@ -1676,7 +1745,7 @@ function generarPDFActa(r, oficina, datos){
       columnStyles = {
         0: { cellWidth: 15, halign: "center" },
         1: { cellWidth: 20, halign: "center" },
-        2: { cellWidth: "auto", halign: "justify" },   /* Descripción justificada */
+        2: { cellWidth: "auto", halign: "justify" },
         3: { cellWidth: 25, halign: "center" }
       };
       body = sec.lista.map((item, i) => [
@@ -1687,8 +1756,19 @@ function generarPDFActa(r, oficina, datos){
       ]);
     }
 
+    /* ⭐ V5.3 — "NO CUENTA" combinando todas las celdas (colSpan=4), centrado y en cursiva */
     if(sec.lista.length === 0){
-      body = [["", "", "NO CUENTA", ""]];
+      body = [[
+        {
+          content: "NO CUENTA",
+          colSpan: 4,
+          styles: {
+            halign: "center",
+            fontStyle: "italic",
+            cellWidth: "auto"
+          }
+        }
+      ]];
     }
 
     /* Tablas SIN color */
@@ -1778,14 +1858,26 @@ function generarPDFActa(r, oficina, datos){
 
   dibujarBloqueFirmasPDF(doc, datos, r, yCursor);
 
+  /* ⭐ V5.3 — Números de página "1 - N", "2 - N" centrados al pie */
+  const totalPaginas = doc.getNumberOfPages();
+  for(let i = 1; i <= totalPaginas; i++){
+    doc.setPage(i);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(0, 0, 0);
+    const textoPag = `${i} - ${totalPaginas}`;
+    doc.text(textoPag, PDF_LAYOUT.pageW / 2, PDF_LAYOUT.pageH - 10, { align: "center" });
+  }
+
   return doc;
 }
 
 function medirBloqueFirmasPDF(doc, datos, r){
-  let altura = 8;
-  altura += 30;
+  /* ⭐ V5.3 — Espacio aumentado para firmar */
+  let altura = 8;        /* fecha */
+  altura += 38;          /* fila Entregué/Recibí (30mm para firmar + 5 nombre + 3 cargo) */
   if(datos.sup1.grado || datos.sup1.nombres) altura += 20;
-  altura += 25;
+  altura += 32;          /* Vo.Bo. (24mm para firmar + 5 nombre + 3 cargo) */
   return altura;
 }
 
@@ -1815,11 +1907,13 @@ function dibujarBloqueFirmasPDF(doc, datos, r, yInicio){
   const colIzqX = PDF_LAYOUT.marginLeft + (PDF_LAYOUT.contentW * 0.25);
   const colDerX = PDF_LAYOUT.marginLeft + (PDF_LAYOUT.contentW * 0.75);
 
+  /* Fila 1: ENTREGUÉ / RECIBÍ */
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.text("ENTREGUÉ CONFORME:", colIzqX, y, { align: "center" });
   doc.text("RECIBÍ CONFORME:", colDerX, y, { align: "center" });
-  y += 22;
+  /* ⭐ V5.3 — Espacio aumentado de 22 a 30mm para firmar */
+  y += 30;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
@@ -1833,6 +1927,7 @@ function dibujarBloqueFirmasPDF(doc, datos, r, yInicio){
   doc.text(cargoEntrante, colDerX, y, { align: "center" });
   y += 12;
 
+  /* Fila 2: Supervisores */
   if(nombreSup1 || nombreSup2){
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
@@ -1862,10 +1957,12 @@ function dibujarBloqueFirmasPDF(doc, datos, r, yInicio){
     }
   }
 
+  /* Vo.Bo. */
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.text("Vo. Bo.", PDF_LAYOUT.pageW/2, y, { align: "center" });
-  y += 18;
+  /* ⭐ V5.3 — Espacio aumentado de 18 a 24mm */
+  y += 24;
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
@@ -1895,14 +1992,17 @@ function imprimirPDF(){
     mostrarToast("No hay PDF generado", "error", "⚠");
     return;
   }
-  /* ⭐ V5.2 — Imprimir el PDF desde el mismo iframe */
+  /* ⭐ V5.3 — En móvil, abrir en nueva pestaña; en desktop, usar iframe */
+  if(esDispositivoMovil()){
+    abrirPDFNuevaPestana();
+    return;
+  }
   const iframe = document.getElementById("pdfViewer");
   if(iframe && iframe.contentWindow){
     try{
       iframe.contentWindow.focus();
       iframe.contentWindow.print();
     }catch(err){
-      /* Fallback: abrir en nueva pestaña */
       const blobURL = actaEnProceso.pdfDoc.output("bloburl");
       window.open(blobURL, "_blank");
     }
