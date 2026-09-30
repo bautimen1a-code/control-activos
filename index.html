@@ -3,16 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control DIV-10 · V6.0</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<title>Control DIV-10 · V6.1</title>
 <style>
 /* ============================================================
-   [01] VARIABLES Y TEMA — TACTICAL COMMAND
+   [01] VARIABLES Y TEMA
    ============================================================ */
 :root{
-  /* Paleta oscura militar */
   --bg:#0d1410;
   --bg-panel:#121a15;
   --bg-elevado:#18241c;
@@ -27,7 +23,6 @@
   --borde:rgba(143,163,150,.15);
   --borde-fuerte:rgba(143,163,150,.35);
 
-  /* Colores tácticos */
   --ambar:#e8a93a;
   --ambar-brillante:#ffc55c;
   --ambar-glow:rgba(232,169,58,.4);
@@ -46,14 +41,12 @@
   --gris-metal:#2a362e;
   --gris-metal-claro:#3a4a3e;
 
-  --mono:"JetBrains Mono","Consolas","Monaco",monospace;
+  --mono:"JetBrains Mono","Fira Code","Consolas",monospace;
   --sans:"Inter","Segoe UI",Roboto,system-ui,sans-serif;
-  --display:"Orbitron","Inter",sans-serif;
 
   --sombra-panel:0 8px 24px rgba(0,0,0,.5), 0 2px 4px rgba(0,0,0,.3);
   --sombra-elevado:0 12px 36px rgba(0,0,0,.6);
 }
-
 body.light{
   --bg:#e8ede8;
   --bg-panel:#ffffff;
@@ -61,14 +54,11 @@ body.light{
   --bg-hover:#e8efe8;
   --bg-card:#fafcfa;
   --bg-terminal:#1a1a1a;
-
   --texto:#1a2418;
   --texto-suave:#5a6b58;
   --texto-muy-suave:#8fa39a;
-
   --borde:rgba(26,36,24,.15);
   --borde-fuerte:rgba(26,36,24,.35);
-
   --ambar:#b8801a;
   --ambar-brillante:#d99c2e;
   --verde:#4a7a22;
@@ -77,7 +67,6 @@ body.light{
   --rojo-brillante:#d64545;
   --azul:#1e6fd9;
 }
-
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
@@ -93,7 +82,7 @@ body{
 }
 
 /* ============================================================
-   [02] FONDO — TEXTURA FIBRA DE CARBONO + RADAR
+   [02] FONDO
    ============================================================ */
 .bg-layer{
   position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
@@ -102,7 +91,6 @@ body{
     radial-gradient(ellipse at 100% 100%, rgba(124,179,66,.05) 0%, transparent 50%),
     var(--bg);
 }
-/* Patrón fibra de carbono */
 .bg-layer::before{
   content:"";
   position:absolute;inset:0;
@@ -118,7 +106,6 @@ body.light .bg-layer::before{
     linear-gradient(45deg, rgba(0,0,0,.02) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.02) 75%),
     linear-gradient(45deg, rgba(0,0,0,.02) 25%, transparent 25%, transparent 75%, rgba(0,0,0,.02) 75%);
 }
-/* Líneas de radar sutiles */
 .bg-layer::after{
   content:"";
   position:absolute;
@@ -135,7 +122,6 @@ body.light .bg-layer::before{
 }
 @keyframes radarSpin{from{transform:translate(-50%,-50%) rotate(0);}to{transform:translate(-50%,-50%) rotate(360deg);}}
 
-/* Scanline superior */
 .scanline{
   position:fixed;top:0;left:0;right:0;height:1px;
   background:linear-gradient(90deg,transparent,var(--ambar),var(--verde),transparent);
@@ -163,7 +149,7 @@ body.light .bg-layer::before{
 .app{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;}
 
 /* ============================================================
-   [05] HEADER — BARRA DE COMANDO
+   [05] HEADER
    ============================================================ */
 .header{
   position:sticky;top:0;z-index:50;
@@ -177,7 +163,6 @@ body.light .bg-layer::before{
 body.light .header{
   background:linear-gradient(180deg, #ffffff 0%, #f0f4f0 100%);
 }
-/* Línea superior ámbar de "estado activo" */
 .header::before{
   content:"";
   position:absolute;top:0;left:0;right:0;height:2px;
@@ -190,14 +175,11 @@ body.light .header{
   padding:12px 22px;
 }
 .header-logo{display:flex;align-items:center;gap:14px;}
-
-/* Logo — escudo/insignia */
 .header-logo-icon{
   width:46px;height:46px;
   position:relative;
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--display);
-  font-size:20px;font-weight:900;color:var(--bg-terminal);
+  font-size:22px;font-weight:900;color:var(--bg-terminal);
   background:linear-gradient(135deg, var(--ambar), #c68a1a);
   border:2px solid var(--gris-metal-claro);
   border-radius:6px;
@@ -212,7 +194,6 @@ body.light .header{
 .header-logo-icon:hover{transform:rotate(0deg) scale(1.05);}
 
 .header-text h1{
-  font-family:var(--display);
   font-size:16px;font-weight:900;
   letter-spacing:2px;text-transform:uppercase;
   color:var(--texto);
@@ -242,7 +223,6 @@ body.light .header{
 
 .header-actions{display:flex;align-items:center;gap:10px;}
 
-/* Botones icono estilo "botón táctico" */
 .btn-icon{
   width:44px;height:44px;
   background:linear-gradient(180deg, var(--gris-metal-claro) 0%, var(--gris-metal) 100%);
@@ -284,7 +264,6 @@ body.light .header{
 .btn-icon.spinning{animation:spin 1s linear infinite;}
 @keyframes spin{from{transform:rotate(0);}to{transform:rotate(360deg);}}
 
-/* Status indicador */
 .header-status{
   display:flex;align-items:center;gap:8px;
   padding:8px 14px;
@@ -316,13 +295,12 @@ body.light .header{
 .main{flex:1;padding:24px 22px;max-width:1400px;margin:0 auto;width:100%;}
 
 /* ============================================================
-   [07] HOME — PANEL DE MÓDULOS
+   [07] HOME
    ============================================================ */
 .home{display:flex;flex-direction:column;gap:20px;padding-top:8px;animation:fadeIn .5s ease both;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
 .home-title{
-  font-family:var(--display);
   font-size:11px;letter-spacing:6px;
   color:var(--texto-suave);
   text-transform:uppercase;
@@ -384,14 +362,12 @@ body.light .header{
 .home-btn:hover .home-btn-icon{transform:scale(1.15);}
 
 .home-btn-label{
-  font-family:var(--display);
   font-size:10px;letter-spacing:3px;
   text-transform:uppercase;
   color:var(--texto-suave);
   font-weight:700;
 }
 .home-btn-count{
-  font-family:var(--display);
   font-size:30px;font-weight:900;
   color:var(--color,var(--ambar));
   line-height:1;
@@ -421,7 +397,6 @@ body.light .header{
   border:1px solid var(--borde-fuerte);
   border-radius:6px;
   padding:12px 18px;
-  font-family:var(--display);
   font-size:11px;letter-spacing:2px;text-transform:uppercase;
   cursor:pointer;font-weight:700;
   flex-shrink:0;white-space:nowrap;
@@ -486,7 +461,6 @@ body.light .header{
   display:flex;justify-content:space-between;align-items:center;
   padding:14px 0;margin-bottom:14px;
   border-bottom:2px solid var(--borde-fuerte);
-  font-family:var(--display);
   font-size:11px;letter-spacing:3px;text-transform:uppercase;
   color:var(--texto-suave);font-weight:700;
   animation:fadeIn .4s ease both;
@@ -501,7 +475,6 @@ body.light .header{
   box-shadow:inset 0 0 8px rgba(232,169,58,.15);
 }
 
-/* Tarjeta responsable */
 .resp-card{
   position:relative;
   background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
@@ -553,7 +526,6 @@ body.light .header{
   transform:translateX(8px);
 }
 
-/* Tarjeta bien */
 .bien-card{
   position:relative;
   background:linear-gradient(180deg, var(--bg-card) 0%, var(--bg-panel) 100%);
@@ -654,7 +626,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   background:linear-gradient(180deg, var(--bg-elevado), var(--bg-panel));
 }
 .modal-header h2{
-  font-family:var(--display);
   font-size:13px;letter-spacing:3px;text-transform:uppercase;
   color:var(--texto);font-weight:700;
   flex:1;min-width:0;word-break:break-word;
@@ -688,7 +659,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   border:1px solid var(--borde-fuerte);
   border-radius:6px;
   padding:10px 18px;
-  font-family:var(--display);
   font-size:11px;letter-spacing:2px;text-transform:uppercase;
   cursor:pointer;font-weight:700;
   transition:all .15s ease;
@@ -709,7 +679,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   border:none;
   border-radius:6px;
   padding:12px 22px;
-  font-family:var(--display);
   font-size:11px;font-weight:800;letter-spacing:2px;
   cursor:pointer;
   display:inline-flex;align-items:center;gap:8px;
@@ -726,7 +695,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
 
 .modal-titulo-seccion{
   text-align:center;padding:10px 0 18px;
-  font-family:var(--display);
   font-size:10px;letter-spacing:3px;text-transform:uppercase;
   color:var(--texto-suave);font-weight:700;
   border-bottom:1px solid var(--borde);margin-bottom:18px;
@@ -766,7 +734,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   color:var(--azul);
   border-radius:4px;
   padding:8px 16px;
-  font-family:var(--display);
   font-size:14px;font-weight:800;
   flex-shrink:0;
   box-shadow:inset 0 0 8px rgba(74,158,255,.15);
@@ -783,7 +750,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   padding:14px 16px;margin-bottom:14px;
 }
 .form-persona-titulo{
-  font-family:var(--display);
   font-size:10px;letter-spacing:2px;text-transform:uppercase;
   color:var(--ambar);font-weight:800;margin-bottom:12px;
   display:flex;justify-content:space-between;align-items:center;
@@ -794,7 +760,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   width:22px;height:22px;
   border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;
-  font-family:var(--display);
   font-size:11px;font-weight:900;
   box-shadow:0 0 12px var(--ambar-glow);
 }
@@ -836,7 +801,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   border:1px solid var(--borde-fuerte);
   border-radius:6px;
   padding:11px 20px;
-  font-family:var(--display);
   font-size:11px;font-weight:700;letter-spacing:2px;
   text-transform:uppercase;cursor:pointer;
   transition:all .2s ease;
@@ -852,7 +816,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   border:none;
   border-radius:6px;
   padding:11px 24px;
-  font-family:var(--display);
   font-size:11px;font-weight:900;letter-spacing:2px;
   text-transform:uppercase;cursor:pointer;
   transition:all .15s ease;
@@ -888,7 +851,6 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
 }
 .tabla-header-titulo{
   display:flex;align-items:center;gap:10px;
-  font-family:var(--display);
   font-size:11px;letter-spacing:2px;text-transform:uppercase;
   color:var(--texto);font-weight:700;
 }
@@ -917,7 +879,6 @@ thead th{
   color:var(--texto-suave);
   text-align:left;
   padding:11px 12px;
-  font-family:var(--display);
   font-size:9px;letter-spacing:2px;
   text-transform:uppercase;font-weight:700;
   border-bottom:2px solid var(--borde-fuerte);
@@ -980,7 +941,6 @@ tbody tr:active{background:var(--gris-metal);}
   color:var(--ambar);
   border-radius:4px;
   padding:8px 16px;
-  font-family:var(--display);
   font-size:14px;font-weight:800;
   flex-shrink:0;
   box-shadow:inset 0 0 8px rgba(232,169,58,.15);
@@ -1030,7 +990,6 @@ tbody tr:active{background:var(--gris-metal);}
 }
 .bien-detalle-tipo-badge{
   display:inline-block;padding:4px 12px;
-  font-family:var(--display);
   font-size:9px;font-weight:800;letter-spacing:1.8px;
   text-transform:uppercase;
   border-radius:3px;
@@ -1076,14 +1035,12 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   filter:drop-shadow(0 0 16px var(--ambar-glow));
 }
 .empty-state-title{
-  font-family:var(--display);
   font-size:13px;letter-spacing:3px;text-transform:uppercase;
   color:var(--texto);margin-bottom:10px;font-weight:700;
 }
 .empty-state-sub{font-size:12px;color:var(--texto-muy-suave);letter-spacing:.5px;}
 .loading,.error{
   text-align:center;padding:40px;
-  font-family:var(--display);
   font-size:12px;letter-spacing:3px;text-transform:uppercase;
   font-weight:700;
 }
@@ -1096,7 +1053,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 .footer{
   text-align:center;padding:24px 22px;
   border-top:2px solid var(--borde);
-  font-family:var(--display);
   font-size:9px;letter-spacing:4px;text-transform:uppercase;
   color:var(--texto-muy-suave);font-weight:700;
   margin-top:auto;
@@ -1181,7 +1137,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   border:1px solid var(--borde-fuerte);
   border-radius:6px;
   padding:11px 18px;
-  font-family:var(--display);
   font-size:11px;font-weight:700;letter-spacing:2px;
   text-transform:uppercase;cursor:pointer;
   transition:all .15s ease;
@@ -1214,7 +1169,6 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   box-shadow:0 6px 16px var(--verde-glow);
 }
 
-/* Marcador de página */
 .preview-acta-wrap .page-break-indicator{
   display:block;height:26px;
   background:repeating-linear-gradient(90deg,#d0d0d0 0px,#d0d0d0 8px,transparent 8px,transparent 16px);
@@ -1438,7 +1392,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
         <div class="header-logo-icon">◈</div>
         <div class="header-text">
           <h1>CONTROL <span class="highlight">DIV-10</span></h1>
-          <div class="subtitle">TACTICAL INVENTORY · V6.0</div>
+          <div class="subtitle">SISTEMA DE INVENTARIO</div>
         </div>
       </div>
       <div class="header-actions">
@@ -1454,7 +1408,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ TACTICAL COMMAND · CONTROL DIV-10 · V6.0 ◈</footer>
+  <footer class="footer">◈ SISTEMA DE CONTROL DIV-10 · V6.1 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -1571,10 +1525,6 @@ const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1Z
 const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
-/* Altura útil de hoja carta con márgenes 2cm arriba/abajo.
-   carta = 27.94 cm × 37.795 px/cm = 1056 px
-   márgenes verticales = 4 cm × 37.795 = 151.2 px
-   útil ≈ 905 px. Se usa 890 como margen de seguridad. */
 const ALTURA_UTIL_HOJA = 890;
 
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
@@ -2694,13 +2644,14 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v6
+   [S18] GENERAR HTML DEL ACTA — LLENADO EXACTO v7
    ------------------------------------------------------------
-   CAMBIOS V6.0:
-     1. El subtítulo NUNCA queda huérfano: se verifica que
-        título + gap + thead + 1ra fila quepan ANTES de escribir
-        el título de la sección.
-     2. Se mide el gap de .acta-seccion y se suma al cálculo.
+   CAMBIOS V6.1:
+     1. El subtítulo NUNCA queda huérfano. Antes de escribir el
+        título, se verifica que el bloque MÍNIMO (gap + título +
+        thead + 1ra fila) quepa en el espacio restante.
+        Si NO cabe → page-break ANTES del título.
+     2. Se mide el gap real de .acta-seccion y se suma.
      3. Se mide fila por fila para máximo aprovechamiento.
      4. Encabezado de continuación SOLO si las firmas van solas.
    ============================================================ */
@@ -2716,7 +2667,6 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* --- Saliente --- */
   const salienteGrado = r.grado || "";
   const salienteNombres = r.nombres || "";
   const salienteApPat = r.apPat || "";
@@ -2726,17 +2676,14 @@ function generarHTMLActa(r, oficina, datos){
   if(!nombreSaliente || nombreSaliente.trim() === "") nombreSaliente = "___________________________________";
   const cargoSaliente = (r.cargo || "").toUpperCase();
 
-  /* --- Entrante --- */
   const nombreEntrante = construirNombreFirmante(datos.entrante.grado, datos.entrante.nombres, datos.entrante.appat, datos.entrante.apmat);
   const cargoEntrante = (datos.entrante.cargo || "").toUpperCase() || "RESPONSABLE ENTRANTE";
 
-  /* --- Supervisores --- */
   const nombreSup1 = construirNombreFirmante(datos.sup1.grado, datos.sup1.nombres, datos.sup1.appat, datos.sup1.apmat);
   const cargoSup1 = (datos.sup1.cargo || "").toUpperCase();
   const nombreSup2 = construirNombreFirmante(datos.sup2.grado, datos.sup2.nombres, datos.sup2.appat, datos.sup2.apmat);
   const cargoSup2 = (datos.sup2.cargo || "").toUpperCase();
 
-  /* --- Vo.Bo. --- */
   const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
   const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
 
@@ -2753,7 +2700,6 @@ function generarHTMLActa(r, oficina, datos){
     return contMed.scrollHeight;
   }
 
-  /* --- Header --- */
   const headerHTML = `
     <div class="acta-membrete">
       <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
@@ -2767,7 +2713,6 @@ function generarHTMLActa(r, oficina, datos){
   `;
   const headerAltura = medirHTML(headerHTML);
 
-  /* --- Firmas --- */
   const firmasHTML = generarBloqueFirmas({
     nombreSaliente, cargoSaliente, nombreEntrante, cargoEntrante,
     nombreSup1, cargoSup1, nombreSup2, cargoSup2,
@@ -2775,7 +2720,6 @@ function generarHTMLActa(r, oficina, datos){
   });
   const firmasAltura = medirHTML(firmasHTML);
 
-  /* --- Resumen --- */
   const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
 
   function generarEncabezadoContinuacion(numHoja){
@@ -2786,7 +2730,6 @@ function generarHTMLActa(r, oficina, datos){
     }
     return h;
   }
-  const encabezadoAltura = medirHTML(generarEncabezadoContinuacion(2));
 
   /* ============================================================
      [S18.2] CONSTRUCCIÓN DE SECCIONES CON ALTURA POR FILA
@@ -2798,34 +2741,28 @@ function generarHTMLActa(r, oficina, datos){
     { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
   ];
 
-  /* Helper: mide el thead de un tipo */
   function medirThead(tipo){
     const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead></table>`;
     return medirHTML(html);
   }
 
-  /* Helper: mide una fila individual DENTRO de una tabla con thead
-     y devuelve la altura INCREMENTAL (delta) que aporta esa fila. */
   function medirFilaIncremental(filaHTML, tipo, alturaThead){
     const htmlCon = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
     const totalCon = medirHTML(htmlCon);
     return Math.max(totalCon - alturaThead, 14);
   }
 
-  /* Helper: mide el título de sección completo incluyendo su margen */
   function medirTituloSeccion(num, titulo){
     const html = `<div class="acta-seccion"><div class="acta-seccion-titulo">${num}<span class="subrayado">${esc(titulo)}</span>.</div></div>`;
     return medirHTML(html);
   }
 
-  /* Helper: mide el gap entre secciones (margin-top de .acta-seccion) */
   function medirGapSeccion(){
     const html = `<div class="acta-seccion"></div>`;
     return medirHTML(html);
   }
   const gapSeccion = medirGapSeccion();
 
-  /* Construir estructura por sección */
   const secciones = seccionesDef.map(sec => {
     const alturaThead = medirThead(sec.tipo);
     const alturaTitulo = medirTituloSeccion(sec.num, sec.titulo);
@@ -2860,35 +2797,34 @@ function generarHTMLActa(r, oficina, datos){
   /* ============================================================
      [S18.3] EMPAQUETADOR — LLENADO EXACTO POR FILA
      ------------------------------------------------------------
-     El subtítulo NUNCA queda huérfano: se verifica que
-     título + gap + thead + 1ra fila quepan ANTES de escribir
-     el título. Si no caben, page-break ANTES del título.
+     Regla de oro: el subtítulo NUNCA queda huérfano.
+     Antes de escribir el título de la sección, se verifica que
+     el bloque mínimo (gap + título + thead + 1ra fila) quepa.
+     Si no cabe → page-break ANTES del título.
      ============================================================ */
   let htmlFinal = "";
   let alturaAcumulada = 0;
   let hojaActual = 1;
 
-  /* Colocar header en hoja 1 */
   htmlFinal += headerHTML;
   alturaAcumulada += headerAltura;
 
-  /* Recorrer secciones */
   for(let s = 0; s < secciones.length; s++){
     const sec = secciones[s];
 
-    /* Calcular espacio necesario para el INICIO COMPLETO de la sección */
+    /* Espacio necesario para el INICIO COMPLETO de la sección */
     const primeraFilaAltura = sec.filas.length > 0 ? sec.filas[0].altura : 0;
     const espacioNecesarioInicio = gapSeccion + sec.alturaTitulo + sec.alturaThead + primeraFilaAltura;
     const espacioRestanteInicial = ALTURA_UTIL_HOJA - alturaAcumulada;
 
-    /* Si NO cabe el inicio completo → page-break ANTES del título */
+    /* Si NO cabe el inicio completo Y ya hay contenido en la hoja → page-break */
     if(espacioNecesarioInicio > espacioRestanteInicial && alturaAcumulada > 0){
       htmlFinal += `<div class="saltar-pagina"></div>`;
       hojaActual++;
       alturaAcumulada = 0;
     }
 
-    /* Ahora sí: escribir título + tabla con thead */
+    /* Escribir título + tabla con thead */
     htmlFinal += `<div class="acta-seccion">`;
     htmlFinal += `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
     htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
@@ -2903,14 +2839,12 @@ function generarHTMLActa(r, oficina, datos){
         htmlFinal += fila.html;
         alturaAcumulada += fila.altura;
       } else {
-        /* No cabe → cerrar tabla, page-break, reabrir con thead
-           (SOLO thead, sin título — es una continuación) */
+        /* No cabe → cerrar tabla, page-break, reabrir con thead */
         htmlFinal += `</tbody></table></div>`;
         htmlFinal += `<div class="saltar-pagina"></div>`;
         hojaActual++;
         alturaAcumulada = 0;
 
-        /* Reabrir tabla con thead (sin título romano) */
         htmlFinal += `<div class="acta-seccion">`;
         htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
         alturaAcumulada += gapSeccion + sec.alturaThead;
@@ -2920,22 +2854,17 @@ function generarHTMLActa(r, oficina, datos){
       }
     }
 
-    /* Cerrar tabla de esta sección */
     htmlFinal += `</tbody></table></div>`;
   }
 
   /* ============================================================
      [S18.4] DECISIÓN DE LAS FIRMAS
-     ------------------------------------------------------------
-     Si caben → colocar directamente.
-     Si no caben → nueva hoja CON encabezado de continuación.
      ============================================================ */
   const espacioParaFirmas = ALTURA_UTIL_HOJA - alturaAcumulada;
 
   if(firmasAltura <= espacioParaFirmas){
     htmlFinal += firmasHTML;
   } else {
-    /* Nueva hoja con encabezado de continuación (firmas van solas) */
     htmlFinal += `<div class="saltar-pagina"></div>`;
     hojaActual++;
     const enc = generarEncabezadoContinuacion(hojaActual);
