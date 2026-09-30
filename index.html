@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V4.4.1</title>
+<title>Sistema de Control DIV-10 V4.4.2</title>
 <style>
   :root{
     --bg:#0a0e12;--bg-panel:#141a20;--bg-elevado:#1e252d;--bg-hover:#252d36;
@@ -232,7 +232,6 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
-  /* CONTENEDOR DE MEDICIÓN */
   .acta-medicion{
     position:absolute;left:-99999px;top:0;visibility:hidden;pointer-events:none;
     width: 21.59cm;padding: 0;margin: 0;
@@ -248,14 +247,14 @@
   .acta-medicion .acta-titulo .titulo-linea3{display:block;}
   .acta-medicion .acta-seccion{margin-top:8pt;}
   .acta-medicion .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 3pt 0;line-height:1.0;}
-  .acta-medicion .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:4pt;border:1px solid #000;}
+  .acta-medicion .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:4pt;border:1px solid #000;table-layout:fixed;}
   .acta-medicion .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;}
-  .acta-medicion .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
+  .acta-medicion .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;word-wrap:break-word;}
   .acta-medicion .acta-tabla td.center{text-align:center;}
   .acta-medicion .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;}
   .acta-medicion .acta-tabla td.vacia{text-align:center;padding:8pt 4pt;font-style:italic;text-transform:uppercase;}
-  .acta-medicion .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;}
-  .acta-medicion .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;}
+  .acta-medicion .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;table-layout:fixed;}
+  .acta-medicion .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;word-wrap:break-word;}
   .acta-medicion .acta-tabla-continuacion td.center{text-align:center;}
   .acta-medicion .acta-tabla-continuacion td.descripcion{text-align:justify;text-transform:uppercase;}
   .acta-medicion .acta-bloque-firmas{margin-top:24pt;}
@@ -271,7 +270,6 @@
   .acta-medicion .acta-continuacion{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:20pt 0 4pt 0;padding-top:8pt;border-top:1px solid #000;line-height:1.2;}
   .acta-medicion .acta-continuacion-resumen{font-family:Arial,sans-serif;font-size:8pt;font-style:italic;font-weight:normal;text-align:center;text-transform:uppercase;margin:0 0 20pt 0;padding-bottom:8pt;border-bottom:1px solid #000;line-height:1.2;}
 
-  /* VISTA PREVIA */
   .preview-acta-wrap{
     background:#fff;color:#000;padding:30px 40px;
     font-family:Arial, sans-serif;font-size:11pt;line-height:1.0;
@@ -289,14 +287,14 @@
   .preview-acta-wrap .acta-seccion{margin-top:10pt;}
   .preview-acta-wrap .acta-seccion-titulo{font-family:Arial,sans-serif;font-size:11pt;font-weight:bold;text-transform:uppercase;margin:0 0 4pt 0;color:#000;}
   .preview-acta-wrap .acta-seccion-titulo .subrayado{text-decoration:underline;}
-  .preview-acta-wrap .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;color:#000;}
+  .preview-acta-wrap .acta-tabla{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin-bottom:6pt;color:#000;table-layout:fixed;}
   .preview-acta-wrap .acta-tabla th{border:1px solid #000;padding:2pt 4pt;text-align:center;font-weight:bold;text-transform:uppercase;background:#fff;font-size:9pt;line-height:1.0;color:#000;}
-  .preview-acta-wrap .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-tabla td{border:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;word-wrap:break-word;}
   .preview-acta-wrap .acta-tabla td.center{text-align:center;color:#000;}
   .preview-acta-wrap .acta-tabla td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
   .preview-acta-wrap .acta-tabla td.vacia{text-align:center;padding:8pt;font-style:italic;text-transform:uppercase;color:#000;}
-  .preview-acta-wrap .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;color:#000;}
-  .preview-acta-wrap .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;}
+  .preview-acta-wrap .acta-tabla-continuacion{width:100%;border-collapse:collapse;font-family:Arial,sans-serif;font-size:9pt;margin:0;border:none;color:#000;table-layout:fixed;}
+  .preview-acta-wrap .acta-tabla-continuacion td{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;padding:2pt 4pt;font-size:9pt;vertical-align:top;line-height:1.0;color:#000;word-wrap:break-word;}
   .preview-acta-wrap .acta-tabla-continuacion td.center{text-align:center;color:#000;}
   .preview-acta-wrap .acta-tabla-continuacion td.descripcion{text-align:justify;text-transform:uppercase;color:#000;}
   .preview-acta-wrap .acta-bloque-firmas{margin-top:24pt;}
@@ -339,7 +337,6 @@
   .btn-preview.green{background:linear-gradient(135deg,var(--verde),#2d8a4e);color:#fff;border-color:transparent;}
   .btn-preview.green:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(74,222,128,.5);}
 
-  /* ACTA PARA IMPRIMIR */
   .acta-print{display:none;}
 
   @media print{
@@ -367,46 +364,19 @@
     .acta-seccion-titulo{font-family: Arial, sans-serif;font-size: 11pt;font-weight: bold;text-transform: uppercase;margin: 0 0 3pt 0;line-height: 1.0;color:#000;}
     .acta-seccion-titulo .subrayado{text-decoration: underline;}
 
-    .acta-tabla{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 9pt;margin-bottom: 4pt;border: 1px solid #000;color:#000;}
+    .acta-tabla{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 9pt;margin-bottom: 4pt;border: 1px solid #000;color:#000;table-layout:fixed;}
     .acta-tabla th{border: 1px solid #000;padding: 2pt 4pt;text-align: center;font-weight: bold;text-transform: uppercase;background: #fff;font-size: 9pt;line-height: 1.0;color:#000;}
-    .acta-tabla td{border: 1px solid #000;padding: 2pt 4pt;font-size: 9pt;vertical-align: top;line-height: 1.0;color:#000;}
+    .acta-tabla td{border: 1px solid #000;padding: 2pt 4pt;font-size: 9pt;vertical-align: top;line-height: 1.0;color:#000;word-wrap:break-word;}
     .acta-tabla td.center{text-align: center;color:#000;}
     .acta-tabla td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
     .acta-tabla td.vacia{text-align: center;padding: 8pt 4pt;font-style: italic;text-transform: uppercase;color:#000;}
 
-    /* ⭐ CAPA 1: Estructura explícita para la tabla de continuación */
-    .acta-tabla-continuacion{
-      width: 100%;
-      border-collapse: collapse;
-      font-family: Arial, sans-serif;
-      font-size: 9pt;
-      margin: 0;
-      border: none;
-      color:#000;
-      display: table;
-      table-layout: fixed;
-    }
-    .acta-tabla-continuacion tbody{display: table-row-group;}
-    .acta-tabla-continuacion tr{display: table-row;}
-    .acta-tabla-continuacion td{
-      display: table-cell;
-      border-left: 1px solid #000;
-      border-right: 1px solid #000;
-      border-bottom: 1px solid #000;
-      border-top: none;
-      padding: 2pt 4pt;
-      font-size: 9pt;
-      vertical-align: top;
-      line-height: 1.0;
-      color:#000;
-    }
+    .acta-tabla-continuacion{width: 100%;border-collapse: collapse;font-family: Arial, sans-serif;font-size: 9pt;margin: 0;border: none;color:#000;table-layout:fixed;}
+    .acta-tabla-continuacion td{border-left: 1px solid #000;border-right: 1px solid #000;border-bottom: 1px solid #000;border-top: none;padding: 2pt 4pt;font-size: 9pt;vertical-align: top;line-height: 1.0;color:#000;word-wrap:break-word;}
     .acta-tabla-continuacion td.center{text-align: center;color:#000;}
     .acta-tabla-continuacion td.descripcion{text-align: justify;text-transform: uppercase;color:#000;}
 
-    /* ⭐ CAPA 2: No repetir thead automáticamente */
     .acta-tabla thead{display: table-row-group;}
-
-    /* ⭐ CAPA 3: Evitar que filas se rompan a mitad (por si Chrome lo respeta) */
     .acta-tabla tr,
     .acta-tabla-continuacion tr{
       page-break-inside: avoid;
@@ -480,7 +450,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v4.4.1 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v4.4.2 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -598,14 +568,13 @@ const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1Z
 const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
-/* Altura útil: letter (27.94cm) - márgenes (4cm) - margen seguridad (25px) */
 const PX_POR_CM = 96 / 2.54;
 const ALTURA_LETTER_CM = 27.94;
 const MARGENES_CM = 4;
 const MARGEN_SEGURIDAD_PX = 25;
 const ALTURA_UTIL_HOJA = Math.floor(
   ((ALTURA_LETTER_CM - MARGENES_CM) * PX_POR_CM) - MARGEN_SEGURIDAD_PX
-); // ≈ 879px
+);
 
 const DATA = { fijos: [], fungibles: [], internos: [], prestados: [], resp: [] };
 
@@ -1720,15 +1689,12 @@ function imprimirActaDirecta(){
 }
 
 /* ============================================================
-   V4.4.1 — GENERADOR DEL ACTA CON PAGINACIÓN UNIVERSAL
+   V4.4.2 — GENERADOR DEL ACTA CON PAGINACIÓN UNIVERSAL
    ------------------------------------------------------------
-   Reglas:
-   1. Corte por tope de hoja (suma simple de alturas)
-   2. Continuación sin subtítulo ni thead
-   3. Subtítulo + thead + 1 fila = bloque atómico
-   4. Firmas + fecha = bloque atómico
-   5. Encabezado continuación solo si firmas van solas
-   6. Ordinal contado desde saltos reales
+   Fixes V4.4.2:
+   - Contador por sección (reinicia en 1)
+   - <colgroup> en tabla completa Y continuación
+   - Reserva de firmas en última sección no vacía
    ============================================================ */
 function generarHTMLActa(r, oficina, datos){
   const idAsignacion = oficina.id;
@@ -1743,7 +1709,6 @@ function generarHTMLActa(r, oficina, datos){
   const nombreOficina = oficina.oficina;
   const oficinaConArt = oficinaConArticulo(nombreOficina);
 
-  /* Firmantes */
   const salienteGrado = r.grado || "";
   const salienteNombres = r.nombres || "";
   const salienteApPat = r.apPat || "";
@@ -1764,11 +1729,10 @@ function generarHTMLActa(r, oficina, datos){
   const nombreVobo = construirNombreFirmante(datos.vobo.grado, datos.vobo.nombres, datos.vobo.appat, datos.vobo.apmat);
   const cargoVobo = (datos.vobo.cargo || "").toUpperCase();
 
-  /* Título con salto inteligente */
+  /* Título */
   const tituloL1 = `ACTA DE ENTREGA Y RECEPCIÓN`;
   const textoL2 = `DEL INVENTARIO ${oficinaConArt.toUpperCase()}`;
   const textoSufijo = `DE LA DIV-10`;
-
   const anchoCompleto = (textoL2 + " " + textoSufijo).length;
   const requiereTresLineas = anchoCompleto > 75;
 
@@ -1794,7 +1758,7 @@ function generarHTMLActa(r, oficina, datos){
     return medidor.scrollHeight;
   }
 
-  /* Medir header y firmas */
+  /* Header */
   const headerHTML = `
     <div class="acta-membrete">
       <div class="linea1">COMANDO GENERAL DEL EJÉRCITO</div>
@@ -1805,6 +1769,7 @@ function generarHTMLActa(r, oficina, datos){
   `;
   const alturaHeader = medirHTML(headerHTML);
 
+  /* Firmas */
   const firmasHTML = generarBloqueFirmas({
     nombreSaliente, cargoSaliente, nombreEntrante, cargoEntrante,
     nombreSup1, cargoSup1, nombreSup2, cargoSup2,
@@ -1812,7 +1777,7 @@ function generarHTMLActa(r, oficina, datos){
   });
   const alturaFirmas = medirHTML(firmasHTML);
 
-  /* Preparar secciones */
+  /* Secciones */
   const seccionesMeta = [
     { num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
     { num: "II.- ",  titulo: "INVENTARIO DE ACTIVOS FUNGIBLES",       lista: fungibles, tipo: "fungibles" },
@@ -1824,24 +1789,29 @@ function generarHTMLActa(r, oficina, datos){
     sec._columnasHTML = (sec.tipo === "fijos")
       ? `<th style="width:8%;">N°</th><th style="width:22%;">CÓDIGO (VSIAF.)</th><th style="width:55%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`
       : `<th style="width:8%;">N°</th><th style="width:10%;">CANTIDAD</th><th style="width:67%;">DESCRIPCIÓN</th><th style="width:15%;">ESTADO</th>`;
+
+    sec._colgroupHTML = (sec.tipo === "fijos")
+      ? `<colgroup><col style="width:8%;"><col style="width:22%;"><col style="width:55%;"><col style="width:15%;"></colgroup>`
+      : `<colgroup><col style="width:8%;"><col style="width:10%;"><col style="width:67%;"><col style="width:15%;"></colgroup>`;
+
     sec._subtituloHTML = `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
 
     /* Medir subtítulo + thead (sin filas) */
     const tablaVacia = `<div class="acta-seccion">${sec._subtituloHTML}
-      <table class="acta-tabla"><thead><tr>${sec._columnasHTML}</tr></thead><tbody></tbody></table></div>`;
+      <table class="acta-tabla">${sec._colgroupHTML}<thead><tr>${sec._columnasHTML}</tr></thead><tbody></tbody></table></div>`;
     sec._alturaSubtituloThead = medirHTML(tablaVacia);
 
-    /* Medir cada fila individualmente */
+    /* Medir cada fila */
     sec._alturasFilas = sec.lista.map(it => {
       const filaHTML = filaTablaHTML(it, 1, sec.tipo);
       const h = medirHTML(`<div class="acta-seccion">${sec._subtituloHTML}
-        <table class="acta-tabla"><thead><tr>${sec._columnasHTML}</tr></thead><tbody>${filaHTML}</tbody></table></div>`);
+        <table class="acta-tabla">${sec._colgroupHTML}<thead><tr>${sec._columnasHTML}</tr></thead><tbody>${filaHTML}</tbody></table></div>`);
       return h - sec._alturaSubtituloThead;
     });
 
-    /* Medir "NO CUENTA" */
+    /* Medir NO CUENTA */
     sec._alturaNoCuenta = medirHTML(`<div class="acta-seccion">${sec._subtituloHTML}
-      <table class="acta-tabla"><thead><tr>${sec._columnasHTML}</tr></thead>
+      <table class="acta-tabla">${sec._colgroupHTML}<thead><tr>${sec._columnasHTML}</tr></thead>
       <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody></table></div>`);
   });
 
@@ -1851,6 +1821,7 @@ function generarHTMLActa(r, oficina, datos){
     const filasHTML = items.map(f => filaTablaHTML(f.item, f.num, sec.tipo)).join("");
     return `<div class="acta-seccion">${sec._subtituloHTML}
       <table class="acta-tabla">
+        ${sec._colgroupHTML}
         <thead><tr>${sec._columnasHTML}</tr></thead>
         <tbody>${filasHTML}</tbody>
       </table>
@@ -1861,6 +1832,7 @@ function generarHTMLActa(r, oficina, datos){
     if(items.length === 0) return "";
     const filasHTML = items.map(f => filaTablaHTML(f.item, f.num, sec.tipo)).join("");
     return `<table class="acta-tabla-continuacion">
+      ${sec._colgroupHTML}
       <tbody>${filasHTML}</tbody>
     </table>`;
   }
@@ -1868,29 +1840,39 @@ function generarHTMLActa(r, oficina, datos){
   function emitirBloqueNoCuenta(sec){
     return `<div class="acta-seccion">${sec._subtituloHTML}
       <table class="acta-tabla">
+        ${sec._colgroupHTML}
         <thead><tr>${sec._columnasHTML}</tr></thead>
         <tbody><tr><td class="vacia" colspan="4">NO CUENTA</td></tr></tbody>
       </table>
     </div>`;
   }
 
+  /* Identificar última sección no vacía (NO CUENTA cuenta como 1 fila) */
+  let ultimaSeccionNoVaciaIdx = -1;
+  seccionesMeta.forEach((sec, idx) => {
+    if(sec.lista.length > 0) ultimaSeccionNoVaciaIdx = idx;
+  });
+
   /* ============================================================
      ENSAMBLADO
      ============================================================ */
   let htmlFinal = headerHTML;
   let alturaEnHoja = alturaHeader;
-  let contadorGlobal = 1;
 
-  /* Iterar secciones */
-  seccionesMeta.forEach(sec => {
+  seccionesMeta.forEach((sec, idxSec) => {
     const lista = sec.lista;
     const alturas = sec._alturasFilas;
+    const esUltimaNoVacia = (idxSec === ultimaSeccionNoVaciaIdx);
 
-    /* Caso: lista vacía */
+    /* Reserva de firmas SOLO en la última sección no vacía */
+    const reservaFirmas = esUltimaNoVacia ? alturaFirmas : 0;
+
+    /* Caso: lista vacía → NO CUENTA */
     if(lista.length === 0){
       const bloqueHTML = emitirBloqueNoCuenta(sec);
-      const espacio = ALTURA_UTIL_HOJA - alturaEnHoja;
-      if(sec._alturaNoCuenta <= espacio){
+      const espacioDisponible = ALTURA_UTIL_HOJA - alturaEnHoja - reservaFirmas;
+
+      if(sec._alturaNoCuenta <= espacioDisponible){
         htmlFinal += bloqueHTML;
         alturaEnHoja += sec._alturaNoCuenta;
       } else {
@@ -1904,11 +1886,11 @@ function generarHTMLActa(r, oficina, datos){
     /* Caso: lista con filas */
     let idxFila = 0;
     let esPrimeraPagina = true;
+    let contadorSeccion = 1;  /* ⭐ FIX: contador reinicia por sección */
 
     while(idxFila < lista.length){
-      const espacioDisponible = ALTURA_UTIL_HOJA - alturaEnHoja;
+      const espacioDisponible = ALTURA_UTIL_HOJA - alturaEnHoja - reservaFirmas;
 
-      /* Altura mínima: subtítulo + thead + 1 fila (primera) o solo 1 fila (continuación) */
       const alturaEncabezado = esPrimeraPagina ? sec._alturaSubtituloThead : 0;
       const alturaMinima = alturaEncabezado + alturas[idxFila];
 
@@ -1919,7 +1901,7 @@ function generarHTMLActa(r, oficina, datos){
         continue;
       }
 
-      /* Calcular cuántas filas caben (suma simple) */
+      /* Calcular filas que caben */
       const espacioParaFilas = espacioDisponible - alturaEncabezado;
       const itemsEnPagina = [];
       let alturaAcumulada = 0;
@@ -1928,7 +1910,7 @@ function generarHTMLActa(r, oficina, datos){
       while(j < lista.length){
         const hFila = alturas[j];
         if(alturaAcumulada + hFila <= espacioParaFilas){
-          itemsEnPagina.push({ item: lista[j], num: contadorGlobal++ });
+          itemsEnPagina.push({ item: lista[j], num: contadorSeccion++ });
           alturaAcumulada += hFila;
           j++;
         } else {
@@ -1938,7 +1920,7 @@ function generarHTMLActa(r, oficina, datos){
 
       /* Seguridad: si no cabe ninguna, forzar 1 */
       if(itemsEnPagina.length === 0){
-        itemsEnPagina.push({ item: lista[idxFila], num: contadorGlobal++ });
+        itemsEnPagina.push({ item: lista[idxFila], num: contadorSeccion++ });
         alturaAcumulada = alturas[idxFila];
         j = idxFila + 1;
       }
@@ -1955,7 +1937,6 @@ function generarHTMLActa(r, oficina, datos){
       idxFila = j;
       esPrimeraPagina = false;
 
-      /* Si quedan filas → salto de hoja */
       if(idxFila < lista.length){
         htmlFinal += `<div class="saltar-pagina"></div>`;
         alturaEnHoja = 0;
@@ -1974,10 +1955,9 @@ function generarHTMLActa(r, oficina, datos){
 
   htmlFinal += firmasHTML;
 
-  /* Insertar encabezado de continuación si firmas van solas */
+  /* Encabezado de continuación si firmas van solas */
   if(firmasVanSolas){
     const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
-    /* Contar hojas reales: 1 + cantidad de saltar-pagina */
     const totalHojas = 1 + (htmlFinal.match(/saltar-pagina/g) || []).length;
     const ordinal = ordinalHoja(totalHojas);
     const textoContinuacion = `${ordinal} HOJA DEL INVENTARIO ${oficinaConArt.toUpperCase()} DIV-10`;
