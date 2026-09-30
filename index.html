@@ -3,25 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control DIV-10 · V6.1</title>
+<title>Control DIV-10 · V6.2</title>
 <style>
 /* ============================================================
    [01] VARIABLES Y TEMA
    ============================================================ */
 :root{
-  --bg:#0d1410;
-  --bg-panel:#121a15;
-  --bg-elevado:#18241c;
-  --bg-hover:#1f2e24;
-  --bg-card:#141d17;
-  --bg-terminal:#0a100c;
+  /* Paleta oscura militar — ACLARADA V6.2 */
+  --bg:#1a2620;
+  --bg-panel:#22302a;
+  --bg-elevado:#2a3a32;
+  --bg-hover:#33453c;
+  --bg-card:#25322c;
+  --bg-terminal:#141c18;
 
-  --texto:#e8f0e6;
-  --texto-suave:#8fa396;
-  --texto-muy-suave:#5a6b60;
+  --texto:#eef4ec;
+  --texto-suave:#a8b8ac;
+  --texto-muy-suave:#70857a;
 
-  --borde:rgba(143,163,150,.15);
-  --borde-fuerte:rgba(143,163,150,.35);
+  --borde:rgba(168,184,172,.18);
+  --borde-fuerte:rgba(168,184,172,.4);
 
   --ambar:#e8a93a;
   --ambar-brillante:#ffc55c;
@@ -38,14 +39,14 @@
   --azul:#4a9eff;
   --azul-glow:rgba(74,158,255,.4);
 
-  --gris-metal:#2a362e;
-  --gris-metal-claro:#3a4a3e;
+  --gris-metal:#384a40;
+  --gris-metal-claro:#4a5e50;
 
   --mono:"JetBrains Mono","Fira Code","Consolas",monospace;
   --sans:"Inter","Segoe UI",Roboto,system-ui,sans-serif;
 
-  --sombra-panel:0 8px 24px rgba(0,0,0,.5), 0 2px 4px rgba(0,0,0,.3);
-  --sombra-elevado:0 12px 36px rgba(0,0,0,.6);
+  --sombra-panel:0 8px 24px rgba(0,0,0,.35), 0 2px 4px rgba(0,0,0,.2);
+  --sombra-elevado:0 12px 36px rgba(0,0,0,.45);
 }
 body.light{
   --bg:#e8ede8;
@@ -95,8 +96,8 @@ body{
   content:"";
   position:absolute;inset:0;
   background-image:
-    linear-gradient(45deg, rgba(255,255,255,.015) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.015) 75%),
-    linear-gradient(45deg, rgba(255,255,255,.015) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.015) 75%);
+    linear-gradient(45deg, rgba(255,255,255,.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.02) 75%),
+    linear-gradient(45deg, rgba(255,255,255,.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.02) 75%);
   background-size:6px 6px;
   background-position:0 0, 3px 3px;
   opacity:.5;
@@ -114,8 +115,8 @@ body.light .bg-layer::before{
   transform:translate(-50%,-50%);
   background:
     repeating-conic-gradient(from 0deg at 50% 50%,
-      transparent 0deg, rgba(124,179,66,.025) 1deg, transparent 2deg, transparent 90deg,
-      transparent 90deg, rgba(232,169,58,.025) 91deg, transparent 92deg, transparent 180deg);
+      transparent 0deg, rgba(124,179,66,.03) 1deg, transparent 2deg, transparent 90deg,
+      transparent 90deg, rgba(232,169,58,.03) 91deg, transparent 92deg, transparent 180deg);
   opacity:.6;
   animation:radarSpin 60s linear infinite;
   pointer-events:none;
@@ -153,12 +154,12 @@ body.light .bg-layer::before{
    ============================================================ */
 .header{
   position:sticky;top:0;z-index:50;
-  background:linear-gradient(180deg, var(--bg-panel) 0%, rgba(13,20,16,.95) 100%);
+  background:linear-gradient(180deg, var(--bg-panel) 0%, rgba(26,38,32,.95) 100%);
   border-bottom:2px solid var(--borde-fuerte);
   padding:0;
   overflow:hidden;
   transition:background .4s ease;
-  box-shadow:0 2px 0 rgba(0,0,0,.3), 0 4px 20px rgba(0,0,0,.4);
+  box-shadow:0 2px 0 rgba(0,0,0,.2), 0 4px 20px rgba(0,0,0,.3);
 }
 body.light .header{
   background:linear-gradient(180deg, #ffffff 0%, #f0f4f0 100%);
@@ -184,10 +185,10 @@ body.light .header{
   border:2px solid var(--gris-metal-claro);
   border-radius:6px;
   box-shadow:
-    0 0 0 1px rgba(0,0,0,.5),
+    0 0 0 1px rgba(0,0,0,.4),
     inset 0 1px 0 rgba(255,255,255,.3),
     inset 0 -2px 4px rgba(0,0,0,.3),
-    0 4px 12px rgba(0,0,0,.5);
+    0 4px 12px rgba(0,0,0,.4);
   transform:rotate(-3deg);
   transition:transform .3s ease;
 }
@@ -238,7 +239,7 @@ body.light .header{
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.15),
     inset 0 -2px 4px rgba(0,0,0,.3),
-    0 2px 4px rgba(0,0,0,.3);
+    0 2px 4px rgba(0,0,0,.25);
 }
 .btn-icon::before{
   content:"";
@@ -403,7 +404,7 @@ body.light .header{
   transition:all .15s ease;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.15),
-    0 2px 4px rgba(0,0,0,.3);
+    0 2px 4px rgba(0,0,0,.25);
 }
 .btn-volver:hover{
   background:linear-gradient(180deg, var(--ambar) 0%, #c68a1a 100%);
@@ -422,11 +423,11 @@ body.light .header{
   padding:4px 14px;
   width:100%;
   transition:all .2s ease;
-  box-shadow:inset 0 2px 6px rgba(0,0,0,.4);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.3);
 }
 .search-box:focus-within{
   border-color:var(--ambar);
-  box-shadow:inset 0 2px 6px rgba(0,0,0,.4), 0 0 20px var(--ambar-glow);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.3), 0 0 20px var(--ambar-glow);
 }
 .search-icon{
   color:var(--ambar);font-size:18px;margin-right:12px;flex-shrink:0;
@@ -589,7 +590,7 @@ body.light .header{
    ============================================================ */
 .modal-overlay{
   position:fixed;inset:0;
-  background:rgba(5,10,7,.85);
+  background:rgba(10,16,12,.85);
   backdrop-filter:blur(8px);
   -webkit-backdrop-filter:blur(8px);
   z-index:100;
@@ -605,7 +606,7 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   border-radius:12px;
   max-width:780px;width:100%;max-height:92vh;
   overflow:hidden;display:flex;flex-direction:column;
-  box-shadow:0 20px 60px rgba(0,0,0,.7), 0 0 0 1px rgba(0,0,0,.5);
+  box-shadow:0 20px 60px rgba(0,0,0,.6), 0 0 0 1px rgba(0,0,0,.4);
   position:relative;
   animation:modalIn .3s cubic-bezier(.34,1.56,.64,1);
 }
@@ -663,7 +664,7 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   cursor:pointer;font-weight:700;
   transition:all .15s ease;
   margin-bottom:16px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.25);
 }
 .btn-nav:hover{
   background:linear-gradient(180deg, var(--ambar), #c68a1a);
@@ -685,7 +686,7 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   transition:all .15s ease;
   text-transform:uppercase;
   margin-bottom:16px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.25);
 }
 .btn-imprimir:hover{
   transform:translateY(-2px);
@@ -781,11 +782,11 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   font-family:var(--mono);font-size:13px;
   outline:none;
   transition:all .2s ease;
-  box-shadow:inset 0 2px 4px rgba(0,0,0,.3);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.25);
 }
 .form-group input:focus{
   border-color:var(--ambar);
-  box-shadow:inset 0 2px 4px rgba(0,0,0,.3), 0 0 0 3px var(--ambar-glow);
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.25), 0 0 0 3px var(--ambar-glow);
 }
 .form-group input::placeholder{color:var(--texto-muy-suave);}
 .form-persona .form-grid{grid-template-columns:1fr 1.5fr 1fr 1fr;}
@@ -819,7 +820,7 @@ body.light .modal-overlay{background:rgba(20,30,20,.4);}
   font-size:11px;font-weight:900;letter-spacing:2px;
   text-transform:uppercase;cursor:pointer;
   transition:all .15s ease;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4), 0 3px 8px rgba(0,0,0,.25);
 }
 .btn-confirmar:hover{
   transform:translateY(-2px);
@@ -891,7 +892,7 @@ tbody td{
   font-family:Arial,sans-serif;font-size:11px;
 }
 tbody tr{cursor:pointer;transition:all .15s ease;}
-tbody tr:nth-child(even){background:rgba(255,255,255,.015);}
+tbody tr:nth-child(even){background:rgba(255,255,255,.02);}
 body.light tbody tr:nth-child(even){background:rgba(0,0,0,.015);}
 tbody tr:hover{background:var(--bg-hover);}
 tbody tr:active{background:var(--gris-metal);}
@@ -1005,7 +1006,7 @@ tbody tr:active{background:var(--gris-metal);}
   border-bottom:1px solid var(--borde);
 }
 .bien-detalle-campo:last-child{border-bottom:none;}
-.bien-detalle-campo:nth-child(even){background:rgba(255,255,255,.015);}
+.bien-detalle-campo:nth-child(even){background:rgba(255,255,255,.02);}
 body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 .bien-detalle-label{
   flex:0 0 38%;
@@ -1100,15 +1101,15 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   z-index:300;
   font-family:var(--mono);
   font-size:12px;letter-spacing:1.5px;font-weight:700;
-  box-shadow:0 20px 50px rgba(0,0,0,.7), 0 0 30px var(--ambar-glow);
+  box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--ambar-glow);
   opacity:0;pointer-events:none;
   transition:all .35s cubic-bezier(.34,1.56,.64,1);
   display:flex;align-items:center;gap:12px;
   max-width:90vw;
 }
 .toast.visible{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.success{border-color:var(--verde);box-shadow:0 20px 50px rgba(0,0,0,.7), 0 0 30px var(--verde-glow);}
-.toast.error{border-color:var(--rojo);box-shadow:0 20px 50px rgba(0,0,0,.7), 0 0 30px var(--rojo-glow);}
+.toast.success{border-color:var(--verde);box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--verde-glow);}
+.toast.error{border-color:var(--rojo);box-shadow:0 20px 50px rgba(0,0,0,.6), 0 0 30px var(--rojo-glow);}
 .toast.info{border-color:var(--azul);}
 .toast-icon{font-size:16px;}
 
@@ -1141,7 +1142,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
   text-transform:uppercase;cursor:pointer;
   transition:all .15s ease;
   display:inline-flex;align-items:center;gap:8px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.3);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15), 0 2px 4px rgba(0,0,0,.25);
 }
 .btn-preview:hover{
   background:linear-gradient(180deg, var(--ambar), #c68a1a);
@@ -1408,7 +1409,7 @@ body.light .bien-detalle-campo:nth-child(even){background:rgba(0,0,0,.015);}
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ SISTEMA DE CONTROL DIV-10 · V6.1 ◈</footer>
+  <footer class="footer">◈ SISTEMA DE CONTROL DIV-10 · V6.2 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -2649,8 +2650,7 @@ function imprimirActaDirecta(){
    FIX DEFINITIVO DEL SUBTÍTULO HUÉRFANO:
      - Se mide el BLOQUE INICIO COMPLETO de cada sección como una
        sola unidad HTML (idéntica a la que se va a renderizar).
-     - Esto captura TODOS los márgenes reales (gap .acta-seccion,
-       margin-bottom de .acta-tabla, gap entre título y tabla).
+     - Esto captura TODOS los márgenes reales.
      - Solo se escribe el subtítulo si el bloque inicio COMPLETO
        (gap + título + thead + 1ra fila) cabe en el espacio actual.
      - Si no cabe → page-break ANTES del subtítulo.
@@ -2733,10 +2733,6 @@ function generarHTMLActa(r, oficina, datos){
 
   /* ============================================================
      [S18.2] CONSTRUCCIÓN DE SECCIONES CON ALTURA POR FILA
-     ------------------------------------------------------------
-     FIX CRÍTICO: la altura de inicio se mide como BLOQUE COMPLETO
-     (div.acta-seccion + título + tabla con thead + 1ra fila),
-     no como suma de partes separadas. Esto captura márgenes reales.
      ============================================================ */
   const seccionesDef = [
     { nombre: "FIJOS",     num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)", lista: fijos,     tipo: "fijos" },
@@ -2745,22 +2741,18 @@ function generarHTMLActa(r, oficina, datos){
     { nombre: "PRESTADOS", num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",      lista: prestados, tipo: "prestados" }
   ];
 
-  /* Helper: mide el thead solo (para saber cuánto resta de cada fila) */
   function medirThead(tipo){
     const html = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody></tbody></table>`;
     return medirHTML(html);
   }
 
-  /* Helper: mide UNA fila en contexto de tabla con thead y resta el thead */
   function medirFilaIncremental(filaHTML, tipo, alturaThead){
     const htmlCon = `<table class="acta-tabla"><thead><tr>${columnasDeTipo(tipo)}</tr></thead><tbody>${filaHTML}</tbody></table>`;
     const totalCon = medirHTML(htmlCon);
     return Math.max(totalCon - alturaThead, 14);
   }
 
-  /* ═══ FIX PRINCIPAL ═══
-     Mide el bloque inicio completo de la sección (idéntico al
-     que se va a renderizar realmente). Captura TODOS los márgenes. */
+  /* ═══ FIX PRINCIPAL: mide el bloque inicio COMPLETO ═══ */
   function medirBloqueInicioSeccion(sec){
     const fila1 = sec.filas.length > 0 ? sec.filas[0].html : "";
     const html = `<div class="acta-seccion">
@@ -2773,7 +2765,6 @@ function generarHTMLActa(r, oficina, datos){
     return medirHTML(html);
   }
 
-  /* Construir estructura por sección */
   const secciones = seccionesDef.map(sec => {
     const alturaThead = medirThead(sec.tipo);
 
@@ -2808,9 +2799,6 @@ function generarHTMLActa(r, oficina, datos){
 
   /* ============================================================
      [S18.3] EMPAQUETADOR — LLENADO EXACTO POR FILA
-     ------------------------------------------------------------
-     Regla de oro: el subtítulo NUNCA queda huérfano.
-     Se verifica con la medición del BLOQUE COMPLETO REAL.
      ============================================================ */
   let htmlFinal = "";
   let alturaAcumulada = 0;
@@ -2822,7 +2810,6 @@ function generarHTMLActa(r, oficina, datos){
   for(let s = 0; s < secciones.length; s++){
     const sec = secciones[s];
 
-    /* ═══ FIX: usar la altura del BLOQUE INICIO completo ═══ */
     const espacioRestanteInicial = ALTURA_UTIL_HOJA - alturaAcumulada;
 
     /* Si NO cabe el bloque inicio completo Y ya hay contenido → page-break */
@@ -2837,16 +2824,10 @@ function generarHTMLActa(r, oficina, datos){
     htmlFinal += `<div class="acta-seccion-titulo">${sec.num}<span class="subrayado">${esc(sec.titulo)}</span>.</div>`;
     htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
 
-    /* Actualizar altura acumulada con el header del bloque real
-       (para el resto del cálculo de filas usamos incrementos) */
-    /* Nota: al haber medido el bloque inicio completo, ya sabemos
-       que el título + thead + 1ra fila caben. Recalculamos altura
-       acumulada restando la altura de la 1ra fila para luego sumarla
-       correctamente en el loop. */
+    /* Actualizar altura acumulada con el header del bloque real */
     const alturaHeaderBloque = sec.alturaBloqueInicio - (sec.filas.length > 0 ? sec.filas[0].altura : 0);
     alturaAcumulada += alturaHeaderBloque;
 
-    /* Colocar filas una por una */
     for(let f = 0; f < sec.filas.length; f++){
       const fila = sec.filas[f];
       const espacioRestante = ALTURA_UTIL_HOJA - alturaAcumulada;
@@ -2855,13 +2836,11 @@ function generarHTMLActa(r, oficina, datos){
         htmlFinal += fila.html;
         alturaAcumulada += fila.altura;
       } else {
-        /* No cabe → cerrar tabla, page-break, reabrir con thead (sin título) */
         htmlFinal += `</tbody></table></div>`;
         htmlFinal += `<div class="saltar-pagina"></div>`;
         hojaActual++;
         alturaAcumulada = 0;
 
-        /* Reabrir con solo thead (es continuación, sin título) */
         htmlFinal += `<div class="acta-seccion">`;
         htmlFinal += `<table class="acta-tabla"><thead><tr>${columnasDeTipo(sec.tipo)}</tr></thead><tbody>`;
         alturaAcumulada += sec.alturaThead;
