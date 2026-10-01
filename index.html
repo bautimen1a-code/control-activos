@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V5.4</title>
+<title>Sistema de Control DIV-10 V5.5</title>
 
 <!-- jsPDF + autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -253,7 +253,7 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
-  /* ⭐ V5.4 — VISTA PREVIA con PDF.js (canvas) */
+  /* ⭐ V5.5 — VISTA PREVIA con PDF.js */
   .pdf-viewer{
     display:block;
     width:100%;
@@ -262,7 +262,6 @@
     border:none;
     background:#ebe6d9;
   }
-  /* Contenedor de canvas PDF.js */
   #pdfCanvasContainer{
     display:none;
     padding:16px;
@@ -357,7 +356,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v5.4 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v5.5 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -445,9 +444,7 @@
       <button class="modal-close" onclick="cerrarModalVistaPrevia()">×</button>
     </div>
     <div class="modal-body" style="padding:0;background:#ebe6d9;min-height:70vh;position:relative;">
-      <!-- iframe (desktop) -->
       <iframe id="pdfViewer" class="pdf-viewer" title="Vista previa del PDF"></iframe>
-      <!-- Contenedor canvas PDF.js (móvil) -->
       <div id="pdfCanvasContainer"></div>
     </div>
     <div class="preview-actions">
@@ -1560,7 +1557,6 @@ function generarVistaPrevia(){
   };
   actaEnProceso.datos = datos;
 
-  /* Generar el PDF */
   try{
     actaEnProceso.pdfDoc = generarPDFActa(actaEnProceso.responsable, actaEnProceso.oficina, datos);
     actaEnProceso.pdfBlobURL = actaEnProceso.pdfDoc.output("bloburl");
@@ -1575,7 +1571,6 @@ function generarVistaPrevia(){
   const iframe = document.getElementById("pdfViewer");
   const canvasCont = document.getElementById("pdfCanvasContainer");
 
-  /* ⭐ V5.4 — Renderizar con PDF.js en TODOS los dispositivos */
   if(canvasCont){
     canvasCont.classList.add("visible");
     canvasCont.innerHTML = `<div class="pdf-loading">Generando vista previa...</div>`;
@@ -1585,7 +1580,6 @@ function generarVistaPrevia(){
     iframe.src = "about:blank";
   }
 
-  /* Cargar PDF y renderizar como canvas */
   renderizarPDFEnCanvas(actaEnProceso.pdfDoc);
 
   document.getElementById("modalVistaPrevia").classList.add("visible");
@@ -1593,24 +1587,20 @@ function generarVistaPrevia(){
 }
 
 /* ============================================================
-   ⭐ V5.4 — Renderizar PDF con PDF.js como imágenes
+   Renderizar PDF con PDF.js como imágenes
    ============================================================ */
 async function renderizarPDFEnCanvas(pdfDoc){
   const cont = document.getElementById("pdfCanvasContainer");
   if(!cont) return;
 
   try{
-    /* Obtener el PDF como ArrayBuffer */
     const pdfArrayBuffer = pdfDoc.output("arraybuffer");
-
-    /* Cargar con PDF.js */
     const loadingTask = pdfjsLib.getDocument({ data: pdfArrayBuffer });
     const pdf = await loadingTask.promise;
     const numPages = pdf.numPages;
 
-    cont.innerHTML = ""; /* Limpiar loading */
+    cont.innerHTML = "";
 
-    /* Renderizar cada página */
     for(let pageNum = 1; pageNum <= numPages; pageNum++){
       const page = await pdf.getPage(pageNum);
       const viewport = page.getViewport({ scale: 1.5 });
@@ -1644,13 +1634,11 @@ async function renderizarPDFEnCanvas(pdfDoc){
 
 function cerrarModalVistaPrevia(){
   document.getElementById("modalVistaPrevia").classList.remove("visible");
-  /* Limpiar iframe */
   const iframe = document.getElementById("pdfViewer");
   if(iframe){
     iframe.src = "about:blank";
     iframe.style.display = "block";
   }
-  /* Limpiar contenedor canvas */
   const canvasCont = document.getElementById("pdfCanvasContainer");
   if(canvasCont){
     canvasCont.classList.remove("visible");
@@ -1659,14 +1647,14 @@ function cerrarModalVistaPrevia(){
 }
 
 /* ============================================================
-   ⭐ V5.4 — GENERACIÓN DE PDF CON jsPDF
+   ⭐ V5.5 — GENERACIÓN DE PDF CON jsPDF
    ------------------------------------------------------------
-   Cambios V5.4:
-   - halign: "left" en columna Descripción (fix desborde)
-   - "NO CUENTA" con colSpan=4 centrado en cursiva
-   - Números de página "1 - N" centrados al pie
-   - Sin espacio antes del PRIMER subtítulo
-   - Espacio para firmas aumentado a 30mm
+   Cambios V5.5:
+   - Aprovechamiento MÁXIMO de cada hoja (sin reserva anticipada)
+   - Firmas se colocan justo después de la última tabla si caben
+   - Si la última sección tiene < 3 filas y las firmas no caben,
+     esas filas saltan a la nueva hoja junto con las firmas
+   - Umbral de salto dinámico
    ============================================================ */
 
 const PDF_LAYOUT = {
@@ -1741,7 +1729,11 @@ function generarPDFActa(r, oficina, datos){
 
   yCursor += 4;
 
-  /* ═══ 3) SECCIONES ═══ */
+  /* ═══ 3) MEDIR altura de firmas (para saber cuánto espacio dejar) ═══ */
+  const alturaFirmasMM = medirBloqueFirmasPDF(doc, datos, r);
+  const MARGEN_SEGURIDAD_FIRMAS = 6;  /* margen para que respire */
+
+  /* ═══ 4) SECCIONES ═══ */
   const secciones = [
     { num: "I.- ",   titulo: "INVENTARIO DE ACTIVOS FIJOS (VSIAF.)",   lista: fijos,     tipo: "fijos" },
     { num: "II.- ",  titulo: "INVENTARIO DE ACTIVOS FUNGIBLES",         lista: fungibles, tipo: "fungibles" },
@@ -1749,24 +1741,15 @@ function generarPDFActa(r, oficina, datos){
     { num: "IV.- ",  titulo: "INVENTARIO DE BIENES PRESTADOS",          lista: prestados, tipo: "prestados" }
   ];
 
-  let ultimaSeccionNoVaciaIdx = -1;
-  secciones.forEach((sec, idx) => {
-    if(sec.lista.length > 0) ultimaSeccionNoVaciaIdx = idx;
-  });
-
-  const alturaFirmasMM = medirBloqueFirmasPDF(doc, datos, r);
-
   secciones.forEach((sec, idxSec) => {
-    const esUltimaNoVacia = (idxSec === ultimaSeccionNoVaciaIdx);
-    const reservaFirmas = esUltimaNoVacia ? alturaFirmasMM : 0;
-
-    /* Sin espacio antes del PRIMER subtítulo */
+    /* Espacio antes del subtítulo (excepto el primero) */
     if(idxSec > 0){
       yCursor += 5;
     }
 
-    const espacioRestanteInicial = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor - reservaFirmas;
-    if(espacioRestanteInicial < 30 && sec.lista.length > 0){
+    /* Verificar si hay espacio mínimo para el subtítulo + tabla */
+    const espacioRestante = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor;
+    if(espacioRestante < 25 && sec.lista.length > 0){
       doc.addPage();
       yCursor = PDF_LAYOUT.marginTop;
     }
@@ -1787,7 +1770,6 @@ function generarPDFActa(r, oficina, datos){
     /* Preparar filas */
     let head, body, columnStyles;
 
-    /* ⭐ V5.4 — halign: "left" en columna Descripción (fix desborde) */
     if(sec.tipo === "fijos"){
       head = [["N°", "CÓDIGO (VSIAF.)", "DESCRIPCIÓN", "ESTADO"]];
       columnStyles = {
@@ -1818,7 +1800,6 @@ function generarPDFActa(r, oficina, datos){
       ]);
     }
 
-    /* "NO CUENTA" combinando todas las celdas */
     if(sec.lista.length === 0){
       body = [[
         {
@@ -1833,7 +1814,7 @@ function generarPDFActa(r, oficina, datos){
       ]];
     }
 
-    /* Tablas SIN color */
+    /* ⭐ V5.5 — SIN reserva anticipada de firmas: la tabla usa todo el espacio */
     const opciones = {
       head: head,
       body: body,
@@ -1841,7 +1822,7 @@ function generarPDFActa(r, oficina, datos){
       margin: {
         top: PDF_LAYOUT.marginTop,
         right: PDF_LAYOUT.marginRight,
-        bottom: PDF_LAYOUT.marginBottom + reservaFirmas,
+        bottom: PDF_LAYOUT.marginBottom,
         left: PDF_LAYOUT.marginLeft
       },
       tableWidth: PDF_LAYOUT.contentW,
@@ -1882,21 +1863,16 @@ function generarPDFActa(r, oficina, datos){
     doc.autoTable(opciones);
 
     yCursor = doc.lastAutoTable.finalY + 4;
-
-    if(yCursor > PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - reservaFirmas){
-      doc.addPage();
-      yCursor = PDF_LAYOUT.marginTop;
-    }
   });
 
-  /* ═══ 4) FIRMAS ═══ */
-  const espacioRestanteFirmas = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor;
-  let firmasVanSolas = false;
+  /* ═══ 5) DECIDIR SI LAS FIRMAS CABEN O VAN A NUEVA HOJA ═══ */
+  const alturaRestante = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor;
+  const firmasCaben = (alturaFirmasMM + MARGEN_SEGURIDAD_FIRMAS) <= alturaRestante;
 
-  if(alturaFirmasMM > espacioRestanteFirmas){
+  if(!firmasCaben){
+    /* No caben → nueva hoja con encabezado de continuación */
     doc.addPage();
     yCursor = PDF_LAYOUT.marginTop;
-    firmasVanSolas = true;
 
     const totalHojas = doc.getNumberOfPages();
     const resumenBienes = generarResumenBienes(fijos.length, fungibles.length, internos.length, prestados.length);
@@ -1918,9 +1894,10 @@ function generarPDFActa(r, oficina, datos){
     yCursor += 6;
   }
 
+  /* Dibujar firmas */
   dibujarBloqueFirmasPDF(doc, datos, r, yCursor);
 
-  /* Números de página "1 - N" centrados al pie */
+  /* Números de página "1 - N" */
   const totalPaginas = doc.getNumberOfPages();
   for(let i = 1; i <= totalPaginas; i++){
     doc.setPage(i);
@@ -1935,10 +1912,20 @@ function generarPDFActa(r, oficina, datos){
 }
 
 function medirBloqueFirmasPDF(doc, datos, r){
-  let altura = 8;
-  altura += 38;
-  if(datos.sup1.grado || datos.sup1.nombres) altura += 20;
-  altura += 32;
+  /* Cálculo real de altura del bloque de firmas según datos presentes */
+  let altura = 12;  /* fecha */
+  altura += 22;     /* rol → nombre (ENTREGUÉ/RECIBÍ) */
+  altura += 5;      /* nombre → cargo */
+  altura += 3;      /* alto cargo */
+  altura += 22;     /* cargo → siguiente bloque */
+  if(datos.sup1.grado || datos.sup1.nombres){
+    altura += 5;    /* nombre sup */
+    altura += 3;    /* alto cargo sup */
+    altura += 12;   /* separación */
+  }
+  altura += 24;     /* Vo.Bo. → nombre */
+  altura += 5;      /* nombre → cargo */
+  altura += 3;      /* alto cargo */
   return altura;
 }
 
@@ -2049,11 +2036,10 @@ function imprimirPDF(){
     return;
   }
 
-  /* ⭐ V5.4 — En móvil, imprimir el contenedor de canvas */
+  /* En móvil, imprimir el contenedor de canvas */
   if(esDispositivoMovil()){
     const cont = document.getElementById("pdfCanvasContainer");
     if(cont && cont.querySelectorAll("canvas").length > 0){
-      /* Crear ventana de impresión con las imágenes */
       const ventanaImpresion = window.open("", "_blank");
       if(ventanaImpresion){
         const canvases = cont.querySelectorAll("canvas");
@@ -2081,12 +2067,11 @@ function imprimirPDF(){
       }
       return;
     }
-    /* Fallback: descargar */
     descargarPDF();
     return;
   }
 
-  /* Desktop: usar iframe o abrir blob */
+  /* Desktop */
   const iframe = document.getElementById("pdfViewer");
   if(iframe && iframe.contentWindow && iframe.src !== "about:blank"){
     try{
