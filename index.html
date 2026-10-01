@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema de Control DIV-10 V5.5</title>
+<title>Sistema de Control DIV-10 V5.6</title>
 
 <!-- jsPDF + autoTable -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -253,7 +253,6 @@
   .toast.info{border-color:var(--cian);}
   .toast-icon{font-size:16px;}
 
-  /* ⭐ V5.5 — VISTA PREVIA con PDF.js */
   .pdf-viewer{
     display:block;
     width:100%;
@@ -356,7 +355,7 @@
 
   <main class="main" id="contenido"></main>
 
-  <footer class="footer">◈ Sistema de Control DIV-10 · v5.5 ◈</footer>
+  <footer class="footer">◈ Sistema de Control DIV-10 · v5.6 ◈</footer>
 </div>
 
 <div class="modal-overlay" id="modal" onclick="if(event.target===this)cerrarModal()">
@@ -472,7 +471,6 @@ const API_URL_NUBE = "https://script.google.com/macros/s/AKfycbzMfNUGlVPgurteK1Z
 const CACHE_KEY = "control_div10_data_v1";
 const CACHE_HOJA_KEY = "control_div10_cache_ts";
 
-/* Configurar worker de PDF.js */
 if (window.pdfjsLib) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 }
@@ -1586,9 +1584,6 @@ function generarVistaPrevia(){
   pushEstado("modalVistaPrevia");
 }
 
-/* ============================================================
-   Renderizar PDF con PDF.js como imágenes
-   ============================================================ */
 async function renderizarPDFEnCanvas(pdfDoc){
   const cont = document.getElementById("pdfCanvasContainer");
   if(!cont) return;
@@ -1647,14 +1642,12 @@ function cerrarModalVistaPrevia(){
 }
 
 /* ============================================================
-   ⭐ V5.5 — GENERACIÓN DE PDF CON jsPDF
+   ⭐ V5.6 — GENERACIÓN DE PDF CON jsPDF
    ------------------------------------------------------------
-   Cambios V5.5:
-   - Aprovechamiento MÁXIMO de cada hoja (sin reserva anticipada)
-   - Firmas se colocan justo después de la última tabla si caben
-   - Si la última sección tiene < 3 filas y las firmas no caben,
-     esas filas saltan a la nueva hoja junto con las firmas
-   - Umbral de salto dinámico
+   Cambios V5.6:
+   - Umbral dinámico de salto: 35mm para secciones con filas,
+     20mm para "NO CUENTA". Evita subtítulos huérfanos.
+   - Subtítulo + espacio + tabla SIEMPRE juntos.
    ============================================================ */
 
 const PDF_LAYOUT = {
@@ -1667,6 +1660,10 @@ const PDF_LAYOUT = {
   get contentW() { return this.pageW - this.marginLeft - this.marginRight; },
   get contentH() { return this.pageH - this.marginTop - this.marginBottom; }
 };
+
+/* Altura estimada del bloque mínimo de una sección */
+const ALTURA_BLOQUE_SECCION_CON_FILAS = 35;   /* subtítulo + espacio + thead + 3 filas */
+const ALTURA_BLOQUE_SECCION_NO_CUENTA = 20;   /* subtítulo + espacio + fila NO CUENTA */
 
 function generarPDFActa(r, oficina, datos){
   const { jsPDF } = window.jspdf;
@@ -1729,9 +1726,9 @@ function generarPDFActa(r, oficina, datos){
 
   yCursor += 4;
 
-  /* ═══ 3) MEDIR altura de firmas (para saber cuánto espacio dejar) ═══ */
+  /* ═══ 3) MEDIR altura de firmas ═══ */
   const alturaFirmasMM = medirBloqueFirmasPDF(doc, datos, r);
-  const MARGEN_SEGURIDAD_FIRMAS = 6;  /* margen para que respire */
+  const MARGEN_SEGURIDAD_FIRMAS = 6;
 
   /* ═══ 4) SECCIONES ═══ */
   const secciones = [
@@ -1742,16 +1739,23 @@ function generarPDFActa(r, oficina, datos){
   ];
 
   secciones.forEach((sec, idxSec) => {
-    /* Espacio antes del subtítulo (excepto el primero) */
-    if(idxSec > 0){
-      yCursor += 5;
-    }
+    /* ⭐ V5.6 — Calcular altura del bloque completo antes de dibujar */
+    const esNoCuenta = (sec.lista.length === 0);
+    const alturaBloque = esNoCuenta
+      ? ALTURA_BLOQUE_SECCION_NO_CUENTA
+      : ALTURA_BLOQUE_SECCION_CON_FILAS;
 
-    /* Verificar si hay espacio mínimo para el subtítulo + tabla */
-    const espacioRestante = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor;
-    if(espacioRestante < 25 && sec.lista.length > 0){
+    /* Espacio antes del subtítulo (excepto el primero) */
+    const espacioPrevistoAntes = (idxSec > 0) ? 5 : 0;
+    const espacioRestante = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor - espacioPrevistoAntes;
+
+    /* ⭐ V5.6 — Verificar que el bloque completo quepa ANTES de dibujar el subtítulo */
+    if(espacioRestante < alturaBloque){
       doc.addPage();
       yCursor = PDF_LAYOUT.marginTop;
+    } else {
+      /* Aplicar espacio antes del subtítulo */
+      yCursor += espacioPrevistoAntes;
     }
 
     /* Dibujar subtítulo */
@@ -1814,7 +1818,6 @@ function generarPDFActa(r, oficina, datos){
       ]];
     }
 
-    /* ⭐ V5.5 — SIN reserva anticipada de firmas: la tabla usa todo el espacio */
     const opciones = {
       head: head,
       body: body,
@@ -1865,12 +1868,11 @@ function generarPDFActa(r, oficina, datos){
     yCursor = doc.lastAutoTable.finalY + 4;
   });
 
-  /* ═══ 5) DECIDIR SI LAS FIRMAS CABEN O VAN A NUEVA HOJA ═══ */
+  /* ═══ 5) FIRMAS ═══ */
   const alturaRestante = PDF_LAYOUT.pageH - PDF_LAYOUT.marginBottom - yCursor;
   const firmasCaben = (alturaFirmasMM + MARGEN_SEGURIDAD_FIRMAS) <= alturaRestante;
 
   if(!firmasCaben){
-    /* No caben → nueva hoja con encabezado de continuación */
     doc.addPage();
     yCursor = PDF_LAYOUT.marginTop;
 
@@ -1894,7 +1896,6 @@ function generarPDFActa(r, oficina, datos){
     yCursor += 6;
   }
 
-  /* Dibujar firmas */
   dibujarBloqueFirmasPDF(doc, datos, r, yCursor);
 
   /* Números de página "1 - N" */
@@ -1912,20 +1913,19 @@ function generarPDFActa(r, oficina, datos){
 }
 
 function medirBloqueFirmasPDF(doc, datos, r){
-  /* Cálculo real de altura del bloque de firmas según datos presentes */
-  let altura = 12;  /* fecha */
-  altura += 22;     /* rol → nombre (ENTREGUÉ/RECIBÍ) */
-  altura += 5;      /* nombre → cargo */
-  altura += 3;      /* alto cargo */
-  altura += 22;     /* cargo → siguiente bloque */
+  let altura = 12;
+  altura += 22;
+  altura += 5;
+  altura += 3;
+  altura += 22;
   if(datos.sup1.grado || datos.sup1.nombres){
-    altura += 5;    /* nombre sup */
-    altura += 3;    /* alto cargo sup */
-    altura += 12;   /* separación */
+    altura += 5;
+    altura += 3;
+    altura += 12;
   }
-  altura += 24;     /* Vo.Bo. → nombre */
-  altura += 5;      /* nombre → cargo */
-  altura += 3;      /* alto cargo */
+  altura += 24;
+  altura += 5;
+  altura += 3;
   return altura;
 }
 
@@ -2036,7 +2036,6 @@ function imprimirPDF(){
     return;
   }
 
-  /* En móvil, imprimir el contenedor de canvas */
   if(esDispositivoMovil()){
     const cont = document.getElementById("pdfCanvasContainer");
     if(cont && cont.querySelectorAll("canvas").length > 0){
@@ -2071,7 +2070,6 @@ function imprimirPDF(){
     return;
   }
 
-  /* Desktop */
   const iframe = document.getElementById("pdfViewer");
   if(iframe && iframe.contentWindow && iframe.src !== "about:blank"){
     try{
